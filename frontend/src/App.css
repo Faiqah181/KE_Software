@@ -1,0 +1,24 @@
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.home{
+  position: fixed;
+  top: 0;
+  top: 0;
+  left: 220px;
+  height: 100%;
+  transition: var(--tran-05);
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
