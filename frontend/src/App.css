@@ -6,12 +6,15 @@
 }
 
 .home{
-  position: fixed;
-  top: 0;
   top: 0;
   left: 220px;
   height: 100%;
   transition: var(--tran-05);
+  flex: auto;
+}
+
+.app{
+  display: flex;
 }
 
 @keyframes App-logo-spin {

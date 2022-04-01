@@ -13,7 +13,7 @@ function App() {
 
   return (
 
-    <div>
+    <div class="app">
       <SideNav />
       <div className="home">
       <Route exact path='/Accounts' component={Account} />
