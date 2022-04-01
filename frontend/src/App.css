@@ -5,7 +5,7 @@
   }
 }
 
-.home{
+.home {
   top: 0;
   left: 220px;
   height: 100%;
@@ -13,7 +13,8 @@
   flex: auto;
 }
 
-.app{
+.app {
+  background: #FAFAFA;
   display: flex;
 }
 

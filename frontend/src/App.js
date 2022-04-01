@@ -1,7 +1,8 @@
 import './App.css';
 import { Router, Route, Routes } from "react-router-dom";
-import React from 'react';
+import React, {useState} from 'react';
 import SideNav from './components/Navbar';
+import Titlebar from './components/Titlebar';
 import Account from './views/Accounts';
 import Dashboard from './views/Dashboard';
 import Customer from './views/Customers';
@@ -11,19 +12,25 @@ import Inventory from './views/Inventory';
 
 function App() {
 
+  const [isNavOpened, setNavOpened] = useState(false);
+
   return (
 
-    <div class="app">
-      <SideNav />
-      <div className="home">
-      <Route exact path='/Accounts' component={Account} />
-      <Route exact path='/Dashboard' component={Dashboard} />
-      <Route exact path='/' component={Dashboard} />
-      <Route exact path='/Customers' component={Customer} />
-      <Route exact path='/DailyRecord' component={DailyRecord} />
-      <Route exact path='/MonthlyRecord' component={MonthlyRecord} />
-      <Route exact path='/Inventory' component={Inventory} />
+    <div>
+      <Titlebar isNavOpened={isNavOpened} setNavOpened={setNavOpened} />
+      <div className='app'>
+        <SideNav isNavOpened={isNavOpened} />
+        <div className='home'>
+        <Route exact path='/Accounts' component={Account} />
+        <Route exact path='/Dashboard' component={Dashboard} />
+        <Route exact path='/' component={Dashboard} />
+        <Route exact path='/Customers' component={Customer} />
+        <Route exact path='/DailyRecord' component={DailyRecord} />
+        <Route exact path='/MonthlyRecord' component={MonthlyRecord} />
+        <Route exact path='/Inventory' component={Inventory} />
+        </div>
       </div>
+      
       
 
       {/** 

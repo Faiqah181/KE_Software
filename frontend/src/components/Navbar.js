@@ -11,24 +11,17 @@ import "react-pro-sidebar/dist/css/styles.css";
 import '../css/Navbar.css';
 
 
-const SideNav = () => {
+const SideNav = ({isNavOpened}) => {
 
-    const [isOpen, setIsOpen] = useState(false);
-
-    const [activeBtn, setActive] = useState("Dashboaord");
+    const [activeBtn, setActive] = useState("Dashboard");
 
     return (
         <>
             <div>
                 <div id="header">
-                    <ProSidebar collapsed={isOpen}>
+                    <ProSidebar collapsed={!isNavOpened}>
                         <SidebarHeader>
-                            <div className="logotext">
-                                <p>{isOpen ? "KE" : "Khan-Electronics"}</p>
-                            </div>
-                            <div className="closemenu" onClick={() => setIsOpen(!isOpen)}>
-                                {isOpen ? (<FiArrowRightCircle />) : (<FiArrowLeftCircle />)}
-                            </div>
+                            
                         </SidebarHeader>
 
                         <SidebarContent>
