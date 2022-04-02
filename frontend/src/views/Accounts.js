@@ -4,12 +4,24 @@ import { store } from "../stores"
 
 const Account = () => {
 
-    const [$foo, setFoos, updateFoos] = useWritable(store);
+    const [$store, setStore, updateStore] = useWritable(store);
 
     return(
         <div>
-            Accounts
-            {$foo}
+            <div>
+                Accounts
+            </div>
+            <div>
+                Lallu
+            </div>
+            
+            {$store.map(e =>{
+                return(
+                    <div key={e.name}>
+                        <div>{e.name} = Rs {e.value}</div>
+                    </div>
+                );
+            })}
         </div>
     );
 
