@@ -2,3 +2,7 @@
     display: inline;
     margin-right: 0.8rem;
 }
+
+.title-logo{
+    max-width: 3rem;
+}

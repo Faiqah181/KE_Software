@@ -6,11 +6,14 @@ import '../css/Titlebar.css';
 
 const Titlebar = ({ isNavOpened, setNavOpened }) => {
     return (
-        <Navbar color="light" expand="md" light >
+        <Navbar color="primary" expand="md" dark >
             <NavbarBrand>
                 <div className="toggle-icon" onClick={() => { setNavOpened(!isNavOpened) }}>
                     <FiMenu />
                 </div>
+
+                <img className="title-logo" src="logo-dark.png" alt="Khan Electronics"></img>
+
                 Khan Electronics
             </NavbarBrand>
             <Collapse navbar>
