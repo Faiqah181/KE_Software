@@ -1,4 +1,10 @@
 
+
+$primary: #725174;
+$danger: #fa5555;
+
+@import '~bootstrap/scss/bootstrap';
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

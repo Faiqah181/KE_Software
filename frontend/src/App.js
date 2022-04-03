@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import { Router, Route, Routes } from "react-router-dom";
 import React, {useState} from 'react';
 import SideNav from './components/Navbar';
