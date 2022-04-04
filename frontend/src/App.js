@@ -10,16 +10,15 @@ import DailyRecord from './views/DailyRecord';
 import MonthlyRecord from './views/MonthlyRecord';
 import Inventory from './views/Inventory';
 
+
 function App() {
-
-  const [isNavOpened, setNavOpened] = useState(false);
-
+  
   return (
 
     <div>
-      <Titlebar isNavOpened={isNavOpened} setNavOpened={setNavOpened} />
+      <Titlebar/>
       <div className='app'>
-        <SideNav isNavOpened={isNavOpened} />
+        <SideNav/>
         <div className='home'>
         <Route exact path='/Accounts' component={Account} />
         <Route exact path='/Dashboard' component={Dashboard} />

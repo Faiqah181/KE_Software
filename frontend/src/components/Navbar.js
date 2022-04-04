@@ -1,52 +1,51 @@
 import React, { useState } from "react";
 import { Link, NavLink as RouterNavLink } from "react-router-dom";
-
 import { ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent } from "react-pro-sidebar";
-
 import { FaList } from "react-icons/fa";
 import { FiHome, FiLogOut, FiArrowLeftCircle, FiArrowRightCircle, FiUsers } from "react-icons/fi";
 import { BiBarChartAlt, BiBarChart, BiCog } from "react-icons/bi";
-
+import { state } from "../store";
+import { useSnapshot } from "valtio";
 import "react-pro-sidebar/dist/css/styles.css";
 import '../css/Navbar.css';
 
 
-const SideNav = ({isNavOpened}) => {
+const SideNav = () => {
 
-    const [activeBtn, setActive] = useState("Dashboard");
+    const globalVar = useSnapshot(state);
 
     return (
         <>
             <div>
                 <div id="header">
-                    <ProSidebar collapsed={!isNavOpened}>
+                    <ProSidebar collapsed={globalVar.isCollapsed}>
                         <SidebarHeader>
                             
                         </SidebarHeader>
 
                         <SidebarContent>
                             <Menu iconShape="square">
-                                <MenuItem active={activeBtn === "Dashboard"} icon={<FiHome />} onClick={() => setActive("Dashboard")}>
+                                <MenuItem active={globalVar.isSelected === "Dashboard"} icon={<FiHome />} onClick={() => state.isSelected = "Dashboard"}>
                                     <Link to={"/Dashboard"}></Link>
                                     Dashboard
                                 </MenuItem>
-                                <MenuItem active={activeBtn === "Accounts"} icon={<FaList />} onClick={() => setActive("Accounts")}>
+                                <MenuItem active={globalVar.isSelected === "Accounts"} icon={<FaList />} onClick={() => state.isSelected = "Accounts"}>
                                     <Link to={"/Accounts"}></Link>
                                     Accounts
                                 </MenuItem>
-                                <MenuItem active={activeBtn === "Customers"} icon={<FiUsers />} onClick={() => setActive("Customers")}>
+                                <MenuItem active={globalVar.isSelected === "Customers"} icon={<FiUsers />} onClick={() => state.isSelected = "Customers"}>
                                     <Link to={"/Customers"}></Link>
                                     Customers
                                 </MenuItem>
-                                <MenuItem active={activeBtn === "DailyRecord"} icon={<BiBarChartAlt />} onClick={() => setActive("DailyRecord")}>
+                                <MenuItem active={globalVar.isSelected === "DailyRecord"} icon={<BiBarChartAlt />} onClick={() => state.isSelected = "DailyRecord"}>
                                     <Link to={"/DailyRecord"}></Link>
                                     Daily Record
                                 </MenuItem>
-                                <MenuItem active={activeBtn === "MonthlyRecord"} icon={<BiBarChart />} onClick={() => setActive("MonthlyRecord")}>
+                                <MenuItem active={globalVar.isSelected === "MonthlyRecord"} icon={<BiBarChart />} onClick={() => state.isSelected = "MonthlyRecord"}>
                                     <Link to={"/MonthlyRecord"}></Link>
                                     MonthlyRecord
                                 </MenuItem>
-                                <MenuItem active={activeBtn === "Inventory"} icon={<BiCog />} onClick={() => setActive("Inventory")}>
+                                <MenuItem active={globalVar.isSelected === "Inventory"} icon={<BiCog />} onClick={() => state.isSelected = "Inventory"}>
                                     <Link to={"/Inventory"}></Link>
                                     Inventory
                                 </MenuItem>

@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { FiMenu } from "react-icons/fi";
-
 import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, DropdownItem, NavbarText, DropdownMenu, UncontrolledDropdown, DropdownToggle } from "reactstrap";
+import { state } from "../store";
 import '../css/Titlebar.css';
 
-const Titlebar = ({ isNavOpened, setNavOpened }) => {
+
+const Titlebar = () => {
+
     return (
         <Navbar color="primary" expand="md" dark >
             <NavbarBrand>
-                <div className="toggle-icon" onClick={() => { setNavOpened(!isNavOpened) }}>
+                <div className="toggle-icon" onClick={() => { state.isCollapsed= (!state.isCollapsed) }}>
                     <FiMenu />
                 </div>
 
