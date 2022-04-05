@@ -11,17 +11,25 @@ $danger: #fa5555;
   }
 }
 
+.sub-root{
+  height: inherit;
+  display: flex;
+  flex-flow: column;
+}
+
 .home {
-  top: 0;
-  left: 220px;
-  height: 100%;
-  transition: var(--tran-05);
   flex: auto;
 }
 
-.app {
+#app {
   background: #FAFAFA;
   display: flex;
+  height: inherit;
+}
+
+#content {
+  margin: 1rem;
+  flex: auto;
 }
 
 @keyframes App-logo-spin {

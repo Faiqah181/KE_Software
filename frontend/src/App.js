@@ -9,24 +9,31 @@ import Customer from './views/Customers';
 import DailyRecord from './views/DailyRecord';
 import MonthlyRecord from './views/MonthlyRecord';
 import Inventory from './views/Inventory';
+import { Card, CardBody } from "reactstrap"
 
 
 function App() {
   
   return (
 
-    <div>
-      <Titlebar/>
-      <div className='app'>
-        <SideNav/>
-        <div className='home'>
-        <Route exact path='/Accounts' component={Account} />
-        <Route exact path='/Dashboard' component={Dashboard} />
-        <Route exact path='/' component={Dashboard} />
-        <Route exact path='/Customers' component={Customer} />
-        <Route exact path='/DailyRecord' component={DailyRecord} />
-        <Route exact path='/MonthlyRecord' component={MonthlyRecord} />
-        <Route exact path='/Inventory' component={Inventory} />
+    <div className="sub-root">
+    <Titlebar/>
+      <div id='app'>
+      <SideNav/>
+        <div id='content'>
+          <Card>
+            <CardBody>
+              <div className='home'>
+              <Route exact path='/Accounts' component={Account} />
+              <Route exact path='/Dashboard' component={Dashboard} />
+              <Route exact path='/' component={Dashboard} />
+              <Route exact path='/Customers' component={Customer} />
+              <Route exact path='/DailyRecord' component={DailyRecord} />
+              <Route exact path='/MonthlyRecord' component={MonthlyRecord} />
+              <Route exact path='/Inventory' component={Inventory} />
+            </div>
+            </CardBody>
+          </Card>
         </div>
       </div>
       

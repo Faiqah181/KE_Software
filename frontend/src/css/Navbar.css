@@ -1,5 +1,6 @@
 #header {
     top: 0%;
+    height: inherit;
   }
   #header .pro-sidebar {
     height: 100%;
