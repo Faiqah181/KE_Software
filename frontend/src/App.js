@@ -1,7 +1,7 @@
 import './App.scss';
 import { Router, Route, Routes } from "react-router-dom";
 import React, {useState} from 'react';
-import SideNav from './components/Navbar';
+import SideNav from './components/SideNav';
 import Titlebar from './components/Titlebar';
 import Account from './views/Accounts';
 import Dashboard from './views/Dashboard';
@@ -11,6 +11,7 @@ import MonthlyRecord from './views/MonthlyRecord';
 import Inventory from './views/Inventory';
 import { Card, CardBody } from "reactstrap"
 
+import days from "./days"
 
 function App() {
   
@@ -28,7 +29,9 @@ function App() {
               <Route exact path='/Dashboard' component={Dashboard} />
               <Route exact path='/' component={Dashboard} />
               <Route exact path='/Customers' component={Customer} />
-              <Route exact path='/DailyRecord' component={DailyRecord} />
+              <Route exact path='/DailyRecord'>
+                <DailyRecord days={days} />
+              </Route>
               <Route exact path='/MonthlyRecord' component={MonthlyRecord} />
               <Route exact path='/Inventory' component={Inventory} />
             </div>

@@ -31,7 +31,7 @@ const Titlebar = () => {
                         >
                             Shuaib Ghazi
                         </DropdownToggle>
-                        <DropdownMenu right>
+                        <DropdownMenu end>
                             <DropdownItem>
                                 Profile
                             </DropdownItem>
