@@ -1,28 +1,39 @@
 import config from "./config.js";
 import express from "express";
 import cors from "cors";
+import functions from "./init.js"
 
 const app = express();
 
-
-const users = [
-    {name: "Asad", username: "kamranasad7"},
-    {name: "Faiqah", username: "faiqahshuaib"},
-    {name: "Lallu", username: "lallu_legend"},
-    {name: "Lallu222", username: "lallu_legend"},
-]
+await functions.initialize();
 
 app.use(cors());
 app.listen(config.port,() => console.log(`Server listening at port ${config.port}`));
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
-});
 
-app.get("/api/users", (req, res) => {
+app.get("/api/users", async (req, res) => {
+    const users = await functions.getCollection("users");
     res.send(users);
 });
 
-app.get("/about", (req, res) => {
-    res.send("About route");
+app.get("/api/customers", async (req, res) => {
+    const customers = await functions.getCollection("customers");
+    res.send(customers);
 });
+
+app.get("/api/accounts", async (req, res) => {
+    const accounts = await functions.getCollection("accounts");
+    res.send(accounts);
+});
+
+app.get("/api/inventory", async (req, res) => {
+    const inventory = await functions.getCollection("inventory");
+    res.send(inventory);
+});
+
+app.get("/api/dailyInstallments", async (req, res) => {
+    const dailyInstallments = await functions.getCollection("dailyInstallments");
+    res.send(dailyInstallments);
+});
+
+
