@@ -1,11 +1,18 @@
-import React, { useState } from "react";
-import { FiMenu } from "react-icons/fi";
-import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, DropdownItem, NavbarText, DropdownMenu, UncontrolledDropdown, DropdownToggle } from "reactstrap";
-import { state } from "../store";
+import React, { useState } from 'react';
+import { FiMenu } from 'react-icons/fi';
+import { Navbar, NavbarBrand, Nav, Collapse, DropdownItem, DropdownMenu, UncontrolledDropdown, DropdownToggle } from "reactstrap";
+import { state } from '../store';
+import { useHistory } from "react-router-dom";
 import '../css/Titlebar.css';
 
 
 const Titlebar = () => {
+
+    let history = useHistory();
+
+    const logout = () => {
+        history.push("/Login");
+    }
 
     return (
         <Navbar color="primary" expand="md" dark >
@@ -21,31 +28,21 @@ const Titlebar = () => {
             <Collapse navbar>
                 <Nav className="me-auto" navbar >
 
-                    <UncontrolledDropdown
-                        inNavbar
-                        nav
-                    >
-                        <DropdownToggle
-                            caret
-                            nav
-                        >
-                            Shuaib Ghazi
-                        </DropdownToggle>
-                        <DropdownMenu end>
-                            <DropdownItem>
-                                Profile
-                            </DropdownItem>
-                            <DropdownItem>
-                                Logout
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </UncontrolledDropdown>
-
                 </Nav>
 
-                <NavbarText>
-                    Simple Text
-                </NavbarText>
+                <UncontrolledDropdown inNavbar>
+                    <DropdownToggle caret color='primary'>
+                        Shuaib Ghazi
+                    </DropdownToggle>
+                    <DropdownMenu end>
+                    <DropdownItem>
+                            Profile
+                        </DropdownItem>
+                        <DropdownItem onClick={logout}>
+                            Logout
+                        </DropdownItem>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
             </Collapse>
         </Navbar>
     );

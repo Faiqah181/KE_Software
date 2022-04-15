@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, NavLink as RouterNavLink } from "react-router-dom";
 import { ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent } from "react-pro-sidebar";
 import { FaList } from "react-icons/fa";
-import { FiHome, FiLogOut, FiArrowLeftCircle, FiArrowRightCircle, FiUsers } from "react-icons/fi";
+import { FiHome, FiLogOut, FiUsers } from "react-icons/fi";
 import { BiBarChartAlt, BiBarChart, BiCog } from "react-icons/bi";
 import { state } from "../store";
 import { useSnapshot } from "valtio";
