@@ -13,6 +13,7 @@ app.listen(config.port,() => console.log(`Server listening at port ${config.port
 
 app.get("/api/users", async (req, res) => {
     const users = await functions.getCollection("users");
+    console.log(users);
     res.send(users);
 });
 

@@ -64,7 +64,7 @@ const getCollection = async (collectionName) => {
   try{
     if(collectionExist(collectionName)) {
       const col = await database.collection(collectionName).find();
-      console.log(await col.toArray());
+      return (await col.toArray());
     }
   }catch (e){
     console.log(e)

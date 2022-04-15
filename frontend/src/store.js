@@ -2,7 +2,7 @@ import { proxy } from 'valtio'
 
 const state = proxy({
 
-    isCollapsed:true,
+    isCollapsed:false,
     isSelected:"Dashboard"
 
 })
