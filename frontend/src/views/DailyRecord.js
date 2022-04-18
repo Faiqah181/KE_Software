@@ -1,6 +1,5 @@
-import React, {Fragment, useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import {Table, Input} from "reactstrap"
-import Daily from "../components/Daily"
 import axios from 'axios';
 import config from "../config";
 import "../css/DailyRecord.css"
