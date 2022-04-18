@@ -1,23 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { Navbar, NavbarBrand, Nav, Collapse, DropdownItem, DropdownMenu, UncontrolledDropdown, DropdownToggle } from "reactstrap";
 import { state } from '../store';
 import { useHistory } from "react-router-dom";
+import useAuthentication from './useAuthentication';
 import '../css/Titlebar.css';
 
 
 const Titlebar = () => {
 
-    let history = useHistory();
+    const history = useHistory();
+    const [user, setUser] = useAuthentication();
+
 
     const logout = () => {
         history.push("/Login");
+        setUser(null);
     }
 
     return (
         <Navbar color="primary" expand="md" dark >
             <NavbarBrand>
-                <div className="toggle-icon" onClick={() => { state.isCollapsed= (!state.isCollapsed) }}>
+                <div className="toggle-icon" onClick={() => { state.isCollapsed = (!state.isCollapsed) }}>
                     <FiMenu />
                 </div>
 
@@ -35,7 +39,7 @@ const Titlebar = () => {
                         Shuaib Ghazi
                     </DropdownToggle>
                     <DropdownMenu end>
-                    <DropdownItem>
+                        <DropdownItem>
                             Profile
                         </DropdownItem>
                         <DropdownItem onClick={logout}>

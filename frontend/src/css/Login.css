@@ -1,0 +1,25 @@
+.login-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    width: 450px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.login-title {
+    color: #202124;
+    font-weight: 400;
+    font-size: 24px;
+    margin-top: 2rem;
+}
+
+.login-subtitle {
+    color: #202124;
+    font-weight: 400;
+    font-size: 16px;
+}
