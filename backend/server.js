@@ -8,6 +8,7 @@ const app = express();
 await functions.initialize();
 
 app.use(cors());
+app.use(express.json());
 app.listen(config.port,() => console.log(`Server listening at port ${config.port}`));
 
 
@@ -37,4 +38,9 @@ app.get("/api/dailyInstallments", async (req, res) => {
     res.send(dailyInstallments);
 });
 
+app.post("/api/customers", async (req, res) => {
+    let statusCode = await functions.insertDocument("customers", req.body)
+    console.log(statusCode)
+    res.sendStatus(statusCode)
+});
 

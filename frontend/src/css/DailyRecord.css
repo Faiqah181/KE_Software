@@ -1,3 +1,7 @@
-.daily-container {
-    
+.container {
+    overflow: auto;
+}
+
+.dropdown {
+    background-color: "primary";
 }

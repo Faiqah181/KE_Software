@@ -50,12 +50,15 @@ const insertDocument = async (collectionName, document) => {
     if(collectionExist(collectionName)){
       await database.collection(collectionName).insertOne(document);
       console.log("document inserted")
+      return 200
     }
     else{
       console.log("Collection doesn't exist")
+      return 503
     }
   }catch ( e ){
       console.log(e);
+      return 500
   }
 
 }
