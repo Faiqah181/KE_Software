@@ -15,6 +15,7 @@ import { state } from './store'
 import { useSnapshot } from 'valtio';
 import useAuthentication from './components/useAuthentication';
 import days from "./days"
+import Notification from './components/Notification';
 
 function App() {
   const store = useSnapshot(state);
@@ -54,6 +55,7 @@ function App() {
       </div>}
       <Route exact path='/Login'>
         <Login />
+        <Notification/>
       </Route>
     </div>
 
