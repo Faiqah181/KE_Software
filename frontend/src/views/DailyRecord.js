@@ -9,26 +9,26 @@ const DailyRecord = (props) => {
     const months = useRef(['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'])
     const [users, setUsers] = useState([]);
     const [monthToggle, setMonthToggle] = useState(false)
-    const monthrecord = useRef({})
+    
+    const monthRecord = useRef({})
+    const tableRef = useRef(null);
 
-    function initializeRecords(){
 
-        users.map( customer => {
-            return (
-                monthrecord.current[customer] = Array(31).fill(0)
-            )
+    const initializeRecords = () => {
+        users.map(customer => {
+            return monthRecord.current[customer] = Array(31).fill(0)
         })
-
     }
+
+    const scroll = (scrollOffset) => {
+        tableRef.current.scrollLeft += scrollOffset;
+    };
 
     const inputData = (event, customer, day) => {
-
-        monthrecord.current[customer][day] = event.target.value
+        monthRecord.current[customer][day] = event.target.value
     }
 
-    const daysInMonth = (month, year) => {
-        return new Date(year, month, 0).getDate();
-    }
+    const daysInMonth = (month, year) => new Date(year, month, 0).getDate()
 
     const getCustomers = async () => {
         try {
@@ -60,68 +60,69 @@ const DailyRecord = (props) => {
 
     return (
         <div>
-            <Row>
-                <Col>
-                    <Dropdown isOpen={monthToggle} toggle={() => { setMonthToggle(!monthToggle) }}>
-                        <DropdownToggle caret>
-                            Month
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem className="dropdown" header>
-                                Select a month
-                            </DropdownItem>
-                            {
-                                months.current.map(m => {
-                                    return (
-                                        <DropdownItem key={m}>{m}</DropdownItem>
-                                    )
-                                })
-                            }
-                        </DropdownMenu>
-                    </Dropdown>
-                </Col>
-                <Col>
-                    <Button>
-                        Save
-                    </Button>
-                </Col>
-            </Row>
-
-            <div className="container">
-                <Table bordered>
-                    <thead>
-                        <tr>
-                            <th>Customer</th>
-                            {props.days.map(day => {
+            <div className="daily-row">
+                <Dropdown isOpen={monthToggle} toggle={() => { setMonthToggle(!monthToggle) }}>
+                    <DropdownToggle caret>
+                        Month
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        <DropdownItem className="dropdown" header>
+                            Select a month
+                        </DropdownItem>
+                        {
+                            months.current.map(m => {
                                 return (
-                                    <th key={day}>{day}</th>
+                                    <DropdownItem key={m}>{m}</DropdownItem>
+                                )
+                            })
+                        }
+                    </DropdownMenu>
+                </Dropdown>
+                <Button>Save</Button>
+            </div>
+
+            <div className="daily-row">
+                <Button color="primary" onClick={() => scroll(-200)}>Left</Button>
+                <Button color="primary" onClick={() => scroll(200)}>Right</Button>
+            </div>
+
+            <div className="daily-table-outer">
+                <div className="daily-table-inner" ref={tableRef}>
+                    <Table bordered>
+                        <thead>
+                            <tr>
+                                <th className="daily-table-fix">Customer</th>
+                                {props.days.map(day => {
+                                    return (
+                                        <th key={day}>{day}</th>
+                                    )
+                                })}
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {users.map(user => {
+                                return (
+                                    <tr>
+                                        <th className="daily-table-fix">
+                                            {user.name}
+                                        </th>
+                                        {props.days.map(day => {
+                                            return (
+                                                <td key={day}>
+                                                    <div style={{ width: "5rem" }}>
+                                                        <Input type="number" id="record" />
+                                                    </div>
+                                                </td>
+                                            )
+                                        })}
+                                    </tr>
                                 )
                             })}
-                        </tr>
-                    </thead>
 
-                    <tbody>
-                        {users.map(user => {
-                            return (
-                                <tr>
-                                    <th>
-                                        {user.name}
-                                    </th>
-                                    {props.days.map(day => {
-                                        return (
-                                            <td key={day}>
-                                                <div style={{ width: "5rem" }}>
-                                                    <Input type="number" id="record"/>
-                                                </div>
-                                            </td>
-                                        )
-                                    })}
-                                </tr>
-                            )
-                        })}
-
-                    </tbody>
-                </Table>
+                        </tbody>
+                    </Table>
+                </div>
             </div>
 
         </div>

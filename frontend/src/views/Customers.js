@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {Nav, NavItem, NavLink, Row, Col, TabPane, TabContent,
-    Button, Modal, ModalBody, ModalFooter, ModalHeader, Form, FormGroup, Label, Input } from "reactstrap";
+import {
+    Nav, NavItem, NavLink, Row, Col, TabPane, TabContent,
+    Button, Modal, ModalBody, ModalFooter, ModalHeader, Form, FormGroup, Label, Input
+} from "reactstrap";
 import { state } from "../store";
 import { useSnapshot } from "valtio";
 import axios from "axios";
@@ -14,31 +16,33 @@ const Customer = () => {
 
     const addCustomer = async () => {
 
-        try{
-            const promise = axios.post(`${config.API_URL}/customers`, { name: Name, mobile_num: mobile,cnic: Cnic,address:Address,
-                status:"current", wallet: 0,father_name:fatherName})
+        try {
+            const promise = axios.post(`${config.API_URL}/customers`, {
+                name: Name, mobile_num: mobile, cnic: Cnic, address: Address,
+                status: "current", wallet: 0, father_name: fatherName
+            })
         }
         catch (error) {
             console.log(error)
         }
 
-        finally{
+        finally {
             setModalOpen(false)
         }
 
     }
 
-    
+
 
     const inputData = (event) => {
 
         const target = event.target
-        
-        if(target.id === "Cname"){ Name = target.value }
-        else if(target.id === "C_fName"){ fatherName = target.value }
-        else if(target.id === "C_mobNum"){ mobile = target.value }
-        else if(target.id === "C_cnic"){ Cnic = target.value }
-        else if(target.id === "C_address"){ Address = target.value }
+
+        if (target.id === "Cname") { Name = target.value }
+        else if (target.id === "C_fName") { fatherName = target.value }
+        else if (target.id === "C_mobNum") { mobile = target.value }
+        else if (target.id === "C_cnic") { Cnic = target.value }
+        else if (target.id === "C_address") { Address = target.value }
 
     }
 
@@ -100,9 +104,9 @@ const Customer = () => {
     const getCustomers = async () => {
         try {
             axios.get(`${config.API_URL}/customers`).then(response => {
-                setCustomerData(oldData => {let newData = cloneDeep(oldData); newData.rows = response.data; return newData})
+                setCustomerData(oldData => { let newData = cloneDeep(oldData); newData.rows = response.data; return newData })
             });
-           
+
         }
 
         catch (error) {
@@ -110,7 +114,7 @@ const Customer = () => {
         }
     }
 
-    
+
 
     useEffect(() => {
         getCustomers();
@@ -120,7 +124,7 @@ const Customer = () => {
     return (
         <div>
             <h1>Customers</h1>
-            
+
             <Row>
                 <Col>
                     <Button id="addCustomerBtn" color="primary" onClick={() => { setModalOpen(!isModalOpen) }}>Add Customer </Button>
@@ -198,10 +202,10 @@ const Customer = () => {
                     </MDBDataTable>
                 </TabPane>
                 <TabPane tabId="2">
-                    
+
                 </TabPane>
                 <TabPane tabId="3">
-                    
+
                 </TabPane>
             </TabContent>
 
