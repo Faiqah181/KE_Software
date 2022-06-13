@@ -48,3 +48,14 @@ app.post("/api/accounts", async (req, res)=>{
     console.log(statusCode)
     res.sendStatus(statusCode)
 });
+
+app.post("/api/daily-records", async (req, res)=>{
+    let statusCode = await functions.updateDailyRecord(req.body)
+    console.log(statusCode)
+    res.sendStatus(statusCode)
+})
+
+app.get("/api/daily-records/:year/:month", async (req, res)=>{
+    const records = await functions.getDailyRecord(req.params.year, req.params.month)
+    res.send(records)
+})

@@ -75,8 +75,42 @@ const getCollection = async (collectionName) => {
 
 }
 
+const updateDailyRecord = async (record) => {
+
+  try{
+    console.log(record)
+    if(collectionExist("dailyInstallments")){
+      await database.collection("dailyInstallments").updateOne({year:record.year},
+                                                              {$set:{[`month.${record.month}`]: record.data}}, 
+                                                              {
+                                                                upsert:true
+                                                              }
+                                                              );
+      console.log(record)
+      return 200
+    }
+  }catch (e){ 
+    console.log(e);
+
+  }
+
+}
+
+const getDailyRecord = async (y, m) => {
+
+    try{
+        const record = await database.collection("dailyInstallments").find({"year": parseInt(y)}).toArray()
+        const result = await record
+        return (result[0].month[`${m}`])
+    }catch(e){
+      console.log(e)
+    }
+}
+
 export default {
   initialize,
   insertDocument,
-  getCollection
+  getCollection,
+  updateDailyRecord,
+  getDailyRecord
 };
