@@ -15,6 +15,7 @@
     "react-pro-sidebar": "^0.7.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.0",
+    "react-select": "^5.3.2",
     "reactstrap": "^9.0.1",
     "sass": "^1.49.11",
     "valtio": "^1.5.1",

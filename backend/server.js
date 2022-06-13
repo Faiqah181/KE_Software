@@ -40,7 +40,11 @@ app.get("/api/dailyInstallments", async (req, res) => {
 
 app.post("/api/customers", async (req, res) => {
     let statusCode = await functions.insertDocument("customers", req.body)
-    console.log(statusCode)
     res.sendStatus(statusCode)
 });
 
+app.post("/api/accounts", async (req, res)=>{
+    let statusCode = await functions.insertDocument("accounts", req.body)
+    console.log(statusCode)
+    res.sendStatus(statusCode)
+});
