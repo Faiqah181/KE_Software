@@ -15,7 +15,7 @@ const Login = () => {
     const [error, setError] = useState('');
 
     const submitCredentials = () => {
-        if (username === "lallu" && password === "legend") {
+        if (username === "shuaib" && password === "shuaib123") {
             setUser({ name: "Lallu" })
             history.push("/Dashboard");
         }
@@ -37,6 +37,7 @@ const Login = () => {
                                     placeholder="Username"
                                     type="text"
                                     onChange={e => setUserName(e.target.value)}
+                                    onKeyDown={e => { if (e.key === 'Enter') { submitCredentials() } }}
                                 />
                                 <Label for="username">
                                     Username
@@ -49,6 +50,7 @@ const Login = () => {
                                     placeholder="Password"
                                     type="password"
                                     onChange={e => setPassword(e.target.value)}
+                                    onKeyDown={e => { if (e.key === 'Enter') { submitCredentials() } }}
                                 />
                                 <Label for="password">
                                     Password

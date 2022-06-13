@@ -35,7 +35,16 @@
 }
 
 .daily-row {
-    display: flex;
-    justify-content: space-between;
+    display: flow-root;
     margin-bottom: 0.5rem;
+}
+
+.row-btn-left {
+    margin-right: 10px;
+    float: left;
+}
+
+.row-btn-right {
+    margin-left: 10px;
+    float: right;
 }

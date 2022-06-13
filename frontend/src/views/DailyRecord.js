@@ -4,18 +4,53 @@ import axios from 'axios';
 import config from "../config";
 import "../css/DailyRecord.css";
 
-const DailyRecord = (props) => {
+const DailyRecord = () => {
 
-    const months = useRef(['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'])
-    const [users, setUsers] = useState([]);
-    const [monthToggle, setMonthToggle] = useState(false)
-    
+    const months = useRef(
+        [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ]
+    )
+    const years = useRef([])
+
     const monthRecord = useRef({})
     const tableRef = useRef(null);
+    const inputRefs = useRef([]);
+
+
+    const [customers, setCustomers] = useState([]);
+    const [days, setDays] = useState([]);
+    const [monthToggle, setMonthToggle] = useState(false)
+    const [selectedMonth, setSelectedMonth] = useState('Month')
+    const [yearToggle, setYearToggle] = useState(false)
+    const [selectedYear, setSelectedYear] = useState('2001')
+
+    const [record, setRecord] = useState(null)
+
+    const init = () => {
+        const localDate = new Date();
+        setSelectedMonth(months.current[localDate.getMonth()])
+
+        for (let year = localDate.getFullYear() - 5; year <= localDate.getFullYear(); year++) {
+            years.current.push(year)
+        }
+        setSelectedYear(localDate.getFullYear())
+    }
 
 
     const initializeRecords = () => {
-        users.map(customer => {
+        customers.map(customer => {
             return monthRecord.current[customer] = Array(31).fill(0)
         })
     }
@@ -24,8 +59,11 @@ const DailyRecord = (props) => {
         tableRef.current.scrollLeft += scrollOffset;
     };
 
-    const inputData = (event, customer, day) => {
-        monthRecord.current[customer][day] = event.target.value
+    const setRecordValue = (day, customerId, value) => {
+        setRecord(prev => {
+            prev[day][customerId] = value
+            return prev
+        })
     }
 
     const daysInMonth = (month, year) => new Date(year, month, 0).getDate()
@@ -33,7 +71,7 @@ const DailyRecord = (props) => {
     const getCustomers = async () => {
         try {
             const customerPromise = await axios.get(`${config.API_URL}/customers`);
-            setUsers(await customerPromise.data);
+            setCustomers(await customerPromise.data);
         }
 
         catch (error) {
@@ -44,7 +82,8 @@ const DailyRecord = (props) => {
     const saveDaily = async () => {
 
         try {
-            const dailyrecordPromise = await axios.post(`${config.API_URL}/daily-record`,)
+            const dailyData = {year: selectedYear, month: selectedMonth, data: record}
+            const dailyRecordPromise = await axios.post(`${config.API_URL}/daily-records`, dailyData)
         }
         catch (error) {
             console.log(error);
@@ -54,16 +93,33 @@ const DailyRecord = (props) => {
 
     useEffect(() => {
         getCustomers();
+        init();
         //initializeRecords();
     }, [])
+
+
+    useEffect(() => {
+        setDays(new Array(daysInMonth(months.current.indexOf(selectedMonth) + 1, selectedYear)).fill(0))
+    }, [selectedMonth, selectedYear])
+
+    useEffect(() => {
+        setRecord(state => {
+            state = {}
+            for (let i = 1; i < days.length; i++) {
+                state[i] = {}
+            }
+
+            return state
+        })
+    }, [customers, days])
 
 
     return (
         <div>
             <div className="daily-row">
-                <Dropdown isOpen={monthToggle} toggle={() => { setMonthToggle(!monthToggle) }}>
+                <Dropdown className="row-btn-left" isOpen={monthToggle} toggle={() => { setMonthToggle(!monthToggle) }}>
                     <DropdownToggle caret>
-                        Month
+                        {selectedMonth}
                     </DropdownToggle>
                     <DropdownMenu>
                         <DropdownItem className="dropdown" header>
@@ -72,18 +128,35 @@ const DailyRecord = (props) => {
                         {
                             months.current.map(m => {
                                 return (
-                                    <DropdownItem key={m}>{m}</DropdownItem>
+                                    <DropdownItem key={m} onClick={() => { setSelectedMonth(m) }}>{m}</DropdownItem>
                                 )
                             })
                         }
                     </DropdownMenu>
                 </Dropdown>
-                <Button>Save</Button>
+                <Dropdown className="row-btn-left" isOpen={yearToggle} toggle={() => { setYearToggle(!yearToggle) }}>
+                    <DropdownToggle caret>
+                        {selectedYear}
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        <DropdownItem className="dropdown" header>
+                            Select year
+                        </DropdownItem>
+                        {
+                            years.current.map(y => {
+                                return (
+                                    <DropdownItem key={y} onClick={() => { setSelectedYear(y) }}>{y}</DropdownItem>
+                                )
+                            })
+                        }
+                    </DropdownMenu>
+                </Dropdown>
+                <Button className="row-btn-right" onClick={saveDaily}>Save</Button>
             </div>
 
             <div className="daily-row">
-                <Button color="primary" onClick={() => scroll(-200)}>Left</Button>
-                <Button color="primary" onClick={() => scroll(200)}>Right</Button>
+                <Button className="row-btn-left" color="primary" onClick={() => scroll(-500)}>Left</Button>
+                <Button className="row-btn-right" color="primary" onClick={() => scroll(500)}>Right</Button>
             </div>
 
             <div className="daily-table-outer">
@@ -92,26 +165,26 @@ const DailyRecord = (props) => {
                         <thead>
                             <tr>
                                 <th className="daily-table-fix">Customer</th>
-                                {props.days.map(day => {
+                                {days.map((_, day) => {
                                     return (
-                                        <th key={day}>{day}</th>
+                                        <th key={day + 1}>{day + 1}</th>
                                     )
                                 })}
                             </tr>
                         </thead>
 
                         <tbody>
-                            {users.map(user => {
+                            {customers.map(c => {
                                 return (
-                                    <tr>
+                                    <tr key={c._id}>
                                         <th className="daily-table-fix">
-                                            {user.name}
+                                            {c.name}
                                         </th>
-                                        {props.days.map(day => {
+                                        {days.map((_, day) => {
                                             return (
-                                                <td key={day}>
+                                                <td key={`${day + 1}`}>
                                                     <div style={{ width: "5rem" }}>
-                                                        <Input type="number" id="record" />
+                                                        <Input onChange={e => setRecordValue(day + 1, c._id, e.target.value)} type="number" id="record" />
                                                     </div>
                                                 </td>
                                             )
@@ -124,7 +197,6 @@ const DailyRecord = (props) => {
                     </Table>
                 </div>
             </div>
-
         </div>
     );
 
