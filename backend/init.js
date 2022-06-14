@@ -86,7 +86,7 @@ const updateDailyRecord = async (record) => {
           upsert: true
         }
       );
-      console.log(record)
+      //console.log(record)
       return 200
     }
   } catch (e) {
@@ -169,6 +169,33 @@ const monthlyUpdateAccount = async (customerId) => {
   }
 }
 
+const getUserCredential = async (userName) => {
+
+  try{
+      const u = await database.collection("users").find({"user_name": `${userName}`})
+      if(u){
+        return u["password"]
+      }
+  }
+  catch(e){
+    console.log(e)
+  }
+
+}
+
+const updatePassword = async (userName, password) => {
+
+  try{
+    await database.collection("users").updateOne({"user_name": `${userName}`}, {$set : {"password": `${password}`}})
+    return 200
+  }
+  catch(e){
+    console.log(e)
+    return 401
+  }
+
+}
+
 export default {
   initialize,
   insertDocument,
@@ -176,5 +203,7 @@ export default {
   updateDailyRecord,
   getDailyRecord,
   getMonthlyBalance,
-  monthlyUpdateAccount
+  monthlyUpdateAccount,
+  getUserCredential,
+  updatePassword
 };

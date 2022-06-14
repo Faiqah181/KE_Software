@@ -1,21 +1,15 @@
 import React, { useState } from 'react'
 import { Card, CardTitle, CardSubtitle, CardBody, Form, FormGroup, Label, Input, Button } from 'reactstrap'
-import { useHistory } from "react-router-dom";
-import useAuthentication from '../components/useAuthentication';
-import '../css/Login.css'
 import axios from 'axios';
 import config from "../config";
 
-const Login = () => {
-
-
-    const history = useHistory();
-    const [user, setUser] = useAuthentication();
+const Setting = () => {
 
     const [username, setUserName] = useState();
-    const [password, setPassword] = useState();
-    const [error, setError] = useState('');
+    const [password, setPassword] = useState(); //for temporary setting what the user enter
     const [currentPassword, setCurrentPassword] = useState(); //whats currently in db
+    const [newPassword, setNewPassword] = useState();
+    const [error, setError] = useState('');
 
     const getPassword = async () => {
         try {
@@ -27,13 +21,28 @@ const Login = () => {
         }
     }
 
-    const submitCredentials = async () => {
-        await getPassword();
-        if (password === currentPassword) {
-            setUser({ name: "Lallu" })
-            history.push("/Dashboard");
+    const NewPassword = async () => {
+        try {
+            await axios.post(`${config.API_URL}/user-credential/${username}/${newPassword}`)
         }
-        else setError("Invalid Credentials");
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+    const Authenticate = async () => {
+        await getPassword();
+
+        console.log(username)
+        console.log(password)
+        console.log(currentPassword)
+        
+        if(currentPassword === password){
+            NewPassword();
+        }
+        else{
+            setError("Cannot change password, Invalid Credentials");
+        }
     }
 
     return (
@@ -41,17 +50,16 @@ const Login = () => {
             <div className='login-box'>
                 <Card>
                     <CardTitle className='login-title' tag='span'>Khan Electronics</CardTitle>
-                    <CardSubtitle className='login-subtitle'>Log In</CardSubtitle>
+                    <CardSubtitle className='login-subtitle'>Change Password</CardSubtitle>
                     <CardBody>
                         <Form inline>
                             <FormGroup floating>
                                 <Input
                                     id="username"
                                     name="username"
-                                    placeholder="Username"
+                                    placeholder="Enter Username"
                                     type="text"
                                     onChange={e => setUserName(e.target.value)}
-                                    onKeyDown={e => { if (e.key === 'Enter') { submitCredentials() } }}
                                 />
                                 <Label for="username">
                                     Username
@@ -59,19 +67,30 @@ const Login = () => {
                             </FormGroup>
                             <FormGroup floating>
                                 <Input
-                                    id="password"
-                                    name="password"
-                                    placeholder="Password"
+                                    id="oldpassword"
+                                    name="oldpassword"
+                                    placeholder="Enter current Password"
                                     type="password"
                                     onChange={e => setPassword(e.target.value)}
-                                    onKeyDown={e => { if (e.key === 'Enter') { submitCredentials() } }}
                                 />
-                                <Label for="password">
-                                    Password
+                                <Label for="oldpassword">
+                                    Current Password
                                 </Label>
                             </FormGroup>
-                            <Button color='primary' onClick={submitCredentials}>
-                                Login
+                            <FormGroup floating>
+                                <Input
+                                    id="password"
+                                    name="password"
+                                    placeholder="Enter new Password"
+                                    type="password"
+                                    onChange={e => setNewPassword(e.target.value)}
+                                />
+                                <Label for="password">
+                                    New Password
+                                </Label>
+                            </FormGroup>
+                            <Button color='primary' onClick={Authenticate}>
+                                Change Password
                             </Button>
                             {error && <div>{error}</div>}
                         </Form>
@@ -80,7 +99,7 @@ const Login = () => {
             </div>
         </div>
     )
+
 }
 
-export default Login;
-
+export default Setting;

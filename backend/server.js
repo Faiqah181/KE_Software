@@ -69,3 +69,14 @@ app.get("/api/update-monthly-record/:customerId", async (req, res)=>{
     const x = await functions.monthlyUpdateAccount(req.params.customerId)
     res.send(x)
 })
+
+app.get("/api/user-credential/:username", async (req, res) => {
+    const x = await functions.getUserCredential(req.params.username)
+    console.log(x)
+    res.send(x)
+})
+
+app.post("/api/user-credential/:username/:password", async (req, res) => {
+    let statusCode = await functions.updatePassword(req.params.username, req.params.password)
+    res.sendStatus(statusCode)
+})

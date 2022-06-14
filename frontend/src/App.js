@@ -9,6 +9,7 @@ import Customer from './views/Customers';
 import DailyRecord from './views/DailyRecord';
 import MonthlyRecord from './views/MonthlyRecord';
 import Inventory from './views/Inventory';
+import Setting from './views/Settings';
 import Login from './views/Login';
 import { Card, CardBody } from "reactstrap"
 import { state } from './store'
@@ -48,6 +49,7 @@ function App() {
                 </Route>
                 <Route exact path='/MonthlyRecord' component={MonthlyRecord} />
                 <Route exact path='/Inventory' component={Inventory} />
+                <Route exact path='/Setting' component = {Setting}/>
               </div>
             </CardBody>
           </Card>

@@ -23,10 +23,7 @@ const SideNav = () => {
 
                 <SidebarContent>
                     <Menu iconShape="square">
-                        <MenuItem active={store.isSelected === "Dashboard"} icon={<FiHome />} onClick={() => state.isSelected = "Dashboard"}>
-                            <Link to={"/Dashboard"}></Link>
-                            Dashboard
-                        </MenuItem>
+                        
                         <MenuItem active={store.isSelected === "Accounts"} icon={<FaList />} onClick={() => state.isSelected = "Accounts"}>
                             <Link to={"/Accounts"}></Link>
                             Accounts
@@ -43,16 +40,16 @@ const SideNav = () => {
                             <Link to={"/MonthlyRecord"}></Link>
                             MonthlyRecord
                         </MenuItem>
-                        <MenuItem active={store.isSelected === "Inventory"} icon={<BiCog />} onClick={() => state.isSelected = "Inventory"}>
-                            <Link to={"/Inventory"}></Link>
-                            Inventory
-                        </MenuItem>
+                       
                     </Menu>
                 </SidebarContent>
 
                 <SidebarFooter>
                     <Menu iconShape="square">
-                        <MenuItem icon={<BiCog />}>Settings</MenuItem>
+                        <MenuItem icon={<BiCog />}>
+                            <Link to={"/Setting"}/>
+                            Settings
+                        </MenuItem>
                     </Menu>
                 </SidebarFooter>
             </ProSidebar>
