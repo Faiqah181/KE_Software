@@ -32,8 +32,6 @@ const Customer = () => {
 
     }
 
-
-
     const inputData = (event) => {
 
         const target = event.target
@@ -45,9 +43,6 @@ const Customer = () => {
         else if (target.id === "C_address") { Address = target.value }
 
     }
-
-    //this.inputData = this.inputData.bind(this)
-
 
     const customersData = {
         columns: [
@@ -113,8 +108,6 @@ const Customer = () => {
             console.log(error);
         }
     }
-
-
 
     useEffect(() => {
         getCustomers();
@@ -185,7 +178,7 @@ const Customer = () => {
                         Current Customers
                     </NavLink>
                 </NavItem>
-                <NavItem>
+                {/*<NavItem>
                     <NavLink className={tab === "2" && "active"} onClick={() => { setTab("2") }}>
                         Defaulters
                     </NavLink>
@@ -194,19 +187,19 @@ const Customer = () => {
                     <NavLink className={tab === "3" && "active"} onClick={() => { setTab("3") }}>
                         Former Customers
                     </NavLink>
-                </NavItem>
+                </NavItem>*/}
             </Nav>
             <TabContent activeTab={tab}>
                 <TabPane tabId="1">
                     <MDBDataTable data={customerData} searching sortable >
                     </MDBDataTable>
                 </TabPane>
-                <TabPane tabId="2">
+                {/*<TabPane tabId="2">
 
                 </TabPane>
                 <TabPane tabId="3">
 
-                </TabPane>
+                </TabPane>*/}
             </TabContent>
 
         </div>

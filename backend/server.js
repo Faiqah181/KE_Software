@@ -28,11 +28,6 @@ app.get("/api/accounts", async (req, res) => {
     res.send(accounts);
 });
 
-app.get("/api/inventory", async (req, res) => {
-    const inventory = await functions.getCollection("inventory");
-    res.send(inventory);
-});
-
 app.get("/api/dailyInstallments", async (req, res) => {
     const dailyInstallments = await functions.getCollection("dailyInstallments");
     res.send(dailyInstallments);

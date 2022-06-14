@@ -23,7 +23,10 @@ const SideNav = () => {
 
                 <SidebarContent>
                     <Menu iconShape="square">
-                        
+                        <MenuItem active={store.isSelected === "Dashboard"} icon={<FiHome />} onClick={() => state.isSelected = "Dashboard"}>
+                            <Link to={"/Dashboard"}></Link>
+                            Dashboard
+                        </MenuItem>
                         <MenuItem active={store.isSelected === "Accounts"} icon={<FaList />} onClick={() => state.isSelected = "Accounts"}>
                             <Link to={"/Accounts"}></Link>
                             Accounts

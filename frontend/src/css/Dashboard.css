@@ -1,0 +1,12 @@
+.cardgroup.card-group {
+    padding-top: 30px;
+    text-align: center;
+}
+
+.h3 {
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: oblique;
+    font-display:inherit;
+    color: #493044;
+}
+

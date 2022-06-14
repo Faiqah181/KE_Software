@@ -39,9 +39,7 @@ const Titlebar = () => {
                         Shuaib Ghazi
                     </DropdownToggle>
                     <DropdownMenu end>
-                        <DropdownItem>
-                            Profile
-                        </DropdownItem>
+                        
                         <DropdownItem onClick={logout}>
                             Logout
                         </DropdownItem>
