@@ -14,12 +14,11 @@ const Login = () => {
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
     const [error, setError] = useState('');
-    const [currentPassword, setCurrentPassword] = useState(); //whats currently in db
 
     const getPassword = async () => {
         try {
             const passwordPromise = await axios.get(`${config.API_URL}/user-credential/${username}`);
-            setCurrentPassword(await passwordPromise.data);
+            return await passwordPromise.data;
         }
         catch (e) {
             console.log(e);
@@ -27,7 +26,10 @@ const Login = () => {
     }
 
     const submitCredentials = async () => {
-        await getPassword();
+        login(await getPassword());
+    }
+
+    const login = (currentPassword) => {
         if (password === currentPassword) {
             setUser({ name: "Lallu" })
             history.push("/Dashboard");
