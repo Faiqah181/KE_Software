@@ -11,7 +11,6 @@ const Login = () => {
 
     const history = useHistory();
     const [user, setUser] = useAuthentication();
-
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
     const [error, setError] = useState('');
@@ -19,8 +18,8 @@ const Login = () => {
 
     const getPassword = async () => {
         try {
-            const customerPromise = await axios.get(`${config.API_URL}/user-credential/${username}`);
-            setCurrentPassword(await customerPromise.data);
+            const passwordPromise = await axios.get(`${config.API_URL}/user-credential/${username}`);
+            setCurrentPassword(await passwordPromise.data);
         }
         catch (e) {
             console.log(e);
