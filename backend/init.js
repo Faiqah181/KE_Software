@@ -172,9 +172,9 @@ const monthlyUpdateAccount = async (customerId) => {
 const getUserCredential = async (userName) => {
 
   try{
-      const u = await database.collection("users").find({"user_name": `${userName}`})
+      const u = await database.collection("users").find({"user_name": `${userName}`}).toArray()
       if(u){
-        return u["password"]
+        return u[0]["password"]
       }
   }
   catch(e){

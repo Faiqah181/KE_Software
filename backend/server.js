@@ -72,7 +72,6 @@ app.get("/api/update-monthly-record/:customerId", async (req, res)=>{
 
 app.get("/api/user-credential/:username", async (req, res) => {
     const x = await functions.getUserCredential(req.params.username)
-    console.log(x)
     res.send(x)
 })
 
