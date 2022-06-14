@@ -59,3 +59,13 @@ app.get("/api/daily-records/:year/:month", async (req, res)=>{
     const records = await functions.getDailyRecord(req.params.year, req.params.month)
     res.send(records)
 })
+
+app.get("/api/monthly-records/:year/:month/:customerId", async (req, res)=>{
+    const amount = await functions.getMonthlyBalance(req.params.customerId,req.params.year, req.params.month)
+    res.send(String(amount))
+})
+
+app.get("/api/update-monthly-record/:customerId", async (req, res)=>{
+    const x = await functions.monthlyUpdateAccount(req.params.customerId)
+    res.send(x)
+})
