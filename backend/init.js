@@ -78,7 +78,6 @@ const getCollection = async (collectionName) => {
 const updateDailyRecord = async (record) => {
 
   try {
-    console.log(record)
     if (collectionExist("dailyInstallments")) {
       await database.collection("dailyInstallments").updateOne({ year: record.year },
         { $set: { [`month.${record.month}`]: record.data } },
@@ -86,7 +85,6 @@ const updateDailyRecord = async (record) => {
           upsert: true
         }
       );
-      //console.log(record)
       return 200
     }
   } catch (e) {
@@ -102,7 +100,7 @@ const getDailyRecord = async (y, m) => {
     const record = await database.collection("dailyInstallments").find({ "year": parseInt(y) }).toArray()
     const result = await record
 
-    return (result[0].month[`${m}`] ? result[0].month[`${m}`] : { [`${m}`]: {} })
+    return (result[0]?.month[`${m}`] ? result[0].month[`${m}`] : {})
   }
   catch (e) {
     console.log(e)
@@ -116,7 +114,7 @@ const getMonthlyBalance = async (customerId, y, m) => {
     const monthAllRecords = await getDailyRecord(y, m)
     if (monthAllRecords) {
 
-      const vals = Object.keys(monthAllRecords).map(key => monthAllRecords[key]);
+      const vals = Object.values(monthAllRecords);
 
       vals.forEach(day => {
         const dayRecords = Object.keys(day).map(key => {
@@ -171,13 +169,13 @@ const monthlyUpdateAccount = async (customerId) => {
 
 const getUserCredential = async (userName) => {
 
-  try{
-      const u = await database.collection("users").find({"user_name": `${userName}`}).toArray()
-      if(u){
-        return u[0]["password"]
-      }
+  try {
+    const u = await database.collection("users").find({ "user_name": `${userName}` }).toArray()
+    if (u) {
+      return u[0]["password"]
+    }
   }
-  catch(e){
+  catch (e) {
     console.log(e)
   }
 
@@ -185,11 +183,11 @@ const getUserCredential = async (userName) => {
 
 const updatePassword = async (userName, password) => {
 
-  try{
-    await database.collection("users").updateOne({"user_name": `${userName}`}, {$set : {"password": `${password}`}})
+  try {
+    await database.collection("users").updateOne({ "user_name": `${userName}` }, { $set: { "password": `${password}` } })
     return 200
   }
-  catch(e){
+  catch (e) {
     console.log(e)
     return 401
   }
