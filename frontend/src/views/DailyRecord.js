@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Table, Input, DropdownMenu, Dropdown, DropdownToggle, DropdownItem, Container, Button, Row, Col } from "reactstrap"
+import { Table, Input, DropdownMenu, Dropdown, DropdownToggle, DropdownItem, Button } from "reactstrap"
 import axios from 'axios';
 import config from "../config";
 import "../css/DailyRecord.css";
@@ -23,16 +23,14 @@ const DailyRecord = () => {
         ]
     )
     const years = useRef([])
-
-    const monthRecord = useRef({})
     const tableRef = useRef(null);
-    const inputRefs = useRef([]);
+    const inputRefs = useRef({});
 
 
     const [customers, setCustomers] = useState([]);
     const [days, setDays] = useState([]);
     const [monthToggle, setMonthToggle] = useState(false)
-    const [selectedMonth, setSelectedMonth] = useState('Month')
+    const [selectedMonth, setSelectedMonth] = useState('February')
     const [yearToggle, setYearToggle] = useState(false)
     const [selectedYear, setSelectedYear] = useState('2001')
 
@@ -46,13 +44,6 @@ const DailyRecord = () => {
             years.current.push(year)
         }
         setSelectedYear(localDate.getFullYear())
-    }
-
-
-    const initializeRecords = () => {
-        customers.map(customer => {
-            return monthRecord.current[customer] = Array(31).fill(0)
-        })
     }
 
     const scroll = (scrollOffset) => {
@@ -79,22 +70,41 @@ const DailyRecord = () => {
         }
     }
 
-    const saveDaily = async () => {
-
+    const getDaily = async () => {
         try {
-            const dailyData = {year: selectedYear, month: selectedMonth, data: record}
+            const dailyPromise = await axios.get(`${config.API_URL}/daily-records/${selectedYear}/${selectedMonth}`);
+            handleDailyPromise(await dailyPromise.data);
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleDailyPromise = (dailyRecord) => {
+        for (const c of customers) {
+            for (const [d] of days.entries()) {
+                inputRefs.current[`${c._id}/${d + 1}`].value = (dailyRecord[d + 1]?.[c._id]) ? dailyRecord[d + 1][c._id] : ""
+                if (!dailyRecord[d + 1]) {
+                    dailyRecord[d + 1] = {}
+                }
+            }
+        }
+        setRecord(dailyRecord)
+    }
+
+    const saveDaily = async () => {
+        try {
+            const dailyData = { year: selectedYear, month: selectedMonth, data: record }
             const dailyRecordPromise = await axios.post(`${config.API_URL}/daily-records`, dailyData)
         }
         catch (error) {
             console.log(error);
         }
-
     }
 
     useEffect(() => {
         getCustomers();
         init();
-        //initializeRecords();
     }, [])
 
 
@@ -103,14 +113,18 @@ const DailyRecord = () => {
     }, [selectedMonth, selectedYear])
 
     useEffect(() => {
+
         setRecord(state => {
             state = {}
-            for (let i = 1; i < days.length; i++) {
+            for (let i = 1; i <= days.length; i++) {
                 state[i] = {}
             }
 
             return state
         })
+
+        getDaily()
+
     }, [customers, days])
 
 
@@ -184,7 +198,7 @@ const DailyRecord = () => {
                                             return (
                                                 <td key={`${day + 1}`}>
                                                     <div style={{ width: "5rem" }}>
-                                                        <Input onChange={e => setRecordValue(day + 1, c._id, e.target.value)} type="number" id="record" />
+                                                        <input style={{ width: "32" }} ref={el => (inputRefs.current[`${c._id}/${day + 1}`] = el)} onChange={e => setRecordValue(day + 1, c._id, e.target.value)} type="number" />
                                                     </div>
                                                 </td>
                                             )
