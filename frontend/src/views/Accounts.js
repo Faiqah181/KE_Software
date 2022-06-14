@@ -9,7 +9,7 @@ import { Row, Col, Button, Modal, ModalBody, ModalFooter, ModalHeader, Form, For
 const Account = () => {
 
     const accountData = {
-        columns : [
+        columns: [
             {
                 label: 'Account Number',
                 field: 'account_num',
@@ -18,21 +18,21 @@ const Account = () => {
             },
             {
                 label: 'Customer Name',
-                field:'customer_id',
-                sort:'asc',
-                width:150
+                field: 'customer_name',
+                sort: 'asc',
+                width: 150
             },
             {
                 label: 'Item Name',
-                field:'item',
-                sort:'asc',
-                width:150
+                field: 'item',
+                sort: 'asc',
+                width: 150
             },
             {
                 label: 'Balance',
-                field:'balance',
-                sort:'asc',
-                width:150
+                field: 'balance',
+                sort: 'asc',
+                width: 150
             }
         ]
     }
@@ -63,6 +63,7 @@ const Account = () => {
     const addAccount = async () => {
         try {
             account.current.customer_id = selectedCustomer.value
+            account.current.customer_name = selectedCustomer.label
             account.current.discount = 0
             account.current.closed = false
             account.current.date_of_sale = new Date().toLocaleDateString()
@@ -94,6 +95,7 @@ const Account = () => {
         }
     }
 
+
     useEffect(() => {
         setCustomersList(customerData.map(c => ({
             value: c._id, label: c.name
@@ -118,20 +120,20 @@ const Account = () => {
                             <Col>
                                 <FormGroup>
                                     <Label for="A_number">Account Number</Label>
-                                    <Input id="A_number" name="Account Number" onChange={(evt)=>{account.current.account_num = evt.target.value}} placeholder="Enter Account Number"></Input>
+                                    <Input id="A_number" name="Account Number" onChange={(evt) => { account.current.account_num = evt.target.value }} placeholder="Enter Account Number"></Input>
                                 </FormGroup>
                             </Col>
                             <Col>
                                 <FormGroup>
                                     <Label for="A_Customer">Customer</Label>
                                     <Select id="A_Customer" isSearchable isClearable onChange={setSelectedCustomer}
-                                    options={customersList} placeholder="Select Customer" />
+                                        options={customersList} placeholder="Select Customer" />
                                 </FormGroup>
                             </Col>
                             <Col>
                                 <FormGroup>
                                     <Label for="A_item">Item</Label>
-                                    <Input id="A_item" name="Item" onChange={(evt)=>{account.current.item = evt.target.value}} placeholder="Enter item name"></Input>
+                                    <Input id="A_item" name="Item" onChange={(evt) => { account.current.item = evt.target.value }} placeholder="Enter item name"></Input>
                                 </FormGroup>
                             </Col>
                         </Row>
@@ -139,19 +141,19 @@ const Account = () => {
                             <Col>
                                 <FormGroup>
                                     <Label for="A_originalCost">Original Cost</Label>
-                                    <Input id="A_originalCost" type="number" onChange={(evt)=>{account.current.cost = evt.target.value}} placeholder="Enter Cost of Item" />
+                                    <Input id="A_originalCost" type="number" onChange={(evt) => { account.current.cost = evt.target.value }} placeholder="Enter Cost of Item" />
                                 </FormGroup>
                             </Col>
                             <Col>
                                 <FormGroup>
                                     <Label for="A_retailPrice">Retail Price</Label>
-                                    <Input id="A_retailPrice" onChange={(evt)=>{account.current.retail_price = evt.target.value}} placeholder="Enter retail price of item" />
+                                    <Input id="A_retailPrice" onChange={(evt) => { account.current.retail_price = evt.target.value }} placeholder="Enter retail price of item" />
                                 </FormGroup>
                             </Col>
                             <Col>
                                 <FormGroup>
                                     <Label for="A_installmentPrice">Installment Price</Label>
-                                    <Input id="A_installmentPrice" onChange={(evt)=>{account.current.installment_price = evt.target.value}} placeholder="Enter installment price" />
+                                    <Input id="A_installmentPrice" onChange={(evt) => { account.current.installment_price = evt.target.value }} placeholder="Enter installment price" />
                                 </FormGroup>
                             </Col>
                         </Row>
@@ -159,13 +161,13 @@ const Account = () => {
                             <Col>
                                 <FormGroup>
                                     <Label for="A_advance">Advance Amount</Label>
-                                    <Input id="A_advance" onChange={(evt)=>{account.current.advance = evt.target.value}} placeholder="Enter Advance amount" />
+                                    <Input id="A_advance" onChange={(evt) => { account.current.advance = evt.target.value }} placeholder="Enter Advance amount" />
                                 </FormGroup>
                             </Col>
                             <Col>
                                 <FormGroup>
                                     <Label for="A_balance">Balance Amount</Label>
-                                    <Input id="A_balance" onChange={(evt)=>{account.current.balance = evt.target.value}} placeholder="Enter Balance amount" />
+                                    <Input id="A_balance" onChange={(evt) => { account.current.balance = evt.target.value }} placeholder="Enter Balance amount" />
                                 </FormGroup>
                             </Col>
                         </Row>
