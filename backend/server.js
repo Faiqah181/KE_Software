@@ -2,6 +2,8 @@ import config from "./config.js";
 import express from "express";
 import cors from "cors";
 import functions from "./init.js"
+import authenticateToken from "./middleware.js"
+import  jwt  from "jsonwebtoken"
 
 const app = express();
 
@@ -9,8 +11,23 @@ await functions.initialize();
 
 app.use(cors());
 app.use(express.json());
+app.use(authenticateToken)
+
 app.listen(config.port,() => console.log(`Server listening at port ${config.port}`));
 
+
+app.post("/api/login", async(req,res)=>{
+    
+    const pass = await functions.getUserCredential(req.body.username)
+
+    if(req.body.password != pass){
+        return res.json({ status: 'error', error: 'Invalid login' })
+    }
+    else{
+        const token = jwt.sign({ username : req.params.username}, config.ACCESS_TOKEN_KEY)
+        return res.json({status:'ok', user:token})
+    }
+})
 
 app.get("/api/users", async (req, res) => {
     const users = await functions.getCollection("users");
