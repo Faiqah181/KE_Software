@@ -170,7 +170,7 @@ const monthlyUpdateAccount = async (customerId) => {
 const getUserCredential = async (userName) => {
 
   try {
-    const u = await database.collection("users").find({ "user_name": `${userName}` }).toArray()
+    const u = await database.collection("users").find({ "userName": `${userName}` }).toArray()
     if (u) {
       return u[0]["password"]
     }
@@ -184,7 +184,7 @@ const getUserCredential = async (userName) => {
 const updatePassword = async (userName, password) => {
 
   try {
-    await database.collection("users").updateOne({ "user_name": `${userName}` }, { $set: { "password": `${password}` } })
+    await database.collection("users").updateOne({ "userName": `${userName}` }, { $set: { "password": `${password}` } })
     return 200
   }
   catch (e) {
