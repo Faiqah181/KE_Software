@@ -2,8 +2,12 @@ import config from "./config.js";
 import express from "express";
 import cors from "cors";
 import functions from "./init.js"
+import connectToDB from "./db/connect.js";
 import Authentication from "./middlewares/Authentication.js"
 import jwt from "jsonwebtoken"
+
+//Routers
+import customerRouter from "./routes/customer.route.js";
 
 const app = express();
 
@@ -13,7 +17,6 @@ app.use(cors());
 app.use(express.json());
 
 app.listen(config.port, () => console.log(`Server listening at port ${config.port}`));
-
 
 app.post("/api/login", async (req, res) => {
 
@@ -29,6 +32,10 @@ app.post("/api/login", async (req, res) => {
 })
 
 app.use(Authentication)
+
+// --- Routers --- 
+app.use('/api/customers/', customerRouter);
+
 
 app.get("/api/users", async (req, res) => {
     const users = await functions.getCollection("users");
@@ -92,3 +99,5 @@ app.post("/api/user-credential/:username/:password", async (req, res) => {
     let statusCode = await functions.updatePassword(req.params.username, req.params.password)
     res.sendStatus(statusCode)
 })
+
+connectToDB();
