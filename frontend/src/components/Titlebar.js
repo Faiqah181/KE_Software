@@ -25,7 +25,7 @@ const Titlebar = () => {
                     <FiMenu />
                 </div>
 
-                <img className="title-logo" src="logo-dark.png" alt="Khan Electronics"></img>
+                <img className="title-logo" src="logo-dark.png" alt=""></img>
 
                 Khan Electronics
             </NavbarBrand>

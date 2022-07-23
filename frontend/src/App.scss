@@ -2,15 +2,9 @@
 
 $primary: #725174;
 $secondary: rgb(112, 110, 112);
-$danger: #fa5555;
+$danger: #dc3545;
 
 @import '~bootstrap/scss/bootstrap';
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
 
 .sub-root{
   height: inherit;
@@ -31,13 +25,4 @@ $danger: #fa5555;
 #content {
   margin: 1rem;
   flex: auto;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

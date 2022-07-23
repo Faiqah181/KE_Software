@@ -3,7 +3,8 @@ import { Route } from "react-router-dom";
 import React, { useEffect } from 'react';
 import SideNav from './components/SideNav';
 import Titlebar from './components/Titlebar';
-import Account from './views/Accounts';
+import Accounts from './views/Accounts';
+import Account from './views/Account';
 import Dashboard from './views/Dashboard';
 import Customer from './views/Customers';
 import DailyRecord from './views/DailyRecord';
@@ -18,6 +19,8 @@ import useAuthentication from './components/useAuthentication';
 import days from "./days"
 import Notification from './components/Notification';
 import jwt from "jsonwebtoken";
+
+import NotFound from './views/404';
 
 function App() {
   const store = useSnapshot(state);
@@ -52,7 +55,8 @@ function App() {
           <Card>
             <CardBody>
               <div className='home'>
-                <Route exact path='/Accounts' component={Account} />
+                <Route exact path='/Accounts' component={Accounts} />
+                <Route path='/Accounts/:id' component={Account} />
                 <Route exact path='/Dashboard' component={Dashboard} />
                 <Route exact path='/' component={Dashboard} />
                 <Route exact path='/Customers' component={Customer} />
@@ -61,7 +65,9 @@ function App() {
                 </Route>
                 <Route exact path='/MonthlyRecord' component={MonthlyRecord} />
                 <Route exact path='/Inventory' component={Inventory} />
-                <Route exact path='/Setting' component={Setting} />
+                <Route exact path='/Setting' component = {Setting}/>
+
+                <Route path='/404' component={NotFound} />
               </div>
             </CardBody>
           </Card>

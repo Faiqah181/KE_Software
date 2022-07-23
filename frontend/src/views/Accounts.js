@@ -6,7 +6,7 @@ import config from "../config";
 import Select from 'react-select';
 import { Row, Col, Button, Modal, ModalBody, ModalFooter, ModalHeader, Form, FormGroup, Label, Input } from "reactstrap";
 
-const Account = () => {
+const Accounts = () => {
 
     const accountData = {
         columns: [
@@ -41,7 +41,6 @@ const Account = () => {
     const [isModalOpen, setModalOpen] = useState(false)
 
     const getAccounts = async () => {
-
         try {
             axios.get(`${config.API_URL}/accounts`).then(response => {
                 setAccounts(oldData => { let newData = cloneDeep(oldData); newData.rows = response.data; return newData })
@@ -50,7 +49,6 @@ const Account = () => {
         catch (error) {
             console.log(error)
         }
-
     }
 
     const account = useRef({})
@@ -68,13 +66,19 @@ const Account = () => {
             account.current.closed = false
             account.current.date_of_sale = new Date().toLocaleDateString()
             console.log(account)
-            const promise = axios.post(`${config.API_URL}/accounts`, account.current)
+            const result = await axios.post(`${config.API_URL}/accounts`, account.current);
+            
+            if(result.status === 200){
+                console.log("OK");
+                setAccounts(oldData => {console.log(oldData);oldData.rows.push(account.current);console.log(oldData); return oldData;})
+            }
         }
         catch (error) {
-            console.log(error)
+            console.log(error);
         }
         finally {
-            setModalOpen(false)
+            account.current = {};
+            setModalOpen(false);
         }
 
     }
@@ -112,7 +116,7 @@ const Account = () => {
                 </Col>
             </Row>
 
-            <Modal isOpen={isModalOpen} toggle={() => { setModalOpen(!isModalOpen) }} size='lg' scrollable>
+            <Modal isOpen={isModalOpen} centered toggle={() => { setModalOpen(!isModalOpen) }} size='lg'>
                 <ModalHeader>Add New Account</ModalHeader>
                 <ModalBody>
                     <Form>
@@ -126,7 +130,7 @@ const Account = () => {
                             <Col>
                                 <FormGroup>
                                     <Label for="A_Customer">Customer</Label>
-                                    <Select id="A_Customer" isSearchable isClearable onChange={setSelectedCustomer}
+                                    <Select id="A_Customer" isSearchable isClearable onChange={(val) => setSelectedCustomer(val)}
                                         options={customersList} placeholder="Select Customer" />
                                 </FormGroup>
                             </Col>
@@ -178,10 +182,10 @@ const Account = () => {
                     <Button color="primary" onClick={addAccount} >Add Account</Button>
                 </ModalFooter>
             </Modal>
-            <MDBDataTable searching sortable data={accounts} />
+            <MDBDataTable hover searching sortable data={accounts} />
         </div>
     );
 
 };
 
-export default Account;
+export default Accounts;
