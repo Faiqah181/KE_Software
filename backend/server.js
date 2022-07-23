@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken"
 
 //Routers
 import customerRouter from "./routes/customer.route.js";
+import userRouter from "./routes/user.route.js";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(Authentication)
 
 // --- Routers --- 
 app.use('/api/customers/', customerRouter);
+app.use('/api/users/', userRouter);
 
 
 app.get("/api/users", async (req, res) => {

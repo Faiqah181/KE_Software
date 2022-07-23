@@ -28,7 +28,7 @@ controller.getByID = async (_req, res, id) => {
 controller.addCustomer = async (req, res) => {
     const customerToAdd = Customer(req.body);
     try {
-        const addedCustomer = await Customer.addUser(customerToAdd);
+        const addedCustomer = await Customer.addCustomer(customerToAdd);
         res.send(json(addedCustomer));
     }
     catch (e) {

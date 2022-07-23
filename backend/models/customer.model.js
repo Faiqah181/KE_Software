@@ -16,7 +16,7 @@ CustomerModel.getAll = () => {
     return CustomerModel.find({});
 }
 
-CustomerModel.addUser = customer => {
+CustomerModel.addCustomer = customer => {
     return customer.save();
 }
 
