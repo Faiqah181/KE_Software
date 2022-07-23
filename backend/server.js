@@ -2,8 +2,8 @@ import config from "./config.js";
 import express from "express";
 import cors from "cors";
 import functions from "./init.js"
-import authenticateToken from "./middleware.js"
-import  jwt  from "jsonwebtoken"
+import Authentication from "./middlewares/Authentication.js"
+import jwt from "jsonwebtoken"
 
 const app = express();
 
@@ -11,23 +11,24 @@ await functions.initialize();
 
 app.use(cors());
 app.use(express.json());
-app.use(authenticateToken)
 
-app.listen(config.port,() => console.log(`Server listening at port ${config.port}`));
+app.listen(config.port, () => console.log(`Server listening at port ${config.port}`));
 
 
-app.post("/api/login", async(req,res)=>{
-    
+app.post("/api/login", async (req, res) => {
+
     const pass = await functions.getUserCredential(req.body.username)
 
-    if(req.body.password != pass){
-        return res.json({ status: 'error', error: 'Invalid login' })
+    if (req.body.password != pass) {
+        res.sendStatus(401);
     }
-    else{
-        const token = jwt.sign({ username : req.params.username}, config.ACCESS_TOKEN_KEY)
-        return res.json({status:'ok', user:token})
+    else {
+        const token = jwt.sign({ username: req.body.username }, config.ACCESS_TOKEN_KEY)
+        res.status(200).send(token);
     }
 })
+
+app.use(Authentication)
 
 app.get("/api/users", async (req, res) => {
     const users = await functions.getCollection("users");
@@ -55,29 +56,29 @@ app.post("/api/customers", async (req, res) => {
     res.sendStatus(statusCode)
 });
 
-app.post("/api/accounts", async (req, res)=>{
+app.post("/api/accounts", async (req, res) => {
     let statusCode = await functions.insertDocument("accounts", req.body)
     console.log(statusCode)
     res.sendStatus(statusCode)
 });
 
-app.post("/api/daily-records", async (req, res)=>{
+app.post("/api/daily-records", async (req, res) => {
     let statusCode = await functions.updateDailyRecord(req.body)
     console.log(statusCode)
     res.sendStatus(statusCode)
 })
 
-app.get("/api/daily-records/:year/:month", async (req, res)=>{
+app.get("/api/daily-records/:year/:month", async (req, res) => {
     const records = await functions.getDailyRecord(req.params.year, req.params.month)
     res.send(records)
 })
 
-app.get("/api/monthly-records/:year/:month/:customerId", async (req, res)=>{
-    const amount = await functions.getMonthlyBalance(req.params.customerId,req.params.year, req.params.month)
+app.get("/api/monthly-records/:year/:month/:customerId", async (req, res) => {
+    const amount = await functions.getMonthlyBalance(req.params.customerId, req.params.year, req.params.month)
     res.send(String(amount))
 })
 
-app.get("/api/update-monthly-record/:customerId", async (req, res)=>{
+app.get("/api/update-monthly-record/:customerId", async (req, res) => {
     const x = await functions.monthlyUpdateAccount(req.params.customerId)
     res.send(x)
 })

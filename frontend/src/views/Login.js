@@ -8,33 +8,33 @@ import config from "../config";
 
 const Login = () => {
 
-
     const history = useHistory();
-    const [user, setUser] = useAuthentication();
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
     const [error, setError] = useState('');
 
-    const getPassword = async () => {
-        try {
-            const passwordPromise = await axios.get(`${config.API_URL}/user-credential/${username}`);
-            return await passwordPromise.data;
-        }
-        catch (e) {
-            console.log(e);
-        }
-    }
 
-    const submitCredentials = async () => {
-        login(await getPassword());
-    }
+    const [user, setUser] = useAuthentication();
+    async function loginUser(event) {
 
-    const login = (currentPassword) => {
-        if (password === currentPassword) {
-            setUser({ name: "Lallu" })
+        event.preventDefault()
+
+        const res = await axios.post(`${config.API_URL}/login`, {
+            "username": username,
+            "password": password
+        })
+
+        const d = await res
+        console.log(d.data.user)
+
+        if (d.status === 200) {
+            setUser(d.data.user);
             history.push("/Dashboard");
         }
-        else setError("Invalid Credentials");
+        else {
+            setUser(null)
+            alert('Please check your username and password')
+        }
     }
 
     return (
@@ -52,7 +52,6 @@ const Login = () => {
                                     placeholder="Username"
                                     type="text"
                                     onChange={e => setUserName(e.target.value)}
-                                    onKeyDown={e => { if (e.key === 'Enter') { submitCredentials() } }}
                                 />
                                 <Label for="username">
                                     Username
@@ -65,16 +64,15 @@ const Login = () => {
                                     placeholder="Password"
                                     type="password"
                                     onChange={e => setPassword(e.target.value)}
-                                    onKeyDown={e => { if (e.key === 'Enter') { submitCredentials() } }}
                                 />
                                 <Label for="password">
                                     Password
                                 </Label>
                             </FormGroup>
-                            <Button color='primary' onClick={submitCredentials}>
+                            <Button color='primary' onClick={loginUser}>
                                 Login
                             </Button>
-                            {error && <div>{error}</div>}
+
                         </Form>
                     </CardBody>
                 </Card>

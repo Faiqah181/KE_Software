@@ -1,7 +1,9 @@
 import  jwt  from "jsonwebtoken"
-import config from "./config.js"
+import config from "../config.js"
 
 function authenticateToken(req, res, next){
+
+    console.log(req.body)
 
     const token = req.headers['x-access-token']
 

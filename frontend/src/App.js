@@ -17,13 +17,25 @@ import { useSnapshot } from 'valtio';
 import useAuthentication from './components/useAuthentication';
 import days from "./days"
 import Notification from './components/Notification';
+import jwt from "jsonwebtoken";
 
 function App() {
   const store = useSnapshot(state);
   const [user, setUser] = useAuthentication();
 
   useEffect(() => {
-    state.user = user
+    const token = user;
+
+    if (token) {
+      try {
+        jwt.decode(token)
+      }
+      catch (error) {
+        console.log(error)
+        setUser(null)
+      }
+    }
+
   }, [])
 
   if (!store.user) {
@@ -49,7 +61,7 @@ function App() {
                 </Route>
                 <Route exact path='/MonthlyRecord' component={MonthlyRecord} />
                 <Route exact path='/Inventory' component={Inventory} />
-                <Route exact path='/Setting' component = {Setting}/>
+                <Route exact path='/Setting' component={Setting} />
               </div>
             </CardBody>
           </Card>
@@ -57,7 +69,7 @@ function App() {
       </div>}
       <Route exact path='/Login'>
         <Login />
-        <Notification/>
+        <Notification />
       </Route>
     </div>
 
