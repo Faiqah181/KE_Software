@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, CardTitle, CardSubtitle, CardBody, Form, FormGroup, Label, Input, Button } from 'reactstrap'
+import { Card, CardTitle, CardSubtitle, CardBody, Form, FormGroup, Label, Input, Button, Spinner, FormFeedback } from 'reactstrap'
 import { useHistory } from "react-router-dom";
 import useAuthentication from '../components/useAuthentication';
 import '../css/Login.css'
@@ -9,15 +9,24 @@ import config from "../config";
 const Login = () => {
 
     const history = useHistory();
-    const [username, setUserName] = useState();
-    const [password, setPassword] = useState();
+    const [username, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [invalid, setInvalid] = useState(false);
     const [error, setError] = useState('');
 
-
     const [user, setUser] = useAuthentication();
-    async function loginUser(event) {
+    
+    const loginUser = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setInvalid(false);
 
-        event.preventDefault()
+        if(password == ''){
+            setError('Enter a password');
+            setInvalid(true);
+            return;
+        }
 
         const res = await axios.post(`${config.API_URL}/login`, {
             "username": username,
@@ -33,18 +42,22 @@ const Login = () => {
         }
         else {
             setUser(null)
-            alert('Please check your username and password')
+            setError('Wrong password. Try again or click Forgot password to reset it.');
+            setInvalid(true);
+            setPassword('');
         }
+
+        setLoading(false);
     }
 
     return (
         <div className='login-container'>
             <div className='login-box'>
-                <Card>
+                <Card body>
                     <CardTitle className='login-title' tag='span'>Khan Electronics</CardTitle>
                     <CardSubtitle className='login-subtitle'>Log In</CardSubtitle>
                     <CardBody>
-                        <Form inline>
+                        <Form onSubmit={loginUser}>
                             <FormGroup floating>
                                 <Input
                                     id="username"
@@ -61,18 +74,23 @@ const Login = () => {
                                 <Input
                                     id="password"
                                     name="password"
+                                    value={password}
                                     placeholder="Password"
                                     type="password"
+                                    invalid={invalid}
                                     onChange={e => setPassword(e.target.value)}
                                 />
                                 <Label for="password">
                                     Password
                                 </Label>
+                                <FormFeedback>{error}</FormFeedback>
                             </FormGroup>
-                            <Button color='primary' onClick={loginUser}>
-                                Login
+                            <Button color='primary' type='submit'>
+                                <span>Login</span>
+                                <span className={`button-spinner ${loading ? 'loading' : ''}`}>
+                                    <Spinner size='sm' />
+                                </span>
                             </Button>
-
                         </Form>
                     </CardBody>
                 </Card>

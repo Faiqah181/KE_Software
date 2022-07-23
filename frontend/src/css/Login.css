@@ -23,3 +23,18 @@
     font-weight: 400;
     font-size: 16px;
 }
+
+.button-spinner{
+    margin-left: 10px;
+    display: none;
+}
+
+.loading {
+    display: inline;
+    animation: fade-in 0.2s;
+}
+
+@keyframes fade-in {
+    0% { opacity: 0%; margin-left: -10px; }
+    100% { opacity: 100%;}
+}
