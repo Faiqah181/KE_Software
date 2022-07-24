@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Card, CardTitle, CardSubtitle, CardBody, Form, FormGroup, Label, Input, Button } from 'reactstrap'
 import axios from 'axios';
 import config from "../config";
+import useAuthentication from '../components/useAuthentication';
 
 const Setting = () => {
 
+    const [user, setUser] = useAuthentication()
     const [username, setUserName] = useState();
     const [currentPassword, setCurrentPassword] = useState(); //whats currently in db
     const [newPassword, setNewPassword] = useState();
@@ -22,7 +24,9 @@ const Setting = () => {
 
     const NewPassword = async () => {
         try {
-            await axios.post(`${config.API_URL}/user-credential/${username}/${newPassword}`)
+            await axios.post(`${config.API_URL}/user-credential/${username}/${newPassword}`,{
+                headers: {'x-access-token': user,},
+            })
         }
         catch (e) {
             console.log(e);

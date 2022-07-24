@@ -9,15 +9,18 @@ import axios from "axios";
 import config from "../config";
 import { MDBDataTable } from "mdbreact";
 import cloneDeep from 'lodash/cloneDeep';
+import useAuthentication from "../components/useAuthentication";
 
 const Customer = () => {
 
     var Name, fatherName, mobile, Cnic, Address
+    const [user, setUser] = useAuthentication()
 
     const addCustomer = async () => {
 
         try {
             const promise = axios.post(`${config.API_URL}/customers`, {
+                headers: {'x-access-token': user,},
                 name: Name, mobile_num: mobile, cnic: Cnic, address: Address,
                 status: "current", wallet: 0, father_name: fatherName
             })
@@ -98,7 +101,9 @@ const Customer = () => {
 
     const getCustomers = async () => {
         try {
-            axios.get(`${config.API_URL}/customers`).then(response => {
+            axios.get(`${config.API_URL}/customers`, {
+                headers: {'x-access-token': user,},
+            }).then(response => {
                 setCustomerData(oldData => { let newData = cloneDeep(oldData); newData.rows = response.data; return newData })
             });
 

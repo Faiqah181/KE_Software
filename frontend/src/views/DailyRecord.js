@@ -3,6 +3,7 @@ import { Table, Input, DropdownMenu, Dropdown, DropdownToggle, DropdownItem, But
 import axios from 'axios';
 import config from "../config";
 import "../css/DailyRecord.css";
+import useAuthentication from "../components/useAuthentication";
 
 const DailyRecord = () => {
 
@@ -26,7 +27,7 @@ const DailyRecord = () => {
     const tableRef = useRef(null);
     const inputRefs = useRef({});
 
-
+    const [user, setUser] = useAuthentication()
     const [customers, setCustomers] = useState([]);
     const [days, setDays] = useState([]);
     const [monthToggle, setMonthToggle] = useState(false)
@@ -61,7 +62,9 @@ const DailyRecord = () => {
 
     const getCustomers = async () => {
         try {
-            const customerPromise = await axios.get(`${config.API_URL}/customers`);
+            const customerPromise = await axios.get(`${config.API_URL}/customers`, {
+                headers: { 'x-access-token': user, },
+            });
             setCustomers(await customerPromise.data);
         }
 
@@ -72,7 +75,9 @@ const DailyRecord = () => {
 
     const getDaily = async () => {
         try {
-            const dailyPromise = await axios.get(`${config.API_URL}/daily-records/${selectedYear}/${selectedMonth}`);
+            const dailyPromise = await axios.get(`${config.API_URL}/daily-records/${selectedYear}/${selectedMonth}`, {
+                headers: { 'x-access-token': user, },
+            });
             handleDailyPromise(await dailyPromise.data);
         }
         catch (error) {
@@ -95,7 +100,10 @@ const DailyRecord = () => {
     const saveDaily = async () => {
         try {
             const dailyData = { year: selectedYear, month: selectedMonth, data: record }
-            const dailyRecordPromise = await axios.post(`${config.API_URL}/daily-records`, dailyData)
+            const dailyRecordPromise = await axios.post(`${config.API_URL}/daily-records`, {
+                headers: { 'x-access-token': user, },
+                dailyData,
+            })
         }
         catch (error) {
             console.log(error);

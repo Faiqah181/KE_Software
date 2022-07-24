@@ -6,9 +6,11 @@ import LabelledText from "../components/LabelledText";
 import axios from "axios";
 import config from "../config";
 import "../css/Account.css"
+import useAuthentication from "../components/useAuthentication";
 
 const Account = () => {
 
+    const [user, setUser] = useAuthentication()
     const params = useParams();
     const id = params.id;
     const [account, setAccount] = useState();
@@ -18,7 +20,11 @@ const Account = () => {
         
         const fetchAccount = async () => {
             try {
-                const accountResult = await axios.get(`${config.API_URL}/Accounts/${id}`);
+                const accountResult = await axios.get(`${config.API_URL}/Accounts/${id}`, {
+                    headers: {
+                        'x-access-token': user,
+                    },
+                });
                 const fetchedAccount = accountResult.data;
                 
                 if(!fetchedAccount){

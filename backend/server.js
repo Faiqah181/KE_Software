@@ -23,14 +23,16 @@ app.listen(config.port, () => console.log(`Server listening at port ${config.por
 app.post("/api/login", async (req, res) => {
 
     const pass = await functions.getUserCredential(req.body.username)
+    if (req.body.password) {
+        if (req.body.password != pass) {
+            res.sendStatus(401);
+        }
+        else {
+            const token = jwt.sign({ username: req.body.username }, config.ACCESS_TOKEN_KEY)
+            res.status(200).send(token);
+        }
+    }
 
-    if (req.body.password != pass) {
-        res.sendStatus(401);
-    }
-    else {
-        const token = jwt.sign({ username: req.body.username }, config.ACCESS_TOKEN_KEY)
-        res.status(200).send(token);
-    }
 })
 
 app.use(Authentication)

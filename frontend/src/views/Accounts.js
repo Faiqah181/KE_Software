@@ -5,6 +5,7 @@ import axios from "axios";
 import config from "../config";
 import Select from 'react-select';
 import { Row, Col, Button, Modal, ModalBody, ModalFooter, ModalHeader, Form, FormGroup, Label, Input } from "reactstrap";
+import useAuthentication from "../components/useAuthentication";
 
 const Accounts = () => {
 
@@ -37,12 +38,13 @@ const Accounts = () => {
         ]
     }
 
+    const [user, setUser] = useAuthentication()
     const [accounts, setAccounts] = useState(accountData)
     const [isModalOpen, setModalOpen] = useState(false)
 
     const getAccounts = async () => {
         try {
-            axios.get(`${config.API_URL}/accounts`).then(response => {
+            axios.get(`${config.API_URL}/accounts`, {headers: {'x-access-token': user,},}).then(response => {
                 setAccounts(oldData => { let newData = cloneDeep(oldData); newData.rows = response.data; return newData })
             });
         }
@@ -66,6 +68,7 @@ const Accounts = () => {
             account.current.closed = false
             account.current.date_of_sale = new Date().toLocaleDateString()
             console.log(account)
+            
             const result = await axios.post(`${config.API_URL}/accounts`, account.current);
             
             if(result.status === 200){
@@ -90,7 +93,9 @@ const Accounts = () => {
     const getCustomers = async () => {
         try {
 
-            const customerPromise = await axios.get(`${config.API_URL}/customers`);
+            const customerPromise = await axios.get(`${config.API_URL}/customers`,{
+                headers: {'x-access-token': user,},
+            });
             setCustomerData(await customerPromise.data);
         }
 
