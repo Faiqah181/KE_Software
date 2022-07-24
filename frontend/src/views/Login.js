@@ -19,7 +19,6 @@ const Login = () => {
     
     const loginUser = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setInvalid(false);
 
         if(password == ''){
@@ -28,26 +27,30 @@ const Login = () => {
             return;
         }
 
-        const res = await axios.post(`${config.API_URL}/login`, {
-            "username": username,
-            "password": password
-        })
+        try {
+            setLoading(true);
+            const res = await axios.post(`${config.API_URL}/login`, {
+                "username": username,
+                "password": password
+            })
 
-        const d = await res
-        console.log(d.data.user)
-
-        if (d.status === 200) {
-            setUser(d.data.user);
-            history.push("/Dashboard");
+            if (res.status === 200) {
+                setUser(res.data);
+                history.push("/Dashboard");
+            }
         }
-        else {
+        catch (err) {
             setUser(null)
-            setError('Wrong password. Try again or click Forgot password to reset it.');
+            setError(err.response?.status === 401 ? 
+                'Wrong password. Try again or click Forgot password to reset it.' : 
+                'Unable to reach server at the moment. '
+            );
             setInvalid(true);
             setPassword('');
         }
-
-        setLoading(false);
+        finally {
+            setLoading(false);
+        }
     }
 
     return (
