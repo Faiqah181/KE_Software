@@ -28,10 +28,10 @@ function App() {
 
   useEffect(() => {
     const token = user;
-
     if (token) {
       try {
         jwt.decode(token)
+        state.user = token;
       }
       catch (error) {
         console.log(error)
