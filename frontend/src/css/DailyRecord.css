@@ -16,7 +16,8 @@
     *margin-left: -100px; /*ie7*/
 }
 
-.daily-table-inner td, th {
+.daily-table-inner td, 
+.daily-table-inner th {
     vertical-align: top;
     border-top: 1px solid #ccc;
     padding: 10px;

@@ -1,0 +1,18 @@
+.descriptive-btn {
+    padding-left: 20px;
+    padding-right: 20px;
+   margin-bottom: 20px;
+}
+
+.descriptive-btn-title {
+    text-align: left;
+    font-size: 20px;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+}
+
+.descriptive-btn-text {
+    text-align: left;
+    white-space: pre-wrap;
+    margin-bottom: 0.3rem;
+}
