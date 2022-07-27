@@ -1,0 +1,43 @@
+
+.custom-table {
+    margin: 1rem 0rem;
+    table-layout: fixed;
+}
+
+.custom-table thead tr {
+    background-color: var(--bs-primary);
+    font-weight: 500;
+    color: white;
+}
+
+.custom-table thead tr :first-child {
+    border-radius: 10px 0 0 0;
+}
+
+.custom-table thead tr :last-child {
+    border-radius: 0 10px 0 0;
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 0.8rem 1rem;
+}
+
+.custom-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.custom-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.custom-table tbody tr:last-of-type {
+    border-bottom: 2px solid var(--bs-primary);
+}
+
+.custom-table-border {
+    margin: 1rem 0rem;
+    padding: 1rem;
+    border: 1px solid #dddddd;
+    border-radius: 0.5rem;
+}
