@@ -6,7 +6,7 @@ const customerRouter = express.Router();
 customerRouter.get('/', (_req, res) => {
     //TODO
     //use or delete it
-    res.send({ })
+    res.send({})
 });
 
 customerRouter.get('/all', (req, res) => {
@@ -14,7 +14,19 @@ customerRouter.get('/all', (req, res) => {
 });
 
 customerRouter.get('/:id', (req, res) => {
-    customerController.getByID(req, res, req.params.id);
+    customerController.getByID(req, res);
+});
+
+customerRouter.get('/type/current', (req, res) => {
+    customerController.getCurrentCustomer(req, res);
+});
+
+customerRouter.get('/type/former', (req, res) => {
+    customerController.getFormerCustomer(req, res);
+});
+
+customerRouter.get('/type/defaulter', (req, res) => {
+    customerController.getDefaulterCustomer(req, res);
 });
 
 customerRouter.post('/add', (req, res) => {
@@ -24,6 +36,7 @@ customerRouter.post('/add', (req, res) => {
 customerRouter.delete('/delete', (req, res) => {
     customerController.deleteCustomer(req, res);
 });
+
 
 
 export default customerRouter;

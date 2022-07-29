@@ -14,8 +14,9 @@ controller.getAll = async (_req, res) => {
     }
 }
 
-controller.getByID = async (_req, res, id) => {
+controller.getByID = async (req, res) => {
     try {
+        const id  = req.params.id
         const customer = await Customer.findById(mongoose.Types.ObjectId(`${id}`));
         res.send(customer);
     }
@@ -26,8 +27,9 @@ controller.getByID = async (_req, res, id) => {
 }
 
 controller.addCustomer = async (req, res) => {
-    const customerToAdd = Customer(req.body);
+    
     try {
+        const customerToAdd = Customer(req.body);
         const addedCustomer = await Customer.addCustomer(customerToAdd);
         res.send(json(addedCustomer));
     }
@@ -42,6 +44,39 @@ controller.deleteCustomer = async (req, res) => {
     try {
         await Customer.deleteByID(customer);
         res.sendStatus(200);
+    }
+    catch (e) {
+        console.error(`Error: ${e}`);
+        res.sendStatus(500);
+    }
+}
+
+controller.getCurrentCustomer = async (req, res) => {
+    try {
+        const customer = await Customer.find({status : "current"});
+        res.send(customer);
+    }
+    catch (e) {
+        console.error(`Error: ${e}`);
+        res.sendStatus(500);
+    }
+}
+
+controller.getFormerCustomer = async (req, res) => {
+    try {
+        const customer = await Customer.find({status : "former"});
+        res.send(customer);
+    }
+    catch (e) {
+        console.error(`Error: ${e}`);
+        res.sendStatus(500);
+    }
+}
+
+controller.getDefaulterCustomer = async (req, res) => {
+    try {
+        const customer = await Customer.find({status : "defaulter"});
+        res.send(customer);
     }
     catch (e) {
         console.error(`Error: ${e}`);
