@@ -1,0 +1,15 @@
+.tertiary-btn {
+    border: 0px;
+    background: transparent;
+    font-weight: 500;
+    color: var(--bs-primary);
+    transition: background-color 0.4s;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+}
+
+.tertiary-btn:hover{
+    color: var(--bs-primary);
+    background-color: var(--primary-hover);
+}

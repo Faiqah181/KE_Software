@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Modal, ModalBody, ModalHeader, Row } from "reactstrap";
 import { BsCheckCircle, BsXCircle } from "react-icons/bs";
+import { BiArrowBack } from "react-icons/bi"
 import LabelledText from "../components/LabelledText";
+import TertiaryButton from "../components/TertiaryButton"
 import DescriptiveButton from "../components/DescriptiveButton";
 import CustomTable from "../components/CustomTable";
-import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
-import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+import { Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 
 import useAuthentication from "../components/useAuthentication";
 import axios from "axios";
@@ -14,7 +15,7 @@ import config from "../config";
 import "../css/Account.css"
 
 
-const Account = () => {
+const AccountDetails = () => {
 
     const [user, setUser] = useAuthentication()
     const params = useParams();
@@ -38,35 +39,12 @@ const Account = () => {
             } catch (error) {
                 console.log(error);
                 if(error.response?.status === 404) {
-                    //history.push('/404');
+                    history.push('/404');
                 }
             }
         }
 
         fetchAccount();
-
-        setAccount({
-            account_num: 656512,
-            item: 'YBR 125G',
-            cost: 2000,
-            retail_price: 2500,
-            installment_price: 100,
-            advance: 200,
-            balance: 0,
-            customer: {
-                "_id": "625ed624191a9bf15062cad8",
-                "name": "Dada Kulfi",
-                "cnic": "35201-4444565-1",
-                "address": "Shop 24, Kulfi Bazar, Lahore",
-                "mobile": "03217878987",
-                "wallet": 4500,
-                "status": "current",
-                "fatherName": "Pardada Kulfi"
-              },
-            discount: 0,
-            closed: false,
-            date_of_sale: '7/17/2022'
-        })
     }, [])
 
     const accountStatusColor = (acc) => {
@@ -81,8 +59,11 @@ const Account = () => {
 
     return (
         <div>
+            <TertiaryButton onClick={() => history.push('/Accounts')}>
+                <span><BiArrowBack /> Back to Accounts</span>
+            </TertiaryButton>
             <div>
-                <div className="account-title">Account No: {account?.account_num}</div>
+                <div className="account-title">Account No: {account?.accountNum}</div>
                 <Dropdown isOpen={statusDropdown} toggle={() => {setStatusDropdown(!statusDropdown)}} style={{display: "inline-block"}}>
                     <DropdownToggle color={accountStatusColor(account)}>
                         {
@@ -112,7 +93,7 @@ const Account = () => {
             <br />
             <Row>
                 <Col>
-                    <LabelledText name="Retail Price">{account?.retail_price}</LabelledText>
+                    <LabelledText name="Retail Price">{account?.retailPrice}</LabelledText>
                 </Col>
                 <Col>
                     <LabelledText name="Advance">{account?.advance}</LabelledText>
@@ -121,7 +102,7 @@ const Account = () => {
             <br />
             <Row>
                 <Col>
-                    <LabelledText name="Installment Price">{account?.installment_price}</LabelledText>
+                    <LabelledText name="Installment Price">{account?.installmentPrice}</LabelledText>
                 </Col>
                 <Col>
                     <LabelledText name="Balance">{account?.balance}</LabelledText>
@@ -181,4 +162,4 @@ const Account = () => {
     )
 }
 
-export default Account;
+export default AccountDetails;

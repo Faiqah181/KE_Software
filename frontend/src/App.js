@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import SideNav from './components/SideNav';
 import Titlebar from './components/Titlebar';
 import Accounts from './views/Accounts';
-import Account from './views/Account';
+import AccountDetails from './views/AccountDetails';
 import Dashboard from './views/Dashboard';
 import Customer from './views/Customers';
 import DailyRecord from './views/DailyRecord';
@@ -56,7 +56,7 @@ function App() {
             <CardBody>
               <div className='home'>
                 <Route exact path='/Accounts' component={Accounts} />
-                <Route path='/Accounts/:id' component={Account} />
+                <Route path='/Accounts/:id' component={AccountDetails} />
                 <Route exact path='/Dashboard' component={Dashboard} />
                 <Route exact path='/' component={Dashboard} />
                 <Route exact path='/Customers' component={Customer} />
