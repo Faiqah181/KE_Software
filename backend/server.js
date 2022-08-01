@@ -10,6 +10,7 @@ import jwt from "jsonwebtoken"
 import customerRouter from "./routes/customer.route.js";
 import userRouter from "./routes/user.route.js";
 import accountRouter from "./routes/account.router.js";
+import installmentRouter from "./routes/installment.router.js";
 
 const app = express();
 
@@ -35,13 +36,13 @@ app.post("/api/login", async (req, res) => {
 
 })
 
-app.use(Authentication)
+//app.use(Authentication)
 
 // --- Routers --- 
 app.use('/api/customers/', customerRouter);
 app.use('/api/users/', userRouter);
 app.use('/api/accounts/', accountRouter);
-
+app.use('/api/installments', installmentRouter);
 
 app.get("/api/users", async (req, res) => {
     const users = await functions.getCollection("users");

@@ -11,7 +11,7 @@ const initialize = async () => {
     console.log("Connection established")
     createCollection("accounts")
     createCollection("customers")
-    createCollection("dailyInstallments")
+    createCollection("InstallmentRecord")
     createCollection("inventory")
     createCollection("users")
   }

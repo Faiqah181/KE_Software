@@ -26,8 +26,9 @@ controller.getByID = async (_req, res, id) => {
 }
 
 controller.addAccount = async (req, res) => {
-    const accountToAdd = Account(req.body);
+    
     try {
+        const accountToAdd = Account(req.body);
         const addedAccount = await Account.addAccount(accountToAdd);
         res.send(json(addedAccount));
     }

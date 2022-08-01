@@ -5,8 +5,9 @@ const controller = {}
 
 
 controller.addUser = async (req, res) => {
-    const userToAdd = User(req.body);
+    
     try {
+        const userToAdd = User(req.body);
         const addedUser = await User.addUser(userToAdd);
         res.send(json(addedUser));
     }
@@ -17,8 +18,9 @@ controller.addUser = async (req, res) => {
 }
 
 controller.deleteUser = async (req, res) => {
-    const user = req.body;
+    
     try {
+        const user = req.body;
         await User.deleteByID(user);
         res.sendStatus(200);
     }
