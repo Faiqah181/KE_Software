@@ -31,7 +31,7 @@ controller.addCustomer = async (req, res) => {
     try {
         const customerToAdd = Customer(req.body);
         const addedCustomer = await Customer.addCustomer(customerToAdd);
-        res.send(json(addedCustomer));
+        res.send(addedCustomer);
     }
     catch (e) {
         console.error(`Error: ${e}`);

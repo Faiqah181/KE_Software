@@ -1,3 +1,5 @@
+import { BSONTypeError } from 'bson';
+import { MongoServerError } from 'mongodb';
 import mongoose from 'mongoose';
 import Account from '../models/account.model.js'
 
@@ -17,11 +19,17 @@ controller.getAll = async (_req, res) => {
 controller.getByID = async (_req, res, id) => {
     try {
         const customer = await Account.findById(mongoose.Types.ObjectId(`${id}`)).populate('customer');
-        res.send(customer);
+        if(customer) {
+            res.send(customer);
+        }
+        else res.sendStatus(404);
     }
     catch (e) {
         console.error(`Error: ${e}`);
-        res.sendStatus(500);
+        if(e instanceof BSONTypeError)  {
+            res.sendStatus(404);
+        }
+        else res.sendStatus(500);
     }
 }
 
@@ -30,11 +38,15 @@ controller.addAccount = async (req, res) => {
     try {
         const accountToAdd = Account(req.body);
         const addedAccount = await Account.addAccount(accountToAdd);
-        res.send(json(addedAccount));
+        await addedAccount.populate('customer');
+        res.send(addedAccount);
     }
     catch (e) {
         console.error(`Error: ${e}`);
-        res.sendStatus(500);
+        if(e instanceof MongoServerError && e.code ===  11000) {
+            res.status(409).send({message:  "Account Number already exists. Duplicate account numbers are not allowed."})
+        }
+        else res.sendStatus(500);
     }
 }
 
