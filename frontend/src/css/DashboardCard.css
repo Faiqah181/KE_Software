@@ -1,0 +1,22 @@
+.dashboard-card-title {
+    color: darkgray;
+    font-weight: 500;
+}
+
+.dashboard-card-value {
+    font-size: 1.8rem;
+}
+
+.dashboard-card-footer {
+    font-size: 0.8rem;
+}
+
+.dashboard-card-footer-positive {
+    color: limegreen;
+    font-weight: 700;
+}
+
+.dashboard-card-footer-negative {
+    color: darkred;
+    font-weight: 700;
+}
