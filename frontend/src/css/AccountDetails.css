@@ -1,0 +1,17 @@
+.account-title {
+    font-size: 22px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+@media print {
+    .print-section {
+        height: 1vh;
+        margin: 20px;
+    }
+
+    .print-btn {
+        display: none;
+    }
+}

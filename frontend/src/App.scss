@@ -12,10 +12,6 @@ $danger: #dc3545;
   flex-flow: column;
 }
 
-.home {
-  flex: auto;
-}
-
 #app {
   background: #FAFAFA;
   display: flex;
@@ -24,6 +20,6 @@ $danger: #dc3545;
 }
 
 #content {
-  margin: 1rem;
+  padding: 1rem;
   flex: auto;
 }

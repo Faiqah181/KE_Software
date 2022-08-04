@@ -23,63 +23,57 @@ import jwt from "jsonwebtoken";
 import NotFound from './views/404';
 
 function App() {
-  const store = useSnapshot(state);
-  const [user, setUser] = useAuthentication();
+	const store = useSnapshot(state);
+	const [user, setUser] = useAuthentication();
 
-  useEffect(() => {
-    const token = user;
-    if (token) {
-      try {
-        jwt.decode(token)
-        state.user = token;
-      }
-      catch (error) {
-        console.log(error)
-        setUser(null)
-      }
-    }
+	useEffect(() => {
+		const token = user;
+		if (token) {
+			try {
+				jwt.decode(token)
+				state.user = token;
+			}
+			catch (error) {
+				console.log(error)
+				setUser(null)
+			}
+		}
 
-  }, [])
+	}, [])
 
-  if (!store.user) {
-    return <Login />
-  }
+	if (!store.user) {
+		return <Login />
+	}
 
-  return (
+	return (
 
-    <div className="sub-root">
-      {store.user && <Titlebar />}
-      {store.user && <div id='app'>
-        <SideNav />
-        <div id='content'>
-          <Card>
-            <CardBody>
-              <div className='home'>
-                <Route exact path='/Accounts' component={Accounts} />
-                <Route path='/Accounts/:id' component={AccountDetails} />
-                <Route exact path='/Dashboard' component={Dashboard} />
-                <Route exact path='/' component={Dashboard} />
-                <Route exact path='/Customers' component={Customer} />
-                <Route exact path='/DailyRecord'>
-                  <DailyRecord days={days} />
-                </Route>
-                <Route exact path='/MonthlyRecord' component={MonthlyRecord} />
-                <Route exact path='/Inventory' component={Inventory} />
-                <Route exact path='/Setting' component = {Setting}/>
+		<div className="sub-root">
+			{store.user && <Titlebar />}
+			{store.user && <div id='app'>
+				<SideNav />
+				<div id='content'>
+					<Route exact path='/' component={Dashboard} />
+					<Route exact path='/Dashboard' component={Dashboard} />
 
-                <Route path='/404' component={NotFound} />
-              </div>
-            </CardBody>
-          </Card>
-        </div>
-      </div>}
-      <Route exact path='/Login'>
-        <Login />
-        <Notification />
-      </Route>
-    </div>
+					<Route exact path='/Accounts' component={Accounts} />
+					<Route path='/Accounts/:id' component={AccountDetails} />
+					<Route exact path='/Customers' component={Customer} />
+					<Route exact path='/DailyRecord' component={DailyRecord} />
+					<Route exact path='/MonthlyRecord' component={MonthlyRecord} />
+					<Route exact path='/Inventory' component={Inventory} />
+					<Route exact path='/Setting' component={Setting} />
 
-  );
+					<Route path='/404' component={NotFound} />
+				</div>
+			</div>}
+
+			<Route exact path='/Login'>
+				<Login />
+				<Notification />
+			</Route>
+		</div>
+
+	);
 }
 
 export default App;

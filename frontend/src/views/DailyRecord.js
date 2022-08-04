@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Table, Input, DropdownMenu, Dropdown, DropdownToggle, DropdownItem, Button } from "reactstrap"
+import { Card, CardBody, Table, Input, DropdownMenu, Dropdown, DropdownToggle, DropdownItem, Button } from "reactstrap"
 import axios from 'axios';
 import config from "../config";
 import "../css/DailyRecord.css";
@@ -7,22 +7,21 @@ import useAuthentication from "../components/useAuthentication";
 
 const DailyRecord = () => {
 
-    const months = useRef(
-        [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-        ]
-    )
+    const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+    ]
+
     const years = useRef([])
     const tableRef = useRef(null);
     const inputRefs = useRef({});
@@ -39,7 +38,7 @@ const DailyRecord = () => {
 
     const init = () => {
         const localDate = new Date();
-        setSelectedMonth(months.current[localDate.getMonth()])
+        setSelectedMonth(months[localDate.getMonth()])
 
         for (let year = localDate.getFullYear() - 5; year <= localDate.getFullYear(); year++) {
             years.current.push(year)
@@ -62,7 +61,7 @@ const DailyRecord = () => {
 
     const getCustomers = async () => {
         try {
-            const customerPromise = await axios.get(`${config.API_URL}/customers`, {
+            const customerPromise = await axios.get(`${config.API_URL}/customers/type/current`, {
                 headers: { 'x-access-token': user, },
             });
             setCustomers(await customerPromise.data);
@@ -112,12 +111,12 @@ const DailyRecord = () => {
 
     useEffect(() => {
         getCustomers();
-        init();
+        //init();
     }, [])
 
 
     useEffect(() => {
-        setDays(new Array(daysInMonth(months.current.indexOf(selectedMonth) + 1, selectedYear)).fill(0))
+        setDays(new Array(daysInMonth(months.indexOf(selectedMonth) + 1, selectedYear)).fill(0))
     }, [selectedMonth, selectedYear])
 
     useEffect(() => {
@@ -137,89 +136,91 @@ const DailyRecord = () => {
 
 
     return (
-        <div>
-            <div className="daily-row">
-                <Dropdown className="row-btn-left" isOpen={monthToggle} toggle={() => { setMonthToggle(!monthToggle) }}>
-                    <DropdownToggle caret>
-                        {selectedMonth}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        <DropdownItem className="dropdown" header>
-                            Select a month
-                        </DropdownItem>
-                        {
-                            months.current.map(m => {
-                                return (
-                                    <DropdownItem key={m} onClick={() => { setSelectedMonth(m) }}>{m}</DropdownItem>
-                                )
-                            })
-                        }
-                    </DropdownMenu>
-                </Dropdown>
-                <Dropdown className="row-btn-left" isOpen={yearToggle} toggle={() => { setYearToggle(!yearToggle) }}>
-                    <DropdownToggle caret>
-                        {selectedYear}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        <DropdownItem className="dropdown" header>
-                            Select year
-                        </DropdownItem>
-                        {
-                            years.current.map(y => {
-                                return (
-                                    <DropdownItem key={y} onClick={() => { setSelectedYear(y) }}>{y}</DropdownItem>
-                                )
-                            })
-                        }
-                    </DropdownMenu>
-                </Dropdown>
-                <Button className="row-btn-right" onClick={saveDaily}>Save</Button>
-            </div>
-
-            <div className="daily-row">
-                <Button className="row-btn-left" color="primary" onClick={() => scroll(-500)}>Left</Button>
-                <Button className="row-btn-right" color="primary" onClick={() => scroll(500)}>Right</Button>
-            </div>
-
-            <div className="daily-table-outer">
-                <div className="daily-table-inner" ref={tableRef}>
-                    <Table bordered>
-                        <thead>
-                            <tr>
-                                <th className="daily-table-fix">Customer</th>
-                                {days.map((_, day) => {
+        <Card>
+            <CardBody>
+                <div className="daily-row">
+                    <Dropdown className="row-btn-left" isOpen={monthToggle} toggle={() => { setMonthToggle(!monthToggle) }}>
+                        <DropdownToggle caret>
+                            {selectedMonth}
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem className="dropdown" header>
+                                Select a month
+                            </DropdownItem>
+                            {
+                                months.map(m => {
                                     return (
-                                        <th key={day + 1}>{day + 1}</th>
+                                        <DropdownItem key={m} onClick={() => { setSelectedMonth(m) }}>{m}</DropdownItem>
+                                    )
+                                })
+                            }
+                        </DropdownMenu>
+                    </Dropdown>
+                    <Dropdown className="row-btn-left" isOpen={yearToggle} toggle={() => { setYearToggle(!yearToggle) }}>
+                        <DropdownToggle caret>
+                            {selectedYear}
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem className="dropdown" header>
+                                Select year
+                            </DropdownItem>
+                            {
+                                years.current.map(y => {
+                                    return (
+                                        <DropdownItem key={y} onClick={() => { setSelectedYear(y) }}>{y}</DropdownItem>
+                                    )
+                                })
+                            }
+                        </DropdownMenu>
+                    </Dropdown>
+                    <Button className="row-btn-right" onClick={saveDaily}>Save</Button>
+                </div>
+
+                <div className="daily-row">
+                    <Button className="row-btn-left" color="primary" onClick={() => scroll(-500)}>Left</Button>
+                    <Button className="row-btn-right" color="primary" onClick={() => scroll(500)}>Right</Button>
+                </div>
+
+                <div className="daily-table-outer">
+                    <div className="daily-table-inner" ref={tableRef}>
+                        <Table bordered>
+                            <thead>
+                                <tr>
+                                    <th className="daily-table-fix">Customer</th>
+                                    {days.map((_, day) => {
+                                        return (
+                                            <th key={day + 1}>{day + 1}</th>
+                                        )
+                                    })}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {customers.map(c => {
+                                    return (
+                                        <tr key={c._id}>
+                                            <th className="daily-table-fix">
+                                                {c.name}
+                                            </th>
+                                            {days.map((_, day) => {
+                                                return (
+                                                    <td key={`${day + 1}`}>
+                                                        <div style={{ width: "5rem" }}>
+                                                            <input style={{ width: "32" }} ref={el => (inputRefs.current[`${c._id}/${day + 1}`] = el)} onChange={e => setRecordValue(day + 1, c._id, e.target.value)} type="number" />
+                                                        </div>
+                                                    </td>
+                                                )
+                                            })}
+                                        </tr>
                                     )
                                 })}
-                            </tr>
-                        </thead>
 
-                        <tbody>
-                            {customers.map(c => {
-                                return (
-                                    <tr key={c._id}>
-                                        <th className="daily-table-fix">
-                                            {c.name}
-                                        </th>
-                                        {days.map((_, day) => {
-                                            return (
-                                                <td key={`${day + 1}`}>
-                                                    <div style={{ width: "5rem" }}>
-                                                        <input style={{ width: "32" }} ref={el => (inputRefs.current[`${c._id}/${day + 1}`] = el)} onChange={e => setRecordValue(day + 1, c._id, e.target.value)} type="number" />
-                                                    </div>
-                                                </td>
-                                            )
-                                        })}
-                                    </tr>
-                                )
-                            })}
-
-                        </tbody>
-                    </Table>
+                            </tbody>
+                        </Table>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </CardBody>
+        </Card>
     );
 
 };
