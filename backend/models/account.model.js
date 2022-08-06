@@ -14,11 +14,15 @@ const accountSchema = mongoose.Schema({
     customer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Customer" 
-    }
+    },
+    monthlyPayments : [{
+        year : Number,
+        month: Number,
+        payment : Number
+    }]
 }, {collection: 'accounts'});
 
 const AccountModel = mongoose.model('Account', accountSchema);
-
 
 AccountModel.getAll = () => {
     return AccountModel.find({}).populate('customer');
