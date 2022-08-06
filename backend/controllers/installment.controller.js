@@ -45,9 +45,6 @@ const updateAccountsAndCustomer = async (customerId, currentAccounts, newSum) =>
 
         if (monthlyRecord.length != 0) {
             lastMonth = monthlyRecord[monthlyRecord.length - 1]
-            if (lastMonth.month === localMonth && lastMonth.year === localYear) {
-                payment = lastMonth.payment
-            }
         }
 
         if (currentAccounts[a].balance > newSum) {
@@ -70,14 +67,15 @@ const updateAccountsAndCustomer = async (customerId, currentAccounts, newSum) =>
             month: localMonth,
             payment: payment
         }
-        
-        if (lastMonth.month === localMonth && lastMonth.year === localYear) {
+
+        if (lastMonth.month === localMonth) {
+            currentMonthDetail.payment += lastMonth.payment
             monthlyRecord[monthlyRecord.length - 1] = currentMonthDetail
         }
-        else{
+        else {
             monthlyRecord[monthlyRecord.length] = currentMonthDetail
         }
-        
+
         await AccountModel.findOneAndUpdate({ _id: currentAccounts[a]._id }, { monthlyPayments: monthlyRecord })
 
     }
