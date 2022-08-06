@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb";
 import config from "./config.js";
-
+import CustomerModel from "./models/customer.model.js";
+import InstallmentModel from "./models/installment.model.js";
 const client = new MongoClient(config.mongoUrl)
 let database = {};
 
@@ -14,6 +15,9 @@ const initialize = async () => {
     createCollection("InstallmentRecord")
     createCollection("inventory")
     createCollection("users")
+
+    updateCustomerStatus()
+
   }
   catch (e) {
     console.log(e);
@@ -44,129 +48,6 @@ const createCollection = async (collectionName) => {
 
 }
 
-const insertDocument = async (collectionName, document) => {
-
-  try {
-    if (collectionExist(collectionName)) {
-      await database.collection(collectionName).insertOne(document);
-      console.log("document inserted")
-      return 200
-    }
-    else {
-      console.log("Collection doesn't exist")
-      return 503
-    }
-  } catch (e) {
-    console.log(e);
-    return 500
-  }
-
-}
-
-const getCollection = async (collectionName) => {
-  try {
-    if (collectionExist(collectionName)) {
-      const col = await database.collection(collectionName).find();
-      return (await col.toArray());
-    }
-  } catch (e) {
-    console.log(e)
-  }
-
-}
-
-const updateDailyRecord = async (record) => {
-
-  try {
-    if (collectionExist("dailyInstallments")) {
-      await database.collection("dailyInstallments").updateOne({ year: record.year },
-        { $set: { [`month.${record.month}`]: record.data } },
-        {
-          upsert: true
-        }
-      );
-      return 200
-    }
-  } catch (e) {
-    console.log(e);
-
-  }
-
-}
-
-const getDailyRecord = async (y, m) => {
-
-  try {
-    const record = await database.collection("dailyInstallments").find({ "year": parseInt(y) }).toArray()
-    const result = await record
-
-    return (result[0]?.month[`${m}`] ? result[0].month[`${m}`] : {})
-  }
-  catch (e) {
-    console.log(e)
-  }
-}
-
-const getMonthlyBalance = async (customerId, y, m) => {
-
-  try {
-    let totalAmount = 0
-    const monthAllRecords = await getDailyRecord(y, m)
-    if (monthAllRecords) {
-
-      const vals = Object.values(monthAllRecords);
-
-      vals.forEach(day => {
-        const dayRecords = Object.keys(day).map(key => {
-          if (key === customerId) {
-            return day[key];
-          }
-        });
-        dayRecords.forEach(v => {
-          if (v) {
-            totalAmount += parseInt(v)
-          }
-        });
-      });
-    }
-
-    return totalAmount
-
-  } catch (e) {
-    console.log(e)
-  }
-
-
-}
-
-const monthlyUpdateAccount = async (customerId) => {
-  try {
-    const acc = await database.collection("accounts").find({ "customer_id": `${customerId}`, closed: false }).toArray()
-    let m = new Date().toLocaleString('default', { month: 'long' });
-    const b = await getMonthlyBalance(customerId, new Date().getFullYear(), m);
-    let balance = b
-
-    for (let index = 0; index < acc.length && balance != 0; index++) {
-      console.log(acc[index])
-      if (acc[index]['balance'] >= balance) {
-        let temp = acc[index]['balance'] - balance;
-        await database.collection("accounts").updateOne({ '_id': acc[index]['_id'] }, { $set: { 'balance': `${temp}` } })
-        balance = 0
-      }
-      else {
-        await database.collection("accounts").updateOne({ '_id': acc[index]['_id'] }, { $set: { 'balance': 0 } })
-        balance = balance - acc[index]['balance']
-      }
-
-    }
-
-    return acc
-  }
-  catch (e) {
-    console.log(e)
-  }
-}
-
 const getUserCredential = async (userName) => {
 
   try {
@@ -181,27 +62,69 @@ const getUserCredential = async (userName) => {
 
 }
 
-const updatePassword = async (userName, password) => {
+const updateCustomerStatus = async () => {
 
-  try {
-    await database.collection("users").updateOne({ "userName": `${userName}` }, { $set: { "password": `${password}` } })
-    return 200
+  const localDate = new Date().getDate();
+  const localMonth = new Date().getMonth();
+  const localYear = new Date().getFullYear();
+
+  const yearRecord = await InstallmentModel.find({ year: localYear })
+  let prevMonthData;
+  const currentMonthData = yearRecord[0].months[localMonth]
+
+  if (localMonth != 0) {
+    prevMonthData = yearRecord[0].months[localMonth - 1]
   }
-  catch (e) {
-    console.log(e)
-    return 401
+  else {
+    let temp = localYear - 1
+    const prevYearRecord = await InstallmentModel.find({ year: temp })
+    prevMonthData = prevYearRecord[0].months[11]
   }
+
+  let paymentReceived = false
+  const currentCustomers = await CustomerModel.find({ status: 'current' })
+
+  currentCustomers.forEach(async c => {
+
+    if (currentMonthData != null) {
+      for (let i = 0; !paymentReceived && i < localDate; i++) {
+        if(currentMonthData.dailyRecord[i] != null){
+          const customersRecord = currentMonthData.dailyRecord[i].customerRecord
+          for (let j = 0; !paymentReceived && j < customersRecord.length; j++) {
+  
+            if (customersRecord[j].customer.equals(c._id)) {
+              paymentReceived = true
+            }
+          }
+        }
+        
+      }
+    }
+
+    if (prevMonthData != null) {
+      for (let i = prevMonthData.length - 1; !paymentReceived && i > localDate; i--) {
+        if(prevMonthData.dailyRecord[i] != null){
+          const customersRecord = prevMonthData.dailyRecord[i].customerRecord
+          for (let j = 0; !paymentReceived && j < customersRecord.length; j++) {
+  
+            if (customersRecord[j].customer.equals(c._id)) {
+              paymentReceived = true
+            }
+          }
+        }
+        
+      }
+    }
+    if (!paymentReceived) {
+      await CustomerModel.findOneAndUpdate({ _id: c._id }, { status: "defaulter" })
+    }
+
+  })
 
 }
 
 export default {
   initialize,
-  insertDocument,
-  getCollection,
-  updateDailyRecord,
-  getDailyRecord,
-  getMonthlyBalance,
-  monthlyUpdateAccount,
   getUserCredential,
-  updatePassword
+  updateCustomerStatus
 };

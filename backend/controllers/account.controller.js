@@ -2,6 +2,7 @@ import { BSONTypeError } from 'bson';
 import { MongoServerError } from 'mongodb';
 import mongoose from 'mongoose';
 import Account from '../models/account.model.js'
+import CustomerModel from '../models/customer.model.js'
 
 const controller = {};
 
@@ -38,6 +39,7 @@ controller.addAccount = async (req, res) => {
     try {
         const accountToAdd = Account(req.body);
         const addedAccount = await Account.addAccount(accountToAdd);
+        await CustomerModel.findOneAndUpdate({_id: accountToAdd.customer}, {status : "current"})
         await addedAccount.populate('customer');
         res.send(addedAccount);
     }
