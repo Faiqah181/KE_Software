@@ -10,7 +10,8 @@ const localYear = new Date().getFullYear();
 controller.getByMonthYear = async (req, res) => {
 
     try {
-        const data = InstallmentModel.find({ "year": req.params.year }, { months: { $slice: [req.params.month, 1] } });
+        const y = req.params.year
+        const data = await InstallmentModel.find({ year: y });
         res.send(data);
     }
     catch (e) {
@@ -35,8 +36,11 @@ function findMonthPayment(monthRecord, customerId) {
     return sum;
 }
 
-const updateAccountsAndCustomer = async (customerId, currentAccounts, newSum) => {
+const updateAccountsAndCustomer = async (customer, currentAccounts, newSum) => {
 
+    if (customer.status === 'defaulter') {
+        CustomerModel.findOneAndUpdate({ _id: customer._id }, { status: 'current' })
+    }
     for (let a = 0; a < currentAccounts.length; a++) {
 
         let monthlyRecord = currentAccounts[a].monthlyPayments
@@ -59,7 +63,7 @@ const updateAccountsAndCustomer = async (customerId, currentAccounts, newSum) =>
             newSum = newSum - currentAccounts[a].balance;
         }
         if (a == (currentAccounts.length - 1) && newSum === 0) {
-            await CustomerModel.findOneAndUpdate({ _id: customerId }, { status: "former" })
+            await CustomerModel.findOneAndUpdate({ _id: customer._id }, { status: "former" })
         }
 
         const currentMonthDetail = {
@@ -114,7 +118,9 @@ controller.addMonthlyRecord = async (req, res) => {
             let newSum = currentSum - prevSum;
 
             //Update Accounts and Customer balance/status/wallet
-            await updateAccountsAndCustomer(c._id, currentAccounts, newSum);
+            if (newSum > 0) {
+                await updateAccountsAndCustomer(c, currentAccounts, newSum);
+            }
 
         }
 
