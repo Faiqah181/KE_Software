@@ -1,36 +1,3 @@
-.daily-table-outer {
-    position: relative;
-    display: grid;
-}
-
-.daily-table-inner {
-    overflow-x: scroll;
-    overflow-y: visible;
-    margin-left: 100px;
-    scroll-behavior: smooth;
-}
-
-.daily-table-inner table {
-    table-layout: fixed; 
-    width: 100%;
-    *margin-left: -100px; /*ie7*/
-}
-
-.daily-table-inner td, 
-.daily-table-inner th {
-    vertical-align: top;
-    border-top: 1px solid #ccc;
-    padding: 10px;
-    width: 100px;
-}
-
-.daily-table-fix {
-    position: absolute;
-    *position: relative; /*ie7*/
-    margin-left: -100px;
-    width: 100px;
-  }
-
 .dropdown {
     background-color: "primary";
 }

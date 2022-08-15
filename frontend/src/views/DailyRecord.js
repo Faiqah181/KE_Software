@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Card, CardBody, Table, Input, DropdownMenu, Dropdown, DropdownToggle, DropdownItem, Button } from "reactstrap"
+import { Card, CardBody, Input, DropdownMenu, Dropdown, DropdownToggle, DropdownItem, Button } from "reactstrap"
+import InstallmentTable from "../components/InstallmentTable";
 import axios from 'axios';
 import config from "../config";
-import "../css/DailyRecord.css";
 import useAuthentication from "../components/useAuthentication";
+import "../css/DailyRecord.css";
 
 const DailyRecord = () => {
 
@@ -24,40 +25,22 @@ const DailyRecord = () => {
 
     const years = useRef([])
     const tableRef = useRef(null);
-    const inputRefs = useRef({});
 
-    const [user, setUser] = useAuthentication()
+    const [user] = useAuthentication()
     const [customers, setCustomers] = useState([]);
     const [days, setDays] = useState([]);
     const [monthToggle, setMonthToggle] = useState(false)
-    const [selectedMonth, setSelectedMonth] = useState('February')
+    const [selectedMonth, setSelectedMonth] = useState('February 2001')
     const [yearToggle, setYearToggle] = useState(false)
-    const [selectedYear, setSelectedYear] = useState('2001')
+    const [selectedYear, setSelectedYear] = useState('-')
 
-    const [record, setRecord] = useState(null)
+    const [installments, setInstallments] = useState(Array(31).fill().map(() => ({ })));
 
-    const init = () => {
-        const localDate = new Date();
-        setSelectedMonth(months[localDate.getMonth()])
-
-        for (let year = localDate.getFullYear() - 5; year <= localDate.getFullYear(); year++) {
-            years.current.push(year)
-        }
-        setSelectedYear(localDate.getFullYear())
-    }
+    const daysInMonth = (month, year) => new Date(year, month, 0).getDate()
 
     const scroll = (scrollOffset) => {
         tableRef.current.scrollLeft += scrollOffset;
     };
-
-    const setRecordValue = (day, customerId, value) => {
-        setRecord(prev => {
-            prev[day][customerId] = value
-            return prev
-        })
-    }
-
-    const daysInMonth = (month, year) => new Date(year, month, 0).getDate()
 
     const getCustomers = async () => {
         try {
@@ -66,43 +49,58 @@ const DailyRecord = () => {
             });
             setCustomers(await customerPromise.data);
         }
-
         catch (error) {
             console.log(error);
         }
     }
 
-    const getDaily = async () => {
+    const getInstallments = async () => {
         try {
-            const dailyPromise = await axios.get(`${config.API_URL}/daily-records/${selectedYear}/${selectedMonth}`, {
+            const monthNum = months.indexOf(selectedMonth) + 1;
+            const res = await axios.get(`${config.API_URL}/installments/${selectedYear}/${monthNum}`, {
                 headers: { 'x-access-token': user, },
             });
-            handleDailyPromise(await dailyPromise.data);
+
+            const data = await res.data;
+            setInstallments(() => {
+                const state = Array(31).fill().map(() => ({ }));
+                if(!data?.length) {
+                    return state;
+                }
+
+                for (let day = 0; day < days.length; day++) {
+                    
+                    for(const record of data.dailyRecord[day].customerRecord) {
+                        state[day][record.customer] = record.amount;
+                    }
+
+                    for(const c of customers) {
+                        if(!state[day][c._id]) {
+                            state[day][c._id] = "";
+                        }
+                    }
+                }
+                
+                return state;
+            });
         }
         catch (error) {
             console.log(error)
         }
     }
 
-    const handleDailyPromise = (dailyRecord) => {
-        for (const c of customers) {
-            for (const [d] of days.entries()) {
-                inputRefs.current[`${c._id}/${d + 1}`].value = (dailyRecord[d + 1]?.[c._id]) ? dailyRecord[d + 1][c._id] : ""
-                if (!dailyRecord[d + 1]) {
-                    dailyRecord[d + 1] = {}
-                }
-            }
-        }
-        setRecord(dailyRecord)
+    const setValue = (e, day, c_id) => {
+        e.persist();
+        setInstallments(prev => {
+            const newState = [...prev];
+            newState[day][c_id] = e.target.value;
+            return newState;
+        })
     }
 
     const saveDaily = async () => {
         try {
-            const dailyData = { year: selectedYear, month: selectedMonth, data: record }
-            const dailyRecordPromise = await axios.post(`${config.API_URL}/daily-records`, {
-                headers: { 'x-access-token': user, },
-                dailyData,
-            })
+            console.log(installments);
         }
         catch (error) {
             console.log(error);
@@ -110,39 +108,40 @@ const DailyRecord = () => {
     }
 
     useEffect(() => {
-        getCustomers();
-        //init();
+        const loadData = async () => {
+            await getCustomers();
+
+            const localDate = new Date();
+            setSelectedMonth(months[localDate.getMonth()]);
+            
+            for (let year = localDate.getFullYear() - 5; year <= localDate.getFullYear(); year++) {
+                years.current.push(year);
+            }
+            setSelectedYear(localDate.getFullYear());
+        }
+
+        loadData();
     }, [])
 
 
     useEffect(() => {
-        setDays(new Array(daysInMonth(months.indexOf(selectedMonth) + 1, selectedYear)).fill(0))
+        if(selectedYear !== '-' && selectedMonth !== "February 2001") {
+            setDays(new Array(daysInMonth(months.indexOf(selectedMonth) + 1, selectedYear)).fill(0))
+        }
     }, [selectedMonth, selectedYear])
 
     useEffect(() => {
-
-        setRecord(state => {
-            state = {}
-            for (let i = 1; i <= days.length; i++) {
-                state[i] = {}
-            }
-
-            return state
-        })
-
-        getDaily()
-
-    }, [customers, days])
-
+        if(selectedYear !== '-' && selectedMonth !== "February 2001") {
+            getInstallments();
+        }
+    }, [days])
 
     return (
         <Card>
             <CardBody>
                 <div className="daily-row">
                     <Dropdown className="row-btn-left" isOpen={monthToggle} toggle={() => { setMonthToggle(!monthToggle) }}>
-                        <DropdownToggle caret>
-                            {selectedMonth}
-                        </DropdownToggle>
+                        <DropdownToggle caret>{selectedMonth}</DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem className="dropdown" header>
                                 Select a month
@@ -150,16 +149,14 @@ const DailyRecord = () => {
                             {
                                 months.map(m => {
                                     return (
-                                        <DropdownItem key={m} onClick={() => { setSelectedMonth(m) }}>{m}</DropdownItem>
+                                        <DropdownItem key={m} onClick={() => { setSelectedMonth(m); getInstallments(); }}>{m}</DropdownItem>
                                     )
                                 })
                             }
                         </DropdownMenu>
                     </Dropdown>
                     <Dropdown className="row-btn-left" isOpen={yearToggle} toggle={() => { setYearToggle(!yearToggle) }}>
-                        <DropdownToggle caret>
-                            {selectedYear}
-                        </DropdownToggle>
+                        <DropdownToggle caret>{selectedYear}</DropdownToggle>
                         <DropdownMenu>
                             <DropdownItem className="dropdown" header>
                                 Select year
@@ -167,7 +164,7 @@ const DailyRecord = () => {
                             {
                                 years.current.map(y => {
                                     return (
-                                        <DropdownItem key={y} onClick={() => { setSelectedYear(y) }}>{y}</DropdownItem>
+                                        <DropdownItem key={y} onClick={() => { setSelectedYear(y); getInstallments(); }}>{y}</DropdownItem>
                                     )
                                 })
                             }
@@ -180,45 +177,37 @@ const DailyRecord = () => {
                     <Button className="row-btn-left" color="primary" onClick={() => scroll(-500)}>Left</Button>
                     <Button className="row-btn-right" color="primary" onClick={() => scroll(500)}>Right</Button>
                 </div>
+                <InstallmentTable tableRef={tableRef}>
+                    <thead>
+                        <tr>
+                            <th className="sticky-left sticky-top">Customer</th>
+                            {days.map((_, day) => {
+                                return (
+                                    <th className="sticky-top" key={day}>{day + 1}</th>
+                                )
+                            })}
+                        </tr>
+                    </thead>
 
-                <div className="daily-table-outer">
-                    <div className="daily-table-inner" ref={tableRef}>
-                        <Table bordered>
-                            <thead>
-                                <tr>
-                                    <th className="daily-table-fix">Customer</th>
+                    <tbody>
+                        {customers.map(c => {
+                            return (
+                                <tr key={c._id}>
+                                    <th className="sticky-left">
+                                        {c.name}
+                                    </th>
                                     {days.map((_, day) => {
                                         return (
-                                            <th key={day + 1}>{day + 1}</th>
+                                            <td key={`${day + 1}`}>
+                                                <Input value={installments[day][c._id] ? installments[day][c._id] : ""} onChange={(e) => setValue(e, day, c._id)} type="number" />
+                                            </td>
                                         )
                                     })}
                                 </tr>
-                            </thead>
-
-                            <tbody>
-                                {customers.map(c => {
-                                    return (
-                                        <tr key={c._id}>
-                                            <th className="daily-table-fix">
-                                                {c.name}
-                                            </th>
-                                            {days.map((_, day) => {
-                                                return (
-                                                    <td key={`${day + 1}`}>
-                                                        <div style={{ width: "5rem" }}>
-                                                            <input style={{ width: "32" }} ref={el => (inputRefs.current[`${c._id}/${day + 1}`] = el)} onChange={e => setRecordValue(day + 1, c._id, e.target.value)} type="number" />
-                                                        </div>
-                                                    </td>
-                                                )
-                                            })}
-                                        </tr>
-                                    )
-                                })}
-
-                            </tbody>
-                        </Table>
-                    </div>
-                </div>
+                            )
+                        })}
+                    </tbody>
+                </InstallmentTable>
             </CardBody>
         </Card>
     );

@@ -1,0 +1,65 @@
+.installment-table-outer {
+    display: grid;
+}
+
+.installment-table-inner {
+    max-height: 65vh;
+    overflow: auto;
+    scroll-behavior: smooth;
+}
+
+.installment-table-inner table {
+    table-layout: fixed; 
+    width: 100%;
+}
+
+.installment-table-inner th {
+    font-weight: 500;
+    color: white;
+}
+
+.installment-table-inner td,
+.installment-table-inner th {
+    padding: 10px;
+    width: 100px;
+    
+}
+
+.installment-table-inner td {
+    border-bottom: 1px solid #ccc;
+}
+
+
+.installment-table-inner .sticky-left {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: var(--bs-primary);
+}
+
+.installment-table-inner .sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--bs-primary);
+}
+
+.installment-table-inner .sticky-left.sticky-top {
+    z-index: 3;
+    border-radius: 10px 0 0 0;
+} 
+
+
+/*Hide input arrows*/
+.installment-table-inner input::-webkit-outer-spin-button,
+.installment-table-inner input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.installment-table-inner input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+
