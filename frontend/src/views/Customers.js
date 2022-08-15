@@ -7,7 +7,7 @@ import axios from "axios";
 import config from "../config";
 import useAuthentication from "../components/useAuthentication";
 import CustomTable from "../components/CustomTable";
-import { Tbody, Td, Thead, Tr } from "react-super-responsive-table";
+import { Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
 
 const Customer = () => {
 
@@ -114,11 +114,11 @@ const Customer = () => {
                         <CustomTable isEmpty={!customers.length}>
                             <Thead>
                                 <Tr>
-                                    <Td>Name</Td>
-                                    <Td>Mobile No</Td>
-                                    <Td>Address</Td>
-                                    <Td>CNIC</Td>
-                                    <Td>Wallet</Td>
+                                    <Th>Name</Th>
+                                    <Th>Mobile No</Th>
+                                    <Th>Address</Th>
+                                    <Th>CNIC</Th>
+                                    <Th>Wallet</Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
