@@ -12,7 +12,7 @@ controller.getByMonthYear = async (req, res) => {
     try {
         const y = req.params.year
         const data = await InstallmentModel.find({ year: y });
-        res.send(data);
+        res.send(data[0]?.months[req.params.month]);
     }
     catch (e) {
         console.error(`Error: ${e}`);

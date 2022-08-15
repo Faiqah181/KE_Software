@@ -69,6 +69,10 @@ const updateCustomerStatus = async () => {
   const localYear = new Date().getFullYear();
 
   const yearRecord = await InstallmentModel.find({ year: localYear })
+  
+  if(!yearRecord[0]){
+    return;
+  }
   let prevMonthData;
   const currentMonthData = yearRecord[0].months[localMonth]
 
