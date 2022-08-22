@@ -72,7 +72,7 @@ const updateAccountsAndCustomer = async (customer, currentAccounts, newSum) => {
             payment: payment
         }
 
-        if (lastMonth.month === localMonth) {
+        if (lastMonth?.month === localMonth) {
             currentMonthDetail.payment += lastMonth.payment
             monthlyRecord[monthlyRecord.length - 1] = currentMonthDetail
         }
@@ -107,7 +107,7 @@ controller.addMonthlyRecord = async (req, res) => {
 
             //find previous received payments
             let prevSum = 0;
-            if (localRecord) {
+            if (localRecord.length) {
                 localMonthRecord = localRecord[0].months[localMonth];
                 prevSum = findMonthPayment(localMonthRecord, c._id);
             }

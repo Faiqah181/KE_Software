@@ -34,7 +34,7 @@ const DailyRecord = () => {
     const [yearToggle, setYearToggle] = useState(false)
     const [selectedYear, setSelectedYear] = useState('-')
 
-    const [installments, setInstallments] = useState(Array(31).fill().map(() => ({ })));
+    const [installments, setInstallments] = useState(Array(31).fill().map(() => ({})));
 
     const daysInMonth = (month, year) => new Date(year, month, 0).getDate()
 
@@ -57,30 +57,30 @@ const DailyRecord = () => {
     const getInstallments = async () => {
         try {
             const monthNum = months.indexOf(selectedMonth) + 1;
-            const res = await axios.get(`${config.API_URL}/installments/${selectedYear}/${monthNum}`, {
+            const res = await axios.get(`${config.API_URL}/installments/${selectedYear}/${monthNum}`,{
                 headers: { 'x-access-token': user, },
             });
 
             const data = await res.data;
             setInstallments(() => {
-                const state = Array(31).fill().map(() => ({ }));
-                if(!data?.length) {
+                const state = Array(31).fill().map(() => ({}));
+                if (!data?.length) {
                     return state;
                 }
 
                 for (let day = 0; day < days.length; day++) {
-                    
-                    for(const record of data.dailyRecord[day].customerRecord) {
+
+                    for (const record of data.dailyRecord[day].customerRecord) {
                         state[day][record.customer] = record.amount;
                     }
 
-                    for(const c of customers) {
-                        if(!state[day][c._id]) {
+                    for (const c of customers) {
+                        if (!state[day][c._id]) {
                             state[day][c._id] = "";
                         }
                     }
                 }
-                
+
                 return state;
             });
         }
@@ -101,6 +101,28 @@ const DailyRecord = () => {
     const saveDaily = async () => {
         try {
             console.log(installments);
+            const data = { dailyRecord: [] };
+            
+            for (let day = 0; day < days.length; day++) {
+                data.dailyRecord[day] = {
+                    date: (new Date(parseInt(selectedYear), months.indexOf(selectedMonth), day + 1)).toISOString().split('T')[0],
+                    customerRecord: [],
+                };
+                
+                for (const customer in installments[day]) {
+                    if(installments[day][customer]) {
+                        data.dailyRecord[day].customerRecord.push({
+                            customer: customer,
+                            amount: parseInt(installments[day][customer])
+                        });
+                    }
+                }
+            }
+
+            await axios.post(`${config.API_URL}/installments/add`, data, {
+                headers: { 'x-access-token': user, },
+            })
+
         }
         catch (error) {
             console.log(error);
@@ -113,7 +135,7 @@ const DailyRecord = () => {
 
             const localDate = new Date();
             setSelectedMonth(months[localDate.getMonth()]);
-            
+
             for (let year = localDate.getFullYear() - 5; year <= localDate.getFullYear(); year++) {
                 years.current.push(year);
             }
@@ -125,13 +147,13 @@ const DailyRecord = () => {
 
 
     useEffect(() => {
-        if(selectedYear !== '-' && selectedMonth !== "February 2001") {
+        if (selectedYear !== '-' && selectedMonth !== "February 2001") {
             setDays(new Array(daysInMonth(months.indexOf(selectedMonth) + 1, selectedYear)).fill(0))
         }
     }, [selectedMonth, selectedYear])
 
     useEffect(() => {
-        if(selectedYear !== '-' && selectedMonth !== "February 2001") {
+        if (selectedYear !== '-' && selectedMonth !== "February 2001") {
             getInstallments();
         }
     }, [days])
@@ -139,6 +161,8 @@ const DailyRecord = () => {
     return (
         <Card>
             <CardBody>
+                <h2>Installments</h2>
+
                 <div className="daily-row">
                     <Dropdown className="row-btn-left" isOpen={monthToggle} toggle={() => { setMonthToggle(!monthToggle) }}>
                         <DropdownToggle caret>{selectedMonth}</DropdownToggle>
