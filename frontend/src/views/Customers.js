@@ -11,12 +11,18 @@ import { Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
 
 const Customer = () => {
 
-    const [user, setUser] = useAuthentication();
+    const [user] = useAuthentication();
     const newCustomer = useRef({});
 
-    const [customers, setCustomers] = useState([])
-    const [defaulters, setDefaulters] = useState([])
-    const [formers, setFormers] = useState([])
+    const [search, setSearch] = useState('');
+    const [customers, setCustomers] = useState([]);
+    const [filteredCustomers, setFilteredCustomers] = useState([]);
+
+    const [defaulters, setDefaulters] = useState([]);
+    const [filteredDefaulters, setFilteredDefaulters] = useState([]);
+
+    const [formers, setFormers] = useState([]);
+    const [filteredFormers, setFilteredFormers] = useState([]);
     const [activeTab, setActiveTab] = useState("1");
     const [isModalOpen, setModalOpen] = useState(false)
 
@@ -55,38 +61,81 @@ const Customer = () => {
         else if (target.id === "C_address") { newCustomer.current.address = target.value }
     }
 
-    const getCustomers = async () => {
-        try {
-            const currentPromise = axios.get(`${config.API_URL}/customers/type/current`, {
-                headers: { 'x-access-token': user }
-            });
-            const defaulterPromise = axios.get(`${config.API_URL}/customers/type/defaulter`, {
-                headers: { 'x-access-token': user }
-            });
-            const formerPromise = axios.get(`${config.API_URL}/customers/type/former`, {
-                headers: { 'x-access-token': user }
-            });
-
-            const res = await Promise.all([currentPromise, defaulterPromise, formerPromise]);
-
-            setCustomers(res[0].data);
-            setDefaulters(res[1].data);
-            setFormers(res[2].data);
+    const searchChanged = (e, tab) => {
+        if (e) {
+            setSearch(e.target.value.trim().toLowerCase());
         }
-        catch (error) {
-            console.log(error);
+
+        const searchText = e ? e.target.value.trim().toLowerCase() : search;
+
+        if (tab === "1") {
+            setFilteredCustomers(searchText ?
+                customers.filter(c =>
+                    c.name.toLowerCase().includes(searchText) || c.address.toLowerCase().includes(searchText)
+                ) : customers
+            );
+        }
+        else if (tab === "2") {
+            setFilteredDefaulters(searchText ?
+                defaulters.filter(c =>
+                    c.name.toLowerCase().includes(searchText) || c.address.toLowerCase().includes(searchText)
+                ) : defaulters
+            );
+        }
+        else if (tab === "3") {
+            setFilteredFormers(searchText ?
+                defaulters.filter(c =>
+                    c.name.toLowerCase().includes(searchText) || c.address.toLowerCase().includes(searchText)
+                ) : formers
+            );
         }
     }
 
+
     useEffect(() => {
+
+        const getCustomers = async () => {
+            try {
+                const currentPromise = axios.get(`${config.API_URL}/customers/type/current`, {
+                    headers: { 'x-access-token': user }
+                });
+                const defaulterPromise = axios.get(`${config.API_URL}/customers/type/defaulter`, {
+                    headers: { 'x-access-token': user }
+                });
+                const formerPromise = axios.get(`${config.API_URL}/customers/type/former`, {
+                    headers: { 'x-access-token': user }
+                });
+
+                const res = await Promise.all([currentPromise, defaulterPromise, formerPromise]);
+
+                setCustomers(res[0].data);
+                setDefaulters(res[1].data);
+                setFormers(res[2].data);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
         getCustomers();
     }, [])
 
+    useEffect(() => {
+        searchChanged(null, "1");
+    }, [customers])
+
+    useEffect(() => {
+        searchChanged(null, "2");
+    }, [defaulters])
+    
+    useEffect(() => {
+        searchChanged(null, "3");
+    }, [formers])
 
     return (
         <Card>
             <CardBody>
-                <h1>Customers</h1>
+                <h2>Customers</h2>
 
                 <div style={{ display: "flow-root" }}>
                     <Button style={{ float: "right" }} id="addCustomerBtn" color="primary" onClick={() => { setModalOpen(!isModalOpen) }}>Add Customer </Button>
@@ -111,7 +160,7 @@ const Customer = () => {
                 </Nav>
                 <TabContent activeTab={activeTab}>
                     <TabPane tabId="1">
-                        <CustomTable isEmpty={!customers.length}>
+                        <CustomTable searchable isEmpty={!customers.length} searchEvent={(e) => searchChanged(e, "1")}>
                             <Thead>
                                 <Tr>
                                     <Th>Name</Th>
@@ -122,7 +171,7 @@ const Customer = () => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {customers.map(c => {
+                                {filteredCustomers.map(c => {
                                     return (
                                         <Tr key={c._id}>
                                             <Td>{c.name}</Td>
@@ -137,7 +186,7 @@ const Customer = () => {
                         </CustomTable>
                     </TabPane>
                     <TabPane tabId="2">
-                        <CustomTable isEmpty={!defaulters.length}>
+                        <CustomTable searchable isEmpty={!defaulters.length} searchEvent={(e) => searchChanged(e, "2")}>
                             <Thead>
                                 <Tr>
                                     <Td>Name</Td>
@@ -148,7 +197,7 @@ const Customer = () => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {defaulters.map(c => {
+                                {filteredDefaulters.map(c => {
                                     return (
                                         <Tr key={c._id}>
                                             <Td>{c.name}</Td>
@@ -163,7 +212,7 @@ const Customer = () => {
                         </CustomTable>
                     </TabPane>
                     <TabPane tabId="3">
-                        <CustomTable isEmpty={!formers.length}>
+                        <CustomTable searchable isEmpty={!formers.length} searchEvent={(e) => searchChanged(e, "3")}>
                             <Thead>
                                 <Tr>
                                     <Td>Name</Td>
@@ -174,7 +223,7 @@ const Customer = () => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {formers.map(c => {
+                                {filteredFormers.map(c => {
                                     return (
                                         <Tr key={c._id}>
                                             <Td>{c.name}</Td>
