@@ -2,22 +2,29 @@ import { MongoClient } from "mongodb";
 import config from "./config.js";
 import CustomerModel from "./models/customer.model.js";
 import InstallmentModel from "./models/installment.model.js";
+import UserModel from "./models/user.model.js";
 const client = new MongoClient(config.mongoUrl)
 let database = {};
 
 const initialize = async () => {
   try {
     await client.connect();
-    database = await client.db(config.dbName);
+    database = client.db(config.dbName);
     console.log("Connection established")
-    createCollection("accounts")
-    createCollection("customers")
-    createCollection("InstallmentRecord")
-    createCollection("inventory")
-    createCollection("users")
+    // createCollection("accounts")
+    // createCollection("customers")
+    // createCollection("InstallmentRecord")
+    // createCollection("inventory")
+    // createCollection("users")
+    
+    const users = await UserModel.find({})
+    if (!users.length) {
+      //Default User
+      UserModel({ userName: "ShuaibGhazi", password: "shuaib" }).save()
+    }
 
-    updateCustomerStatus()
-
+    updateCustomerStatus();
+      
   }
   catch (e) {
     console.log(e);
@@ -69,8 +76,8 @@ const updateCustomerStatus = async () => {
   const localYear = new Date().getFullYear();
 
   const yearRecord = await InstallmentModel.find({ year: localYear })
-  
-  if(!yearRecord[0]){
+
+  if (!yearRecord[0]) {
     return;
   }
   let prevMonthData;
@@ -92,31 +99,31 @@ const updateCustomerStatus = async () => {
 
     if (currentMonthData != null) {
       for (let i = 0; !paymentReceived && i < localDate; i++) {
-        if(currentMonthData.dailyRecord[i] != null){
+        if (currentMonthData.dailyRecord[i] != null) {
           const customersRecord = currentMonthData.dailyRecord[i].customerRecord
           for (let j = 0; !paymentReceived && j < customersRecord.length; j++) {
-  
+
             if (customersRecord[j].customer.equals(c._id)) {
               paymentReceived = true
             }
           }
         }
-        
+
       }
     }
 
     if (prevMonthData != null) {
       for (let i = prevMonthData.length - 1; !paymentReceived && i > localDate; i--) {
-        if(prevMonthData.dailyRecord[i] != null){
+        if (prevMonthData.dailyRecord[i] != null) {
           const customersRecord = prevMonthData.dailyRecord[i].customerRecord
           for (let j = 0; !paymentReceived && j < customersRecord.length; j++) {
-  
+
             if (customersRecord[j].customer.equals(c._id)) {
               paymentReceived = true
             }
           }
         }
-        
+
       }
     }
     if (!paymentReceived) {

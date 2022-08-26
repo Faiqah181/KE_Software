@@ -85,8 +85,8 @@ const updateAccountsAndCustomer = async (customer, currentAccounts, newSum) => {
     }
 
     if (newSum > 0) {
-        const walletPrice = c.wallet + newSum;
-        await CustomerModel.findOneAndUpdate({ _id: c._id }, { wallet: walletPrice, status: 'former' })
+        const walletPrice = customer.wallet + newSum;
+        await CustomerModel.findOneAndUpdate({ _id: customer._id }, { wallet: walletPrice, status: 'former' })
     }
 }
 
@@ -128,10 +128,21 @@ controller.addMonthlyRecord = async (req, res) => {
         await Promise.all(promises)
 
         //save record
-        localRecord[0].months[localMonth] = record
-        const r = await InstallmentModel.findOneAndUpdate({ "year": localYear }, { "months": localRecord[0].months })
-        res.send(r)
-
+        if(!localRecord[0]){
+            localRecord[0] = {
+                year: localYear,
+                months: []
+            }
+            localRecord[0].months[localMonth] = record
+            const r = await InstallmentModel(localRecord[0]).save()
+            res.send(r)
+        }
+        else {
+            localRecord[0].months[localMonth] = record
+            const r = await InstallmentModel.findOneAndUpdate({ "year": localYear }, { "months": localRecord[0].months })
+            res.send(r)
+        }
+        
     }
     catch (e) {
 

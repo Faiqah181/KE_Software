@@ -11,11 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "backup-mongodb": "^0.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.17.3",
+    "graceful-fs": "^4.2.10",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.5.0",
-    "mongoose": "^6.4.6"
+    "mongodb-restore": "^1.6.2",
+    "mongoose": "^6.5.3"
   }
 }

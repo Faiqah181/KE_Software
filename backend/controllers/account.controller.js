@@ -20,14 +20,14 @@ controller.getAll = async (_req, res) => {
 controller.getByID = async (_req, res, id) => {
     try {
         const customer = await Account.findById(mongoose.Types.ObjectId(`${id}`)).populate('customer');
-        if(customer) {
+        if (customer) {
             res.send(customer);
         }
         else res.sendStatus(404);
     }
     catch (e) {
         console.error(`Error: ${e}`);
-        if(e instanceof BSONTypeError)  {
+        if (e instanceof BSONTypeError) {
             res.sendStatus(404);
         }
         else res.sendStatus(500);
@@ -35,18 +35,18 @@ controller.getByID = async (_req, res, id) => {
 }
 
 controller.addAccount = async (req, res) => {
-    
+
     try {
-        const accountToAdd = Account(req.body);
-        const addedAccount = await Account.addAccount(accountToAdd);
-        await CustomerModel.findOneAndUpdate({_id: accountToAdd.customer}, {status : "current"})
-        await addedAccount.populate('customer');
+        const accountToAdd = Account(req.body.account);
+        let addedAccount = await Account.addAccount(accountToAdd);
+        await CustomerModel.findOneAndUpdate({ _id: accountToAdd.customer }, { status: "current", wallet: req.body.wallet })
+        addedAccount = await addedAccount.populate('customer');
         res.send(addedAccount);
     }
     catch (e) {
         console.error(`Error: ${e}`);
-        if(e instanceof MongoServerError && e.code ===  11000) {
-            res.status(409).send({message:  "Account Number already exists. Duplicate account numbers are not allowed."})
+        if (e instanceof MongoServerError && e.code === 11000) {
+            res.status(409).send({ message: "Account Number already exists. Duplicate account numbers are not allowed." })
         }
         else res.sendStatus(500);
     }

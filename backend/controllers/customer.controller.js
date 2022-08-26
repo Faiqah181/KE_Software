@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import CustomerModel from '../models/customer.model.js';
 import Customer from '../models/customer.model.js'
 
 const controller = {};
@@ -82,6 +83,21 @@ controller.getDefaulterCustomer = async (req, res) => {
         console.error(`Error: ${e}`);
         res.sendStatus(500);
     }
+}
+
+controller.updateCustomerWallet = async (req, res) => {
+
+    try{
+        const customerId = req.body.customerId
+        const walletAmount = rq.body.walletAmount
+        await CustomerModel.findByIdAndUpdate({id: customerId}, {wallet : walletAmount})
+        res.sendStatus(200)
+    }
+    catch(error){
+        console.log(error)
+        res.sendStatus(500)
+    }
+
 }
 
 export default controller;
