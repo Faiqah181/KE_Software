@@ -91,6 +91,18 @@ const Customer = () => {
         }
     }
 
+    const CustomerTableRow = ({data}) => {
+        return (
+            <Tr key={data._id}>
+                <Td>{data.name}</Td>
+                <Td>{data.mobile}</Td>
+                <Td>{data.address}</Td>
+                <Td>{data.cnic}</Td>
+                <Td>{data.wallet}</Td>
+            </Tr>
+        )
+    }
+
 
     useEffect(() => {
 
@@ -171,17 +183,7 @@ const Customer = () => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {filteredCustomers.map(c => {
-                                    return (
-                                        <Tr key={c._id}>
-                                            <Td>{c.name}</Td>
-                                            <Td>{c.mobile}</Td>
-                                            <Td>{c.address}</Td>
-                                            <Td>{c.cnic}</Td>
-                                            <Td>{c.wallet}</Td>
-                                        </Tr>
-                                    )
-                                })}
+                                {filteredCustomers.map(c => <CustomerTableRow data={c} /> )}
                             </Tbody>
                         </CustomTable>
                     </TabPane>
@@ -189,25 +191,15 @@ const Customer = () => {
                         <CustomTable searchable isEmpty={!defaulters.length} searchEvent={(e) => searchChanged(e, "2")}>
                             <Thead>
                                 <Tr>
-                                    <Td>Name</Td>
-                                    <Td>Mobile No</Td>
-                                    <Td>Address</Td>
-                                    <Td>CNIC</Td>
-                                    <Td>Wallet</Td>
+                                    <Th>Name</Th>
+                                    <Th>Mobile No</Th>
+                                    <Th>Address</Th>
+                                    <Th>CNIC</Th>
+                                    <Th>Wallet</Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {filteredDefaulters.map(c => {
-                                    return (
-                                        <Tr key={c._id}>
-                                            <Td>{c.name}</Td>
-                                            <Td>{c.mobile}</Td>
-                                            <Td>{c.address}</Td>
-                                            <Td>{c.cnic}</Td>
-                                            <Td>{c.wallet}</Td>
-                                        </Tr>
-                                    )
-                                })}
+                                {filteredDefaulters.map(c => <CustomerTableRow data={c} /> )}
                             </Tbody>
                         </CustomTable>
                     </TabPane>
@@ -215,25 +207,15 @@ const Customer = () => {
                         <CustomTable searchable isEmpty={!formers.length} searchEvent={(e) => searchChanged(e, "3")}>
                             <Thead>
                                 <Tr>
-                                    <Td>Name</Td>
-                                    <Td>Mobile No</Td>
-                                    <Td>Address</Td>
-                                    <Td>CNIC</Td>
-                                    <Td>Wallet</Td>
+                                    <Th>Name</Th>
+                                    <Th>Mobile No</Th>
+                                    <Th>Address</Th>
+                                    <Th>CNIC</Th>
+                                    <Th>Wallet</Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {filteredFormers.map(c => {
-                                    return (
-                                        <Tr key={c._id}>
-                                            <Td>{c.name}</Td>
-                                            <Td>{c.mobile}</Td>
-                                            <Td>{c.address}</Td>
-                                            <Td>{c.cnic}</Td>
-                                            <Td>{c.wallet}</Td>
-                                        </Tr>
-                                    )
-                                })}
+                                {filteredFormers.map(c => <CustomerTableRow data={c} /> )}
                             </Tbody>
                         </CustomTable>
                     </TabPane>

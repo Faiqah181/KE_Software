@@ -28,6 +28,8 @@ const DailyRecord = () => {
 
     const [user] = useAuthentication()
     const [customers, setCustomers] = useState([]);
+    const [formers, setFormers] = useState([]);
+    const [defaulters, setDefaulters] = useState([]);
     const [days, setDays] = useState([]);
     const [monthToggle, setMonthToggle] = useState(false)
     const [selectedMonth, setSelectedMonth] = useState('February 2001')
@@ -44,10 +46,20 @@ const DailyRecord = () => {
 
     const getCustomers = async () => {
         try {
-            const customerPromise = await axios.get(`${config.API_URL}/customers/type/current`, {
+            const customerPromise = axios.get(`${config.API_URL}/customers/type/current`, {
                 headers: { 'x-access-token': user, },
             });
-            setCustomers(await customerPromise.data);
+            const defaulterPromise = axios.get(`${config.API_URL}/customers/type/defaulter`, {
+                headers: { 'x-access-token': user }
+            });
+            const formerPromise = axios.get(`${config.API_URL}/customers/type/former`, {
+                headers: { 'x-access-token': user }
+            });
+            const res = await Promise.all([customerPromise, defaulterPromise, formerPromise]);
+            
+            setCustomers(res[0].data);
+            setDefaulters(res[1].data);
+            setFormers(res[2].data);
         }
         catch (error) {
             console.log(error);
@@ -218,6 +230,38 @@ const DailyRecord = () => {
                             return (
                                 <tr key={c._id}>
                                     <th className="sticky-left">
+                                        {c.name}
+                                    </th>
+                                    {days.map((_, day) => {
+                                        return (
+                                            <td key={`${day + 1}`}>
+                                                <Input value={installments[day][c._id] ? installments[day][c._id] : ""} onChange={(e) => setValue(e, day, c._id)} type="number" />
+                                            </td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        })}
+                        {formers.map(c => {
+                            return (
+                                <tr key={c._id}>
+                                    <th className="sticky-left inactive">
+                                        {c.name}
+                                    </th>
+                                    {days.map((_, day) => {
+                                        return (
+                                            <td key={`${day + 1}`}>
+                                                <Input value={installments[day][c._id] ? installments[day][c._id] : ""} onChange={(e) => setValue(e, day, c._id)} type="number" />
+                                            </td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        })}
+                        {defaulters.map(c => {
+                            return (
+                                <tr key={c._id}>
+                                    <th className="sticky-left danger">
                                         {c.name}
                                     </th>
                                     {days.map((_, day) => {

@@ -29,7 +29,6 @@
     border-bottom: 1px solid #ccc;
 }
 
-
 .installment-table-inner .sticky-left {
     position: sticky;
     left: 0;
@@ -48,6 +47,14 @@
     z-index: 3;
     border-radius: 10px 0 0 0;
 } 
+
+.installment-table-inner .sticky-left.inactive {
+    background-color: var(--bs-secondary);
+}
+
+.installment-table-inner .sticky-left.defaulter {
+    background-color: var(--bs-danger);
+}
 
 
 /*Hide input arrows*/

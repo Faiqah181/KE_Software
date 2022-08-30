@@ -157,7 +157,7 @@ const Accounts = () => {
 
         <Card>
             <CardBody>
-                <h1>Accounts</h1>
+                <h2>Accounts</h2>
                 <div style={{ display: "flow-root" }}>
                     <>
                         <Button style={{ float: "right" }} id="addAccountBtn" color="primary" onClick={() => { setModalOpen(!isModalOpen) }}>Add Account</Button>
