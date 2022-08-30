@@ -18,7 +18,6 @@ const SideNav = () => {
         <div id="header">
             <ProSidebar collapsed={store.isCollapsed}>
                 <SidebarHeader>
-
                 </SidebarHeader>
 
                 <SidebarContent>
@@ -39,17 +38,14 @@ const SideNav = () => {
                             <Link to={"/DailyRecord"}></Link>
                             Daily Record
                         </MenuItem>
-                        <MenuItem active={store.isSelected === "MonthlyRecord"} icon={<BiBarChart />} onClick={() => state.isSelected = "MonthlyRecord"}>
-                            <Link to={"/MonthlyRecord"}></Link>
-                            MonthlyRecord
-                        </MenuItem>
+                        
                        
                     </Menu>
                 </SidebarContent>
 
                 <SidebarFooter>
                     <Menu iconShape="square">
-                        <MenuItem icon={<BiCog />}>
+                        <MenuItem active={store.isSelected === "Settings"} icon={<BiCog />} onClick={() => state.isSelected = "Settings"} >
                             <Link to={"/Setting"}/>
                             Settings
                         </MenuItem>
