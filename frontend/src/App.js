@@ -12,11 +12,9 @@ import MonthlyRecord from './views/MonthlyRecord';
 import Inventory from './views/Inventory';
 import Setting from './views/Settings';
 import Login from './views/Login';
-import { Card, CardBody } from "reactstrap"
 import { state } from './store'
 import { useSnapshot } from 'valtio';
 import useAuthentication from './components/useAuthentication';
-import days from "./days"
 import Notification from './components/Notification';
 import jwt from "jsonwebtoken";
 

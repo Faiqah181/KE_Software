@@ -48,12 +48,12 @@ const Dashboard = () => {
 
     const getAccounts = async () => {
         try {
-            const accountPromise = await axios.get(`${config.API_URL}/accounts`, {
+            const accountPromise = await axios.get(`${config.API_URL}/accounts/all`, {
                 headers: {
                     'x-access-token': user,
                 },
             });
-            setAccountNum(await accountPromise.data.length)
+            setAccountNum(await accountPromise.data.length);
         }
 
         catch (error) {
@@ -102,7 +102,7 @@ const Dashboard = () => {
   
     return (
         <div >
-            <h3>Dashboard</h3>
+            <h2>Dashboard</h2>
             <Row>
                 <Col sm={5}>
                     <Row>
