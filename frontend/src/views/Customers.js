@@ -21,8 +21,8 @@ const Customer = () => {
     const [defaulters, setDefaulters] = useState([]);
     const [filteredDefaulters, setFilteredDefaulters] = useState([]);
 
-    const [formers, setFormers] = useState([]);
-    const [filteredFormers, setFilteredFormers] = useState([]);
+    const [inactives, setInactives] = useState([]);
+    const [filteredInactives, setFilteredInactives] = useState([]);
     const [activeTab, setActiveTab] = useState("1");
     const [isModalOpen, setModalOpen] = useState(false)
 
@@ -83,10 +83,10 @@ const Customer = () => {
             );
         }
         else if (tab === "3") {
-            setFilteredFormers(searchText ?
+            setFilteredInactives(searchText ?
                 defaulters.filter(c =>
                     c.name.toLowerCase().includes(searchText) || c.address.toLowerCase().includes(searchText)
-                ) : formers
+                ) : inactives
             );
         }
     }
@@ -114,15 +114,15 @@ const Customer = () => {
                 const defaulterPromise = axios.get(`${config.API_URL}/customers/type/defaulter`, {
                     headers: { 'x-access-token': user }
                 });
-                const formerPromise = axios.get(`${config.API_URL}/customers/type/former`, {
+                const inactivePromise = axios.get(`${config.API_URL}/customers/type/inactive`, {
                     headers: { 'x-access-token': user }
                 });
 
-                const res = await Promise.all([currentPromise, defaulterPromise, formerPromise]);
+                const res = await Promise.all([currentPromise, defaulterPromise, inactivePromise]);
 
                 setCustomers(res[0].data);
                 setDefaulters(res[1].data);
-                setFormers(res[2].data);
+                setInactives(res[2].data);
             }
             catch (error) {
                 console.log(error);
@@ -142,7 +142,7 @@ const Customer = () => {
     
     useEffect(() => {
         searchChanged(null, "3");
-    }, [formers])
+    }, [inactives])
 
     return (
         <Card>
@@ -166,7 +166,7 @@ const Customer = () => {
                     </NavItem>
                     <NavItem>
                         <NavLink className={activeTab === "3" ? "active" : ""} onClick={() => setActiveTab("3")}>
-                            Former Customers
+                            Inactive Customers
                         </NavLink>
                     </NavItem>
                 </Nav>
@@ -204,7 +204,7 @@ const Customer = () => {
                         </CustomTable>
                     </TabPane>
                     <TabPane tabId="3">
-                        <CustomTable searchable isEmpty={!formers.length} searchEvent={(e) => searchChanged(e, "3")}>
+                        <CustomTable searchable isEmpty={!inactives.length} searchEvent={(e) => searchChanged(e, "3")}>
                             <Thead>
                                 <Tr>
                                     <Th>Name</Th>
@@ -215,7 +215,7 @@ const Customer = () => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {filteredFormers.map(c => <CustomerTableRow data={c} /> )}
+                                {filteredInactives.map(c => <CustomerTableRow data={c} /> )}
                             </Tbody>
                         </CustomTable>
                     </TabPane>

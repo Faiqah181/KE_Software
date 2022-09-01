@@ -28,7 +28,7 @@ const DailyRecord = () => {
 
     const [user] = useAuthentication()
     const [customers, setCustomers] = useState([]);
-    const [formers, setFormers] = useState([]);
+    const [inactives, setInactives] = useState([]);
     const [defaulters, setDefaulters] = useState([]);
     const [days, setDays] = useState([]);
     const [monthToggle, setMonthToggle] = useState(false)
@@ -52,14 +52,14 @@ const DailyRecord = () => {
             const defaulterPromise = axios.get(`${config.API_URL}/customers/type/defaulter`, {
                 headers: { 'x-access-token': user }
             });
-            const formerPromise = axios.get(`${config.API_URL}/customers/type/former`, {
+            const inactivePromise = axios.get(`${config.API_URL}/customers/type/inactive`, {
                 headers: { 'x-access-token': user }
             });
-            const res = await Promise.all([customerPromise, defaulterPromise, formerPromise]);
+            const res = await Promise.all([customerPromise, defaulterPromise, inactivePromise]);
             
             setCustomers(res[0].data);
             setDefaulters(res[1].data);
-            setFormers(res[2].data);
+            setInactives(res[2].data);
         }
         catch (error) {
             console.log(error);
@@ -242,7 +242,7 @@ const DailyRecord = () => {
                                 </tr>
                             )
                         })}
-                        {formers.map(c => {
+                        {inactives.map(c => {
                             return (
                                 <tr key={c._id}>
                                     <th className="sticky-left inactive">

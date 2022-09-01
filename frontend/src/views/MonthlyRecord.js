@@ -1,6 +1,6 @@
 ///record of each account
 ///sort w.r.t to date of sale
-///search type:defaulter/current/former , name:, mobile:, account no.;
+///search type:defaulter/current/inactive , name:, mobile:, account no.;
 
 import React, { useState, useEffect, useRef } from "react";
 import { List, Card, CardTitle, CardText, DropdownMenu, Dropdown, DropdownToggle, DropdownItem } from "reactstrap"

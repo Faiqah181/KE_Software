@@ -21,8 +21,8 @@ customerRouter.get('/type/current', (req, res) => {
     customerController.getCurrentCustomer(req, res);
 });
 
-customerRouter.get('/type/former', (req, res) => {
-    customerController.getFormerCustomer(req, res);
+customerRouter.get('/type/inactive', (req, res) => {
+    customerController.getinactiveCustomer(req, res);
 });
 
 customerRouter.get('/type/defaulter', (req, res) => {

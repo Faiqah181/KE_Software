@@ -11,11 +11,6 @@ const initialize = async () => {
     await client.connect();
     database = client.db(config.dbName);
     console.log("Connection established")
-    // createCollection("accounts")
-    // createCollection("customers")
-    // createCollection("InstallmentRecord")
-    // createCollection("inventory")
-    // createCollection("users")
     
     const users = await UserModel.find({})
     if (!users.length) {
