@@ -28,7 +28,7 @@ function findMonthPayment(monthRecord, customerId) {
 
             const x = mongoose.Types.ObjectId(p.customer);
             if (x.equals(customerId)) {
-                sum = sum + p.amount
+                sum += p.amount
             }
         })
     })
@@ -38,8 +38,8 @@ function findMonthPayment(monthRecord, customerId) {
 
 const updateAccountsAndCustomer = async (customer, currentAccounts, newSum) => {
 
-    if (customer.status === 'defaulter') {
-        CustomerModel.findOneAndUpdate({ _id: customer._id }, { status: 'current' })
+    if (customer.status === "defaulter") {
+        await CustomerModel.findOneAndUpdate({ _id: customer._id }, { status: "current" })
     }
     for (let a = 0; a < currentAccounts.length; a++) {
 
@@ -55,15 +55,16 @@ const updateAccountsAndCustomer = async (customer, currentAccounts, newSum) => {
             const newBalance = currentAccounts[a].balance - newSum;
             payment += newSum;
             await AccountModel.findOneAndUpdate({ _id: currentAccounts[a]._id }, { balance: newBalance });
-            newSum = newSum - currentAccounts[a].balance;
+            newSum = 0;
         }
         else {
             payment += currentAccounts[a].balance
             await AccountModel.findOneAndUpdate({ _id: currentAccounts[a]._id }, { balance: 0, closed: true });
             newSum = newSum - currentAccounts[a].balance;
+            currentAccounts[a].balance = 0
         }
-        if (a == (currentAccounts.length - 1) && newSum === 0) {
-            await CustomerModel.findOneAndUpdate({ _id: customer._id }, { status: "former" })
+        if (a == (currentAccounts.length - 1) && currentAccounts[a].balance === 0) {
+            await CustomerModel.findOneAndUpdate({ _id: customer._id }, { status: "inactive" })
         }
 
         const currentMonthDetail = {
@@ -86,18 +87,15 @@ const updateAccountsAndCustomer = async (customer, currentAccounts, newSum) => {
 
     if (newSum > 0) {
         const walletPrice = customer.wallet + newSum;
-        await CustomerModel.findOneAndUpdate({ _id: customer._id }, { wallet: walletPrice, status: 'former' })
+        await CustomerModel.findOneAndUpdate({ _id: customer._id }, { wallet: walletPrice, status: 'inactive' })
     }
 }
 
 controller.addMonthlyRecord = async (req, res) => {
 
-    let record;
-    let localMonthRecord;
-
     try {
 
-        record = req.body;
+        const record = req.body;
         const localRecord = await InstallmentModel.find({ "year": localYear });
         const currentCustomers = await CustomerModel.find({});
 
@@ -108,8 +106,8 @@ controller.addMonthlyRecord = async (req, res) => {
             //find previous received payments
             let prevSum = 0;
             if (localRecord.length) {
-                localMonthRecord = localRecord[0].months[localMonth];
-                prevSum = findMonthPayment(localMonthRecord, c._id);
+                const localMonthRecord = localRecord[0].months[localMonth];
+                prevSum = localMonthRecord ? findMonthPayment(localMonthRecord, c._id) : 0;
             }
             //find current received payments
             let currentSum = findMonthPayment(record, c._id);
@@ -133,9 +131,10 @@ controller.addMonthlyRecord = async (req, res) => {
                 year: localYear,
                 months: []
             }
+            localRecord[0].months = Array.apply(null,Array(12)).map(a=>null) 
             localRecord[0].months[localMonth] = record
-            const r = await InstallmentModel(localRecord[0]).save()
-            res.send(r)
+            let r = await InstallmentModel(localRecord[0])
+            res.send(await r.save())
         }
         else {
             localRecord[0].months[localMonth] = record
