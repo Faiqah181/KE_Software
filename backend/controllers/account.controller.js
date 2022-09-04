@@ -5,6 +5,7 @@ import Account from '../models/account.model.js'
 import CustomerModel from '../models/customer.model.js'
 
 const controller = {};
+const localMonth = new Date().getMonth();
 
 controller.getAll = async (_req, res) => {
     try {
@@ -16,6 +17,23 @@ controller.getAll = async (_req, res) => {
         res.sendStatus(500);
     }
 }
+
+controller.getCurrentMonthAccount = async (req, res) => {
+    try {
+        const accounts = await Account.find({})
+        let currentMonthAccount = [];
+        for (const acc of accounts) {
+            if(acc.dateOfSale.getMonth() == localMonth){
+                currentMonthAccount.push(acc)
+            }
+        }
+        res.send(currentMonthAccount.length + "");
+    }
+    catch (e) {
+        console.error(`Error: ${e}`);
+        res.sendStatus(500);
+    }
+} 
 
 controller.getByID = async (_req, res, id) => {
     try {

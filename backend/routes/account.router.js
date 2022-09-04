@@ -8,6 +8,10 @@ accountRouter.get('/all', (req, res) => {
     accountController.getAll(req, res);
 });
 
+accountRouter.get('/accountnum', (req, res)=>{
+    accountController.getCurrentMonthAccount(req, res);
+})
+
 accountRouter.get('/:id', (req, res) => {
     accountController.getByID(req, res, req.params.id);
 });

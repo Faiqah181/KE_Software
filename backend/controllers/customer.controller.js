@@ -100,4 +100,26 @@ controller.updateCustomerWallet = async (req, res) => {
 
 }
 
+controller.getCurrentCustomerAmount = async (req, res) => {
+    try {
+        const customer = await Customer.find({status : "current"});
+        res.send(customer.length+"");
+    }
+    catch (e) {
+        console.error(`Error: ${e}`);
+        res.sendStatus(500);
+    }
+}
+
+controller.getDefaulterCustomerAmount = async (req, res) => {
+    try {
+        const customer = await Customer.find({status : "defaulter"});
+        res.send(customer.length);
+    }
+    catch (e) {
+        console.error(`Error: ${e}`);
+        res.sendStatus(500);
+    }
+}
+
 export default controller;

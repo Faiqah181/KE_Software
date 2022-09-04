@@ -21,11 +21,19 @@ customerRouter.get('/type/current', (req, res) => {
     customerController.getCurrentCustomer(req, res);
 });
 
+customerRouter.get('/amount/current', (req, res) => {
+    customerController.getCurrentCustomerAmount(req, res);
+});
+
 customerRouter.get('/type/inactive', (req, res) => {
     customerController.getinactiveCustomer(req, res);
 });
 
 customerRouter.get('/type/defaulter', (req, res) => {
+    customerController.getDefaulterCustomer(req, res);
+});
+
+customerRouter.get('/amount/defaulter', (req, res) => {
     customerController.getDefaulterCustomer(req, res);
 });
 
