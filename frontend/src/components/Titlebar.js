@@ -19,7 +19,7 @@ const Titlebar = () => {
     }
 
     return (
-        <Navbar color="primary" expand="md" dark >
+        <Navbar className='titlebar' color="primary" expand="md" dark >
             <NavbarBrand>
                 <div className="toggle-icon" onClick={() => { state.isCollapsed = (!state.isCollapsed) }}>
                     <FiMenu />
@@ -31,9 +31,7 @@ const Titlebar = () => {
             </NavbarBrand>
             <Collapse navbar>
                 <Nav className="me-auto" navbar >
-
                 </Nav>
-
                 <UncontrolledDropdown inNavbar>
                     <DropdownToggle caret color='primary'>
                         Shuaib Ghazi
