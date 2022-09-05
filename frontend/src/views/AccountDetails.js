@@ -25,6 +25,8 @@ const AccountDetails = () => {
     const [account, setAccount] = useState();
     const [statusDropdown, setStatusDropdown] = useState(false);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [accMonthlyDetails, setMonthlyDetails] = useState();
+
     const history = useHistory();
 
     const printRef = useRef();
@@ -54,6 +56,25 @@ const AccountDetails = () => {
 
         fetchAccount();
     }, [])
+
+    const setMonthlyRecord = async () => {
+        try {
+
+            const accMonthlyDetails = account.monthlyPayments
+            let balance = account.openingBalance
+
+            for (const i in accMonthlyDetails) {
+                balance = balance - accMonthlyDetails[i]
+                accMonthlyDetails[i].balance = balance
+            }
+            setMonthlyDetails(accMonthlyDetails);
+        }
+        catch (e) {
+            console.log("Account COntroller: getMonthlyRecord")
+            console.log(e)
+        }
+
+    }
 
     const accountStatusColor = (acc) => {
         if (acc?.closed === true) {
@@ -118,7 +139,7 @@ const AccountDetails = () => {
                             <LabelledText name="Installment Price">{account?.installmentPrice}</LabelledText>
                         </Col>
                         <Col>
-                            <LabelledText name="Balance">{account?.balance}</LabelledText>
+                            <LabelledText name="Opening Balance">{account?.openingBalance}</LabelledText>
                         </Col>
                     </Row>
 
@@ -131,21 +152,18 @@ const AccountDetails = () => {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            <Tr>
-                                <Td>January</Td>
-                                <Td>5500</Td>
-                                <Td>15000</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>February</Td>
-                                <Td>8000</Td>
-                                <Td>12000</Td>
-                            </Tr>
-                            <Tr>
-                                <Td>March</Td>
-                                <Td>25000</Td>
-                                <Td>55000</Td>
-                            </Tr>
+                            {
+                                accMonthlyDetails?.map(a => {
+                                    return (
+                                        <Tr>
+                                            <Td>{a.month}</Td>
+                                            <Td>{a.payment}</Td>
+                                            <Td>{a.balance}</Td>
+                                        </Tr>
+                                    )
+                                })
+                            }
+
                         </Tbody>
                     </CustomTable>
                 </div>

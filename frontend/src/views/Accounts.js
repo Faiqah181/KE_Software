@@ -69,6 +69,7 @@ const Accounts = () => {
             account.current.dateOfSale = new Date().toLocaleDateString()
             account.current.monthlyPayments = []
             account.current.balance = balance
+            account.current.openingBalance = balance
             account.current.installmentPrice = installmentPrice
 
             const result = await axios.post(`${config.API_URL}/accounts/add`,
@@ -172,7 +173,10 @@ const Accounts = () => {
                                 <Col>
                                     <FormGroup>
                                         <Label for="A_number">Account Number</Label>
-                                        <Input id="A_number" name="Account Number" onChange={(evt) => { account.current.accountNum = evt.target.value }} placeholder="Enter Account Number"></Input>
+                                        <Input id="A_number" name="Account Number" onChange={(evt) => { account.current.accountNum = evt.target.value;
+                                        setAddBtnDisable(true); 
+                                        setCalculateBtnDisable(false)
+                                        }} placeholder="Enter Account Number"></Input>
                                     </FormGroup>
                                 </Col>
                                 <Col>
@@ -264,6 +268,7 @@ const Accounts = () => {
                             <Th>Account  Number</Th>
                             <Th>Customer</Th>
                             <Th>Item</Th>
+                            <Th>Date of Sale</Th>
                             <Th>Balance</Th>
                         </Tr>
                     </Thead>
@@ -274,6 +279,7 @@ const Accounts = () => {
                                     <Td>{acc.accountNum}</Td>
                                     <Td>{acc.customer.name}</Td>
                                     <Td>{acc.item}</Td>
+                                    <Td>{acc.dateOfSale}</Td>
                                     <Td>{acc.balance}</Td>
                                 </Tr>
                             )
