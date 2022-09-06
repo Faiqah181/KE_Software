@@ -22,6 +22,7 @@ const DailyRecord = () => {
         'November',
         'December',
     ]
+    const today = new Date();
 
     const years = useRef([])
     const tableRef = useRef(null);
@@ -35,6 +36,7 @@ const DailyRecord = () => {
     const [selectedMonth, setSelectedMonth] = useState('February 2001')
     const [yearToggle, setYearToggle] = useState(false)
     const [selectedYear, setSelectedYear] = useState('-')
+    const [isEditable, setEditable] = useState(true);
 
     const [installments, setInstallments] = useState(Array(31).fill().map(() => ({})));
 
@@ -68,15 +70,16 @@ const DailyRecord = () => {
 
     const getInstallments = async () => {
         try {
-            const monthNum = months.indexOf(selectedMonth) + 1;
+            const monthNum = months.indexOf(selectedMonth);
             const res = await axios.get(`${config.API_URL}/installments/${selectedYear}/${monthNum}`,{
                 headers: { 'x-access-token': user, },
             });
 
             const data = await res.data;
+            console.log(data)
             setInstallments(() => {
-                const state = Array(31).fill().map(() => ({}));
-                if (!data?.length) {
+                const state = Array(31).fill().map(() => ({ }));
+                if (!data?.dailyRecord?.length) {
                     return state;
                 }
 
@@ -92,6 +95,7 @@ const DailyRecord = () => {
                         }
                     }
                 }
+                console.log(state);
 
                 return state;
             });
@@ -160,7 +164,12 @@ const DailyRecord = () => {
 
     useEffect(() => {
         if (selectedYear !== '-' && selectedMonth !== "February 2001") {
-            setDays(new Array(daysInMonth(months.indexOf(selectedMonth) + 1, selectedYear)).fill(0))
+            setDays(new Array(daysInMonth(months.indexOf(selectedMonth) + 1, selectedYear)).fill(0));
+            if (today.getFullYear() === selectedYear && today.getMonth() === months.indexOf(selectedMonth)) {
+                setEditable(true);
+            }
+            else setEditable(false);
+            
         }
     }, [selectedMonth, selectedYear])
 
@@ -206,7 +215,7 @@ const DailyRecord = () => {
                             }
                         </DropdownMenu>
                     </Dropdown>
-                    <Button className="row-btn-right" onClick={saveDaily}>Save</Button>
+                    <Button className="row-btn-right" onClick={saveDaily} disabled={!isEditable}>Save</Button>
                 </div>
 
                 <div className="daily-row">
@@ -235,7 +244,7 @@ const DailyRecord = () => {
                                     {days.map((_, day) => {
                                         return (
                                             <td key={`${day + 1}`}>
-                                                <Input value={installments[day][c._id] ? installments[day][c._id] : ""} onChange={(e) => setValue(e, day, c._id)} type="number" />
+                                                <Input value={installments[day][c._id] ? installments[day][c._id] : ""} onChange={(e) => setValue(e, day, c._id)} disabled={!isEditable} type="number" />
                                             </td>
                                         )
                                     })}
@@ -251,7 +260,7 @@ const DailyRecord = () => {
                                     {days.map((_, day) => {
                                         return (
                                             <td key={`${day + 1}`}>
-                                                <Input value={installments[day][c._id] ? installments[day][c._id] : ""} onChange={(e) => setValue(e, day, c._id)} type="number" />
+                                                <Input value={installments[day][c._id] ? installments[day][c._id] : ""} onChange={(e) => setValue(e, day, c._id)} disabled={!isEditable} type="number" />
                                             </td>
                                         )
                                     })}
@@ -267,7 +276,7 @@ const DailyRecord = () => {
                                     {days.map((_, day) => {
                                         return (
                                             <td key={`${day + 1}`}>
-                                                <Input value={installments[day][c._id] ? installments[day][c._id] : ""} onChange={(e) => setValue(e, day, c._id)} type="number" />
+                                                <Input value={installments[day][c._id] ? installments[day][c._id] : ""} onChange={(e) => setValue(e, day, c._id)} disabled={!isEditable} type="number" />
                                             </td>
                                         )
                                     })}
