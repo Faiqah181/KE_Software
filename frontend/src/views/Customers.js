@@ -31,7 +31,7 @@ const Customer = () => {
         e.preventDefault();
 
         try {
-            newCustomer.current.status = "current";
+            newCustomer.current.status = "inactive";
             newCustomer.current.wallet = 0;
 
             const res = await axios.post(`${config.API_URL}/customers/add`, newCustomer.current, {
@@ -84,7 +84,7 @@ const Customer = () => {
         }
         else if (tab === "3") {
             setFilteredInactives(searchText ?
-                defaulters.filter(c =>
+                inactives.filter(c =>
                     c.name.toLowerCase().includes(searchText) || c.address.toLowerCase().includes(searchText)
                 ) : inactives
             );
