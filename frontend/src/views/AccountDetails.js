@@ -27,6 +27,21 @@ const AccountDetails = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [accMonthlyDetails, setMonthlyDetails] = useState();
 
+    const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+    ]
+
     const history = useHistory();
 
     const printRef = useRef();
@@ -57,6 +72,10 @@ const AccountDetails = () => {
         fetchAccount();
     }, [])
 
+    useEffect(()=>{
+        setMonthlyRecord();
+    }, [account])
+
     const setMonthlyRecord = async () => {
         try {
 
@@ -64,7 +83,7 @@ const AccountDetails = () => {
             let balance = account.openingBalance
 
             for (const i in accMonthlyDetails) {
-                balance = balance - accMonthlyDetails[i]
+                balance = balance - accMonthlyDetails[i].payment
                 accMonthlyDetails[i].balance = balance
             }
             setMonthlyDetails(accMonthlyDetails);
@@ -146,6 +165,7 @@ const AccountDetails = () => {
                     <CustomTable>
                         <Thead>
                             <Tr>
+                                <Th>Year</Th>
                                 <Th>Month</Th>
                                 <Th>Payment Received</Th>
                                 <Th>Balance</Th>
@@ -154,9 +174,10 @@ const AccountDetails = () => {
                         <Tbody>
                             {
                                 accMonthlyDetails?.map(a => {
-                                    return (
+                                    return (                                     
                                         <Tr>
-                                            <Td>{a.month}</Td>
+                                            <Td>{a.year}</Td>
+                                            <Td>{months[a.month]}</Td>
                                             <Td>{a.payment}</Td>
                                             <Td>{a.balance}</Td>
                                         </Tr>
