@@ -7,6 +7,7 @@ import Authentication from "./middlewares/Authentication.js";
 import jwt from "jsonwebtoken";
 import backupDB from "./db/backupDB.js";
 import restoreDb from "./db/restoreDb.js";
+import MongoBackup from "./db/MongoBackup.js";
 //Routers
 import customerRouter from "./routes/customer.route.js";
 import userRouter from "./routes/user.route.js";
@@ -46,16 +47,15 @@ app.use('/api/users/', userRouter);
 app.use('/api/accounts/', accountRouter);
 app.use('/api/installments', installmentRouter);
 
-app.post("/api/back-up-DB", async (req, res) => {
-    const r = backupDB();
-    res.send(r)
-    console.log(typeof r)
+app.post("/api/backup", async (req, res) => {
+    //new Date().toISOString().split('T')[0]; TODO....allow multiple backups using date of backup
+    const mongoBackup = new MongoBackup("KE");
+    mongoBackup.backup("./backups", "new-backup", res);
 })
 
-app.get("/api/restore-DB", async (req, res) => {
-    console.log("restore")
-    const r = restoreDb();
-    res.sendStatus(r)
+app.post("/api/restore", async (req, res) => {
+    const mongoBackup = new MongoBackup("KE");
+    mongoBackup.restore("./backups", "new-backup", res);
 })
 
 app.get("/api/user-credential/:username", async (req, res) => {

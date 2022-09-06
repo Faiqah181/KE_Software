@@ -26,7 +26,7 @@ customerRouter.get('/amount/current', (req, res) => {
 });
 
 customerRouter.get('/type/inactive', (req, res) => {
-    customerController.getinactiveCustomer(req, res);
+    customerController.getInactiveCustomer(req, res);
 });
 
 customerRouter.get('/type/defaulter', (req, res) => {

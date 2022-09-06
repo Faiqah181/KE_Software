@@ -63,7 +63,7 @@ controller.getCurrentCustomer = async (req, res) => {
     }
 }
 
-controller.getinactiveCustomer = async (req, res) => {
+controller.getInactiveCustomer = async (req, res) => {
     try {
         const customer = await Customer.find({status : "inactive"});
         res.send(customer);
