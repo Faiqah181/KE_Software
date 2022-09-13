@@ -165,7 +165,7 @@ const Accounts = () => {
                     </>
                 </div>
 
-                <Modal isOpen={isModalOpen} centered toggle={() => { setModalOpen(!isModalOpen) }} size='lg'>
+                <Modal isOpen={isModalOpen} centered scrollable toggle={() => { setModalOpen(!isModalOpen) }} size='lg'>
                     <ModalHeader>Add New Account</ModalHeader>
                     <Form onSubmit={addAccount}>
                         <ModalBody>

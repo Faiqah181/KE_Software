@@ -270,7 +270,7 @@ const DailyRecord = () => {
                         {defaulters.map(c => {
                             return (
                                 <tr key={c._id}>
-                                    <th className="sticky-left danger">
+                                    <th className="sticky-left defaulter">
                                         {c.name}
                                     </th>
                                     {days.map((_, day) => {

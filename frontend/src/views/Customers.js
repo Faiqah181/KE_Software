@@ -39,7 +39,7 @@ const Customer = () => {
             })
 
             if (res.status === 200) {
-                setCustomers(state => { state.push(res.data); return state; })
+                setInactives(state => { state.push(res.data); return state; })
             }
         }
         catch (error) {
