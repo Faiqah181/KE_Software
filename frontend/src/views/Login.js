@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Card, CardTitle, CardSubtitle, CardBody, Form, FormGroup, Label, Input, Button, Spinner, FormFeedback } from 'reactstrap'
+import { Card, CardTitle, CardSubtitle, CardBody, Form, FormGroup, Label, Input, FormFeedback } from 'reactstrap'
 import { useHistory } from "react-router-dom";
 import useAuthentication from '../components/useAuthentication';
 import '../css/Login.css'
 import axios from 'axios';
 import config from "../config";
+import LoadingButton from '../components/LoadingButton';
 
 const Login = () => {
 
@@ -88,12 +89,7 @@ const Login = () => {
                                 </Label>
                                 <FormFeedback>{error}</FormFeedback>
                             </FormGroup>
-                            <Button color='primary' type='submit'>
-                                <span>Login</span>
-                                <span className={`button-spinner ${loading ? 'loading' : ''}`}>
-                                    <Spinner size='sm' />
-                                </span>
-                            </Button>
+                            <LoadingButton color='primary' type='submit' isLoading={loading}>Login</LoadingButton>
                         </Form>
                     </CardBody>
                 </Card>
