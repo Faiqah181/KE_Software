@@ -8,6 +8,8 @@ import config from "../config";
 import useAuthentication from "../components/useAuthentication";
 import CustomTable from "../components/CustomTable";
 import { Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
+import { state } from "../store";
+import { useSnapshot } from "valtio";
 
 const Customer = () => {
 
@@ -26,6 +28,7 @@ const Customer = () => {
     const [activeTab, setActiveTab] = useState("1");
     const [isModalOpen, setModalOpen] = useState(false)
 
+    
 
     const addCustomer = async (e) => {
         e.preventDefault();
@@ -40,10 +43,16 @@ const Customer = () => {
 
             if (res.status === 200) {
                 setInactives(state => { state.push(res.data); return state; })
+                state.alertState.message = "Customer added successfully"
+                state.alertState.color = "info"
+                state.alertState.active = true
             }
         }
         catch (error) {
             console.log(error)
+            state.alertState.message = "Error! Customer not added."
+            state.alertState.color = "danger"
+            state.alertState.active = true
         }
         finally {
             newCustomer.current = {};

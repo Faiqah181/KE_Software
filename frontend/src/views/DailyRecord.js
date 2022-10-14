@@ -5,6 +5,7 @@ import axios from 'axios';
 import config from "../config";
 import useAuthentication from "../components/useAuthentication";
 import "../css/DailyRecord.css";
+import { state } from "../store";
 
 const DailyRecord = () => {
 
@@ -58,7 +59,7 @@ const DailyRecord = () => {
                 headers: { 'x-access-token': user }
             });
             const res = await Promise.all([customerPromise, defaulterPromise, inactivePromise]);
-            
+
             setCustomers(res[0].data);
             setDefaulters(res[1].data);
             setInactives(res[2].data);
@@ -71,14 +72,14 @@ const DailyRecord = () => {
     const getInstallments = async () => {
         try {
             const monthNum = months.indexOf(selectedMonth);
-            const res = await axios.get(`${config.API_URL}/installments/${selectedYear}/${monthNum}`,{
+            const res = await axios.get(`${config.API_URL}/installments/${selectedYear}/${monthNum}`, {
                 headers: { 'x-access-token': user, },
             });
 
             const data = await res.data;
             console.log(data)
             setInstallments(() => {
-                const state = Array(31).fill().map(() => ({ }));
+                const state = Array(31).fill().map(() => ({}));
                 if (!data?.dailyRecord?.length) {
                     return state;
                 }
@@ -118,15 +119,15 @@ const DailyRecord = () => {
         try {
             console.log(installments);
             const data = { dailyRecord: [] };
-            
+
             for (let day = 0; day < days.length; day++) {
                 data.dailyRecord[day] = {
                     date: (new Date(parseInt(selectedYear), months.indexOf(selectedMonth), day + 1)).toISOString().split('T')[0],
                     customerRecord: [],
                 };
-                
+
                 for (const customer in installments[day]) {
-                    if(installments[day][customer]) {
+                    if (installments[day][customer]) {
                         data.dailyRecord[day].customerRecord.push({
                             customer: customer,
                             amount: parseInt(installments[day][customer])
@@ -138,10 +139,16 @@ const DailyRecord = () => {
             await axios.post(`${config.API_URL}/installments/add`, data, {
                 headers: { 'x-access-token': user, },
             })
+            state.alertState.active = true
+            state.alertState.message = "Account added successfully"
+            state.alertState.color = "info"
 
         }
         catch (error) {
             console.log(error);
+            state.alertState.active = true
+            state.alertState.message = "Error! Account not added."
+            state.alertState.color = "danger"
         }
     }
 
@@ -169,7 +176,7 @@ const DailyRecord = () => {
                 setEditable(true);
             }
             else setEditable(false);
-            
+
         }
     }, [selectedMonth, selectedYear])
 

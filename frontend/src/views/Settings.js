@@ -5,6 +5,7 @@ import useAuthentication from '../components/useAuthentication';
 import axios from 'axios';
 import config from "../config";
 import '../css/Settings.css';
+import { state } from '../store';
 
 const Setting = () => {
 
@@ -30,11 +31,30 @@ const Setting = () => {
     const NewPassword = async () => {
         try {
             if (JSON.stringify(confirmNewPassword) === JSON.stringify(newPassword)) {
-                await axios.post(`${config.API_URL}/user-credential/${username}`, {
+                const passPromise = await axios.post(`${config.API_URL}/update-user-credential`, {
                     headers: { 'x-access-token': user, },
+                    userName: username,
                     currentPassword: currentPassword,
                     newPassword: newPassword
                 })
+                if (passPromise.status === 200) {
+                    state.alertState.active = true
+                    state.alertState.message = "Password changed successfully"
+                    state.alertState.color = "info"
+                    setCurrentPassword("")
+                    setUserName("")
+                    setNewPassword("")
+                    setConfirmedPassword("")
+                }
+                else {
+                    state.alertState.active = true
+                    state.alertState.message = "Invalid current password!"
+                    state.alertState.color = "danger"
+                    setCurrentPassword("")
+                    setUserName("")
+                    setNewPassword("")
+                    setConfirmedPassword("")
+                }
             }
 
         }
@@ -120,6 +140,7 @@ const Setting = () => {
                                             name="username"
                                             placeholder="Enter Username"
                                             type="text"
+                                            value={username}
                                             onChange={e => setUserName(e.target.value)}
                                         />
                                         <Label for="username">
@@ -134,6 +155,7 @@ const Setting = () => {
                                             name="currentPassword"
                                             placeholder="Enter Current Password"
                                             type="password"
+                                            value={currentPassword}
                                             onChange={e => setCurrentPassword(e.target.value)}
                                         />
                                         <Label for="password">
@@ -149,6 +171,7 @@ const Setting = () => {
                                             id="newPassword"
                                             name="newPassword"
                                             placeholder="Enter new Password"
+                                            value={newPassword}
                                             type="password"
                                             onChange={e => setNewPassword(e.target.value)}
                                         />
@@ -164,6 +187,7 @@ const Setting = () => {
                                             name="newPasswordConfirm"
                                             placeholder="Re-enter your new Password to Confirm"
                                             type="password"
+                                            value={confirmNewPassword}
                                             onChange={e => setConfirmedPassword(e.target.value)}
                                         />
                                         <Label for="password">

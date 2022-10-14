@@ -11,7 +11,7 @@ const initialize = async () => {
     await client.connect();
     database = client.db(config.dbName);
     console.log("Connection established")
-    
+
     const users = await UserModel.find({})
     if (!users.length) {
       //Default User
@@ -19,7 +19,7 @@ const initialize = async () => {
     }
 
     updateCustomerStatus();
-      
+
   }
   catch (e) {
     console.log(e);
@@ -50,15 +50,23 @@ const createCollection = async (collectionName) => {
 
 }
 
-const getUserCredential = async (userName) => {
+const updateUserCredential = async (req, res) => {
 
   try {
-    const u = await database.collection("users").find({ "userName": `${userName}` }).toArray()
+
+    const u = await UserModel.find({ userName: req.body.userName })
     if (u) {
-      return u[0]["password"]
+      if (u[0].password === req.body.currentPassword) {
+        await UserModel.findOneAndUpdate({ userName: req.body.userName }, { password: req.body.newPassword })
+        return 200
+      }
+      else {
+        return 401
+      }
     }
   }
   catch (e) {
+    console.log("Update user credential")
     console.log(e)
   }
 
@@ -131,6 +139,6 @@ const updateCustomerStatus = async () => {
 
 export default {
   initialize,
-  getUserCredential,
+  updateUserCredential,
   updateCustomerStatus
 };

@@ -52,7 +52,6 @@ function App() {
 				<div id='content'>
 					<Route exact path='/' component={Dashboard} />
 					<Route exact path='/Dashboard' component={Dashboard} />
-
 					<Route exact path='/Accounts' component={Accounts} />
 					<Route path='/Accounts/:id' component={AccountDetails} />
 					<Route exact path='/Customers' component={Customer} />
@@ -60,14 +59,13 @@ function App() {
 					<Route exact path='/MonthlyRecord' component={MonthlyRecord} />
 					<Route exact path='/Inventory' component={Inventory} />
 					<Route exact path='/Setting' component={Setting} />
-
 					<Route path='/404' component={NotFound} />
+					<Notification/>
 				</div>
 			</div>}
 
 			<Route exact path='/Login'>
 				<Login />
-				<Notification />
 			</Route>
 		</div>
 

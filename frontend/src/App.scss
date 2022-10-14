@@ -12,6 +12,10 @@ $danger: #dc3545;
   flex-flow: column;
 }
 
+.custom-notification{
+  z-index: 9999;
+}
+
 #app {
   background: #FAFAFA;
   display: flex;

@@ -11,6 +11,8 @@ import useAuthentication from "../components/useAuthentication";
 import { Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
 import { useHistory } from "react-router-dom";
 import Notification from "../components/Notification";
+import { useSnapshot } from "valtio";
+import { state } from "../store";
 
 const Accounts = () => {
 
@@ -34,6 +36,7 @@ const Accounts = () => {
     const [installmentPrice, setInstallmentPrice] = useState(0);
     const account = useRef({})
 
+    const store = useSnapshot(state)
 
     const getAccounts = async () => {
         try {
@@ -83,6 +86,9 @@ const Accounts = () => {
 
             if (result.status === 200) {
                 setAccounts(prevState => { prevState.push(result.data); return prevState; })
+                state.alertState.active = true
+                state.alertState.message = "Account added successfully"
+                state.alertState.color = "info"
             }
             account.current = {};
             setModalOpen(false);
@@ -93,7 +99,14 @@ const Accounts = () => {
             setWalletAmount('')
         }
         catch (error) {
-            console.log(error);
+            if (error.response) {
+                console.log(error.response.status);
+                if (error.response.status === 409) {
+                    state.alertState.active = true
+                    state.alertState.message = "Account number already used. Try another account number"
+                    state.alertState.color = "danger"
+                }
+            }
         }
     }
 
@@ -120,11 +133,11 @@ const Accounts = () => {
             account.current.retailPrice = parseInt(account.current.retailPrice)
             account.current.advance = parseInt(account.current.advance)
 
-            const Installment = parseInt(account.current.retailPrice + (account.current.retailPrice* 0.3))
+            const Installment = parseInt(account.current.retailPrice + (account.current.retailPrice * 0.3))
             setInstallmentPrice(Installment)
-            
+
             let tempBalance = Installment - account.current.advance
-            
+
             if (selectedCustomer.wallet >= tempBalance) {
                 tempBalance = walletAmount - tempBalance
                 setWalletAmount(tempBalance)
@@ -138,7 +151,9 @@ const Accounts = () => {
             setAddBtnDisable(false);
         }
         else {
-            console.log("incomplete")
+            state.alertState.active = true
+            state.alertState.message = "Provide complete details"
+            state.alertState.color = "warning"
         }
 
     }
@@ -173,9 +188,10 @@ const Accounts = () => {
                                 <Col>
                                     <FormGroup>
                                         <Label for="A_number">Account Number</Label>
-                                        <Input id="A_number" name="Account Number" onChange={(evt) => { account.current.accountNum = evt.target.value;
-                                        setAddBtnDisable(true); 
-                                        setCalculateBtnDisable(false)
+                                        <Input id="A_number" name="Account Number" onChange={(evt) => {
+                                            account.current.accountNum = evt.target.value;
+                                            setAddBtnDisable(true);
+                                            setCalculateBtnDisable(false)
                                         }} placeholder="Enter Account Number"></Input>
                                     </FormGroup>
                                 </Col>
@@ -248,8 +264,8 @@ const Accounts = () => {
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={() => {
-                                setModalOpen(false); 
-                                setAddBtnDisable(true); 
+                                setModalOpen(false);
+                                setAddBtnDisable(true);
                                 setCalculateBtnDisable(false)
                                 setBalance('');
                                 setInstallmentPrice('')

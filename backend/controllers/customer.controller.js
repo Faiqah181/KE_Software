@@ -17,7 +17,7 @@ controller.getAll = async (_req, res) => {
 
 controller.getByID = async (req, res) => {
     try {
-        const id  = req.params.id
+        const id = req.params.id
         const customer = await Customer.findById(mongoose.Types.ObjectId(`${id}`));
         res.send(customer);
     }
@@ -28,7 +28,7 @@ controller.getByID = async (req, res) => {
 }
 
 controller.addCustomer = async (req, res) => {
-    
+
     try {
         const customerToAdd = Customer(req.body);
         const addedCustomer = await Customer.addCustomer(customerToAdd);
@@ -54,7 +54,7 @@ controller.deleteCustomer = async (req, res) => {
 
 controller.getCurrentCustomer = async (req, res) => {
     try {
-        const customer = await Customer.find({status : "current"});
+        const customer = await Customer.find({ status: "current" });
         res.send(customer);
     }
     catch (e) {
@@ -65,7 +65,7 @@ controller.getCurrentCustomer = async (req, res) => {
 
 controller.getInactiveCustomer = async (req, res) => {
     try {
-        const customer = await Customer.find({status : "inactive"});
+        const customer = await Customer.find({ status: "inactive" });
         res.send(customer);
     }
     catch (e) {
@@ -76,7 +76,7 @@ controller.getInactiveCustomer = async (req, res) => {
 
 controller.getDefaulterCustomer = async (req, res) => {
     try {
-        const customer = await Customer.find({status : "defaulter"});
+        const customer = await Customer.find({ status: "defaulter" });
         res.send(customer);
     }
     catch (e) {
@@ -87,13 +87,13 @@ controller.getDefaulterCustomer = async (req, res) => {
 
 controller.updateCustomerWallet = async (req, res) => {
 
-    try{
+    try {
         const customerId = req.body.customerId
         const walletAmount = rq.body.walletAmount
-        await CustomerModel.findByIdAndUpdate({id: customerId}, {wallet : walletAmount})
+        await CustomerModel.findByIdAndUpdate({ id: customerId }, { wallet: walletAmount })
         res.sendStatus(200)
     }
-    catch(error){
+    catch (error) {
         console.log(error)
         res.sendStatus(500)
     }
@@ -102,8 +102,8 @@ controller.updateCustomerWallet = async (req, res) => {
 
 controller.getCurrentCustomerAmount = async (req, res) => {
     try {
-        const customer = await Customer.find({status : "current"});
-        res.send(customer.length+"");
+        const customer = await Customer.find({ status: "current" });
+        res.send(customer.length + "");
     }
     catch (e) {
         console.error(`Error: ${e}`);
@@ -113,8 +113,8 @@ controller.getCurrentCustomerAmount = async (req, res) => {
 
 controller.getDefaulterCustomerAmount = async (req, res) => {
     try {
-        const customer = await Customer.find({status : "defaulter"});
-        res.send(customer.length);
+        const customer = await Customer.find({ status: "defaulter" });
+        res.send(customer.length + "");
     }
     catch (e) {
         console.error(`Error: ${e}`);

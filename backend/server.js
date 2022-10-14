@@ -47,7 +47,7 @@ app.use('/api/accounts/', accountRouter);
 app.use('/api/installments', installmentRouter);
 app.use('/api', BackupRestoreRouter);
 
-app.get("/api/user-credential/:username", async (req, res) => {
-    const x = await functions.getUserCredential(req.params.username)
-    res.send(x)
+app.post("/api/update-user-credential", async (req, res) => {
+    const x = await functions.updateUserCredential(req, res)
+    res.sendStatus(x)
 })

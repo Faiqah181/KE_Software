@@ -21,7 +21,7 @@ customerRouter.get('/type/current', (req, res) => {
     customerController.getCurrentCustomer(req, res);
 });
 
-customerRouter.get('/amount/current', (req, res) => {
+customerRouter.get('/type/current/count', (req, res) => {
     customerController.getCurrentCustomerAmount(req, res);
 });
 
@@ -33,8 +33,8 @@ customerRouter.get('/type/defaulter', (req, res) => {
     customerController.getDefaulterCustomer(req, res);
 });
 
-customerRouter.get('/amount/defaulter', (req, res) => {
-    customerController.getDefaulterCustomer(req, res);
+customerRouter.get('/type/defaulter/count', (req, res) => {
+    customerController.getDefaulterCustomerAmount(req, res);
 });
 
 customerRouter.post('/add', (req, res) => {
