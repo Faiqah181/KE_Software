@@ -9,7 +9,6 @@ import Dashboard from './views/Dashboard';
 import Customer from './views/Customers';
 import DailyRecord from './views/DailyRecord';
 import MonthlyRecord from './views/MonthlyRecord';
-import Inventory from './views/Inventory';
 import Setting from './views/Settings';
 import Login from './views/Login';
 import { state } from './store'
@@ -57,7 +56,6 @@ function App() {
 					<Route exact path='/Customers' component={Customer} />
 					<Route exact path='/DailyRecord' component={DailyRecord} />
 					<Route exact path='/MonthlyRecord' component={MonthlyRecord} />
-					<Route exact path='/Inventory' component={Inventory} />
 					<Route exact path='/Setting' component={Setting} />
 					<Route path='/404' component={NotFound} />
 					<Notification/>

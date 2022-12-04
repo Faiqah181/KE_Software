@@ -5,6 +5,7 @@ import functions from "./init.js"
 import connectToDB from "./db/connect.js";
 import Authentication from "./middlewares/Authentication.js";
 import jwt from "jsonwebtoken";
+import UserModel from "./models/user.model.js";
 
 //Routers
 import customerRouter from "./routes/customer.route.js";
@@ -25,9 +26,9 @@ app.listen(config.port, () => console.log(`Server listening at port ${config.por
 
 app.post("/api/login", async (req, res) => {
 
-    const pass = await functions.getUserCredential(req.body.username)
+    const user = await UserModel.find({ userName: req.body.username })
     if (req.body.password) {
-        if (req.body.password != pass) {
+        if (req.body.password != user[0].password) {
             res.sendStatus(401);
         }
         else {
@@ -37,8 +38,6 @@ app.post("/api/login", async (req, res) => {
     }
 
 })
-
-//app.use(Authentication)
 
 // --- Routers --- 
 app.use('/api/customers/', customerRouter);

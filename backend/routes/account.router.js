@@ -3,7 +3,6 @@ import accountController from '../controllers/account.controller.js'
 
 const accountRouter = express.Router();
 
-
 accountRouter.get('/all', (req, res) => {
     accountController.getAll(req, res);
 });
