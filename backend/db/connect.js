@@ -10,6 +10,7 @@ const connectToDB = async () => {
     catch (e) {
         console.error('Mongoose: Failed to connect');
         console.log(e);
+        process.exit(-1);
     }
 }
 
