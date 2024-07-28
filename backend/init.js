@@ -1,15 +1,18 @@
-import { MongoClient } from "mongodb";
-import config from "./config.js";
+import { MongoClient, ServerApiVersion } from "mongodb";
 import CustomerModel from "./models/customer.model.js";
 import InstallmentModel from "./models/installment.model.js";
 import UserModel from "./models/user.model.js";
-const client = new MongoClient(config.mongoUrl)
+import dotenv from "dotenv"
+
+dotenv.config();
+const client = new MongoClient(process.env.MONGO_URL);
 let database = {};
 
 const initialize = async () => {
   try {
     await client.connect();
-    database = client.db(config.dbName);
+
+    database = client.db(process.env.DB_NAME);
     console.log("Connection established")
 
     const users = await UserModel.find({})
@@ -27,7 +30,7 @@ const initialize = async () => {
 }
 
 const collectionExist = async (collectionName) => {
-  const collectionsList = await client.db("KE").listCollections({}, { nameOnly: true });
+  const collectionsList = await client.db(process.env.DB_NAME).listCollections({}, { nameOnly: true });
   let AllcollectionNames = []
 
   collectionsList.forEach(element => {

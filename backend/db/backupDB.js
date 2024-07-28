@@ -1,5 +1,4 @@
 import Backup from 'backup-mongodb';
-import config from "../config.js";
 
 function getDateString() {
 	
@@ -14,7 +13,7 @@ function getDateString() {
 
 const backupDB = () => {
 
-    const dbUri = `${config.mongoUrl}/${config.dbName}`
+    const dbUri = `${process.env.MONGO_URL}/${process.env.DB_NAME}`
     const basePath = 'backup'
     
     try{

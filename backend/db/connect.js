@@ -1,10 +1,9 @@
 import Mongoose from 'mongoose';
-import config from '../config.js'
 Mongoose.Promise = global.Promise;
 
 const connectToDB = async () => {
     try {
-        await Mongoose.connect(`${config.mongoUrl}/${config.dbName}`);
+        await Mongoose.connect(`${process.env.MONGO_URL}/${process.env.DB_NAME}`);
         console.log('Mongoose: Connected');
     }
     catch (e) {

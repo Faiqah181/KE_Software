@@ -1,10 +1,8 @@
 import Restore from "mongodb-restore";
-import config from "../config.js";
-
 
 const restoreDb = () => {
 
-    const databaseUri = `${config.mongoUrl}/${config.dbName}`;
+    const databaseUri = `${process.env.MONGO_URL}/${process.env.DB_NAME}`;
     const zipFilePath = "backup/KE";
 
     try {

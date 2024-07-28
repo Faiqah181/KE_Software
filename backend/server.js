@@ -1,4 +1,3 @@
-import config from "./config.js";
 import express from "express";
 import cors from "cors";
 import functions from "./init.js"
@@ -22,7 +21,7 @@ await functions.initialize();
 app.use(cors());
 app.use(express.json());
 
-app.listen(config.port, () => console.log(`Server listening at port ${config.port}`));
+app.listen(process.env.PORT, () => console.log(`Server listening at PORT ${process.env.PORT}`));
 
 app.post("/api/login", async (req, res) => {
 
@@ -32,7 +31,7 @@ app.post("/api/login", async (req, res) => {
             res.sendStatus(401);
         }
         else {
-            const token = jwt.sign({ username: req.body.username }, config.ACCESS_TOKEN_KEY)
+            const token = jwt.sign({ username: req.body.username }, process.env.ACCESS_TOKEN_KEY)
             res.status(200).send(token);
         }
     }

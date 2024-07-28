@@ -1,4 +1,4 @@
-import { BSONTypeError } from 'bson';
+// import {  } from 'bson';
 import { MongoServerError } from 'mongodb';
 import mongoose from 'mongoose';
 import Account from '../models/account.model.js'
@@ -44,11 +44,13 @@ controller.getByID = async (_req, res, id) => {
         else res.sendStatus(404);
     }
     catch (e) {
+        console.log("e: ", e);
         console.error(`Error: ${e}`);
-        if (e instanceof BSONTypeError) {
-            res.sendStatus(404);
-        }
-        else res.sendStatus(500);
+        // if (e instanceof BSONTypeError) {
+        //     res.sendStatus(404);
+        // }
+        // else res.sendStatus(500);
+        res.sendStatus(500)
     }
 }
 

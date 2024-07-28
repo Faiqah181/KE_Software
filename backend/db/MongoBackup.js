@@ -2,17 +2,17 @@ import { spawn } from 'child_process'
 import mongoose from 'mongoose';
 
 class MongoBackup {
-    constructor(dbName) {
-        this.dbName = dbName;
+    constructor(DB_NAME) {
+        this.DB_NAME = DB_NAME;
     }
 
     backup(path, backupName, res, debugMode) {
         const mongodump = spawn('mongodump', [
             // '--host', this.dbUrl,
-            // '--port',     this.dbport,
+            // '--PORT',     this.dbport,
             // '--username', this.dbuser,
             // '--password', this.dbpass,
-            '--db', this.dbName,
+            '--db', this.DB_NAME,
             '--out', `${path}/${backupName}`,
             '--gzip',
         ]);
@@ -34,7 +34,7 @@ class MongoBackup {
 
         const mongorestore = spawn('mongorestore', [
             // '--host', this.dbUrl,
-            // '--port',     this.dbport,
+            // '--PORT',     this.dbport,
             // '--username', this.dbuser,
             // '--password', this.dbpass,
             `${path}/${backupName}`,
