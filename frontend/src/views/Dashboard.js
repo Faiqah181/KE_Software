@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import config from "../config";
 import { Card, Row, Col } from "reactstrap"
 import useAuthentication from "../components/useAuthentication";
 import DashboardCard from "../components/DashboardCard";
@@ -35,7 +34,7 @@ const Dashboard = () => {
 
     const getCustomers = async () => {
         try {
-            const customerPromise = await axios.get(`${config.API_URL}/customers/type/current/count`, {
+            const customerPromise = await axios.get(`${process.env.REACT_APP_API_URL}/customers/type/current/count`, {
                 headers: {
                     'x-access-token': user,
                 },
@@ -51,7 +50,7 @@ const Dashboard = () => {
     const getDefaulters = async () => {
         try {
 
-            const customerPromise = await axios.get(`${config.API_URL}/customers/type/defaulter/count`, {
+            const customerPromise = await axios.get(`${process.env.REACT_APP_API_URL}/customers/type/defaulter/count`, {
                 headers: {
                     'x-access-token': user,
                 },
@@ -66,7 +65,7 @@ const Dashboard = () => {
 
     const getAccounts = async () => {
         try {
-            const accountPromise = await axios.get(`${config.API_URL}/accounts/all`, {
+            const accountPromise = await axios.get(`${process.env.REACT_APP_API_URL}/accounts/all`, {
                 headers: {
                     'x-access-token': user,
                 },
@@ -81,7 +80,7 @@ const Dashboard = () => {
 
     const getNewAccounts = async () => {
         try {
-            const accountPromise = await axios.get(`${config.API_URL}/accounts/accountnum`, {
+            const accountPromise = await axios.get(`${process.env.REACT_APP_API_URL}/accounts/accountnum`, {
                 headers: {
                     'x-access-token': user,
                 },
@@ -141,25 +140,20 @@ const Dashboard = () => {
                 <Col sm={5}>
                     <Row>
                         <Col>
-                            <DashboardCard title="Current Customers" value={customerNum} footerValue="5%" positive />
+                            <DashboardCard title="Current Customers" value={customerNum} positive />
                         </Col>
                         <Col>
-                            <DashboardCard title="Active Accounts" value={accountNum} footerValue="2%" />
+                            <DashboardCard title="Active Accounts" value={accountNum} positive />
                         </Col>
                     </Row>
                     <Row style={{ marginTop: "1rem" }}>
                         <Col>
-                            <DashboardCard title="Defaulters" value={defaulterNum} footerValue="5%" positive />
+                            <DashboardCard title="Defaulters" value={defaulterNum} positive />
                         </Col>
                         <Col>
-                            <DashboardCard title="New Accounts" value={newAccounts} footerValue="5%" positive />
+                            <DashboardCard title="New Accounts" value={newAccounts} positive />
                         </Col>
                     </Row>
-                </Col>
-                <Col sm={7}>
-                    <Card body>
-                        <Bar options={options} data={data} />
-                    </Card>
                 </Col>
             </Row>
             <br />

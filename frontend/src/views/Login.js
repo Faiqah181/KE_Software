@@ -4,7 +4,6 @@ import { useHistory } from "react-router-dom";
 import useAuthentication from '../components/useAuthentication';
 import '../css/Login.css'
 import axios from 'axios';
-import config from "../config";
 import LoadingButton from '../components/LoadingButton';
 
 const Login = () => {
@@ -30,7 +29,7 @@ const Login = () => {
 
         try {
             setLoading(true);
-            const res = await axios.post(`${config.API_URL}/login`, {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/login`, {
                 "username": username,
                 "password": password
             })

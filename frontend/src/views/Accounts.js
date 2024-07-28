@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import config from "../config";
 import Select from 'react-select';
 import {
     Row, Col, Button, Modal, ModalBody, ModalFooter, ModalHeader, Form, FormGroup,
@@ -40,7 +39,7 @@ const Accounts = () => {
 
     const getAccounts = async () => {
         try {
-            const res = await axios.get(`${config.API_URL}/accounts/all`, { headers: { 'x-access-token': user } });
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/accounts/all`, { headers: { 'x-access-token': user } });
             setAccounts(res.data);
         }
         catch (error) {
@@ -50,7 +49,7 @@ const Accounts = () => {
 
     const getCustomers = async () => {
         try {
-            const customerPromise = await axios.get(`${config.API_URL}/customers/all`, {
+            const customerPromise = await axios.get(`${process.env.REACT_APP_API_URL}/customers/all`, {
                 headers: { 'x-access-token': user, },
             });
             const result = customerPromise.data
@@ -75,7 +74,7 @@ const Accounts = () => {
             account.current.openingBalance = balance
             account.current.installmentPrice = installmentPrice
 
-            const result = await axios.post(`${config.API_URL}/accounts/add`,
+            const result = await axios.post(`${process.env.REACT_APP_API_URL}/accounts/add`,
                 {
                     account: account.current,
                     wallet: walletAmount

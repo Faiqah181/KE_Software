@@ -4,7 +4,6 @@ import {
     Button, Modal, ModalBody, ModalFooter, ModalHeader, Form, FormGroup, Label, Input
 } from "reactstrap";
 import axios from "axios";
-import config from "../config";
 import useAuthentication from "../components/useAuthentication";
 import CustomTable from "../components/CustomTable";
 import { Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
@@ -37,7 +36,7 @@ const Customer = () => {
             newCustomer.current.status = "inactive";
             newCustomer.current.wallet = 0;
 
-            const res = await axios.post(`${config.API_URL}/customers/add`, newCustomer.current, {
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/customers/add`, newCustomer.current, {
                 headers: { 'x-access-token': user }
             })
 
@@ -117,13 +116,13 @@ const Customer = () => {
 
         const getCustomers = async () => {
             try {
-                const currentPromise = axios.get(`${config.API_URL}/customers/type/current`, {
+                const currentPromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/current`, {
                     headers: { 'x-access-token': user }
                 });
-                const defaulterPromise = axios.get(`${config.API_URL}/customers/type/defaulter`, {
+                const defaulterPromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/defaulter`, {
                     headers: { 'x-access-token': user }
                 });
-                const inactivePromise = axios.get(`${config.API_URL}/customers/type/inactive`, {
+                const inactivePromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/inactive`, {
                     headers: { 'x-access-token': user }
                 });
 

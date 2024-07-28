@@ -3,7 +3,6 @@ import { Card, CardBody, Form, FormGroup, Label, Input, Button, Row, Col, Modal,
 import LoadingButton from '../components/LoadingButton'
 import useAuthentication from '../components/useAuthentication';
 import axios from 'axios';
-import config from "../config";
 import '../css/Settings.css';
 import { state } from '../store';
 
@@ -31,7 +30,7 @@ const Setting = () => {
     const NewPassword = async () => {
         try {
             if (JSON.stringify(confirmNewPassword) === JSON.stringify(newPassword)) {
-                const passPromise = await axios.post(`${config.API_URL}/update-user-credential`, {
+                const passPromise = await axios.post(`${process.env.REACT_APP_API_URL}/update-user-credential`, {
                     headers: { 'x-access-token': user, },
                     userName: username,
                     currentPassword: currentPassword,
@@ -69,7 +68,7 @@ const Setting = () => {
     }
 
     const getCurrentBackups = async () => {
-        const backups = await axios.get(`${config.API_URL}/backups`, {
+        const backups = await axios.get(`${process.env.REACT_APP_API_URL}/backups`, {
             headers: { 'x-access-token': user, },
         });
         setBackupList(backups.data);
@@ -78,7 +77,7 @@ const Setting = () => {
     const backupData = async () => {
         try {
             setBackupLoader(true);
-            await axios.post(`${config.API_URL}/backup`, { backupName: newBackupName }, {
+            await axios.post(`${process.env.REACT_APP_API_URL}/backup`, { backupName: newBackupName }, {
                 headers: { 'x-access-token': user, },
             });
 
@@ -93,7 +92,7 @@ const Setting = () => {
     const restoreData = async (backupName) => {
         try {
             setRestoreLoader(backupName);
-            await axios.post(`${config.API_URL}/restore`, { backupName }, {
+            await axios.post(`${process.env.REACT_APP_API_URL}/restore`, { backupName }, {
                 headers: { 'x-access-token': user, },
             })
 

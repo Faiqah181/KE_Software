@@ -8,7 +8,7 @@
 }
 
 .dashboard-card-footer {
-    display: flex;
+    display: none;
     font-size: 0.8rem;
 }
 

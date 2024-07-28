@@ -13,7 +13,6 @@ import { Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 import useAuthentication from "../components/useAuthentication";
 import { useReactToPrint } from 'react-to-print';
 import axios from "axios";
-import config from "../config";
 import "../css/AccountDetails.css"
 
 
@@ -54,7 +53,7 @@ const AccountDetails = () => {
 
         const fetchAccount = async () => {
             try {
-                const accountResult = await axios.get(`${config.API_URL}/Accounts/${id}`, {
+                const accountResult = await axios.get(`${process.env.REACT_APP_API_URL}/Accounts/${id}`, {
                     headers: {
                         'x-access-token': user,
                     },

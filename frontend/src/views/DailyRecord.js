@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Card, CardBody, Input, DropdownMenu, Dropdown, DropdownToggle, DropdownItem, Button } from "reactstrap"
 import InstallmentTable from "../components/InstallmentTable";
 import axios from 'axios';
-import config from "../config";
 import useAuthentication from "../components/useAuthentication";
 import "../css/DailyRecord.css";
 import { state } from "../store";
@@ -49,13 +48,13 @@ const DailyRecord = () => {
 
     const getCustomers = async () => {
         try {
-            const customerPromise = axios.get(`${config.API_URL}/customers/type/current`, {
+            const customerPromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/current`, {
                 headers: { 'x-access-token': user, },
             });
-            const defaulterPromise = axios.get(`${config.API_URL}/customers/type/defaulter`, {
+            const defaulterPromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/defaulter`, {
                 headers: { 'x-access-token': user }
             });
-            const inactivePromise = axios.get(`${config.API_URL}/customers/type/inactive`, {
+            const inactivePromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/inactive`, {
                 headers: { 'x-access-token': user }
             });
             const res = await Promise.all([customerPromise, defaulterPromise, inactivePromise]);
@@ -72,7 +71,7 @@ const DailyRecord = () => {
     const getInstallments = async () => {
         try {
             const monthNum = months.indexOf(selectedMonth);
-            const res = await axios.get(`${config.API_URL}/installments/${selectedYear}/${monthNum}`, {
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/installments/${selectedYear}/${monthNum}`, {
                 headers: { 'x-access-token': user, },
             });
 
@@ -136,7 +135,7 @@ const DailyRecord = () => {
                 }
             }
 
-            await axios.post(`${config.API_URL}/installments/add`, data, {
+            await axios.post(`${process.env.REACT_APP_API_URL}/installments/add`, data, {
                 headers: { 'x-access-token': user, },
             })
             state.alertState.active = true

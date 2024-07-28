@@ -5,7 +5,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { List, Card, CardTitle, CardText, DropdownMenu, Dropdown, DropdownToggle, DropdownItem } from "reactstrap"
 import axios from 'axios';
-import config from "../config";
 import "../css/DailyRecord.css";
 
 const MonthlyRecord = () => {
@@ -49,7 +48,7 @@ const MonthlyRecord = () => {
 
     const getCustomers = async () => {
         try {
-            const customerPromise = await axios.get(`${config.API_URL}/customers`);
+            const customerPromise = await axios.get(`${process.env.REACT_APP_API_URL}/customers`);
             setCustomers(await customerPromise.data);
         }
 
@@ -71,7 +70,7 @@ const MonthlyRecord = () => {
     useEffect(() => {
         const promises = []
         for (const c of customers) {
-            promises.push(axios.get(`${config.API_URL}/monthly-records/${selectedYear}/${selectedMonth}/${c._id}`));
+            promises.push(axios.get(`${process.env.REACT_APP_API_URL}/monthly-records/${selectedYear}/${selectedMonth}/${c._id}`));
         }
         loadBalances(promises)
 
