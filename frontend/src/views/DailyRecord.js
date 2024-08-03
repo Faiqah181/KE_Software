@@ -121,7 +121,7 @@ const DailyRecord = () => {
 
             for (let day = 0; day < days.length; day++) {
                 data.dailyRecord[day] = {
-                    date: (new Date(parseInt(selectedYear), months.indexOf(selectedMonth), day + 1)).toISOString().split('T')[0],
+                    date: (new Date(parseInt(selectedYear), months.indexOf(selectedMonth), day + 1, 5)).toISOString().split('T')[0],
                     customerRecord: [],
                 };
 

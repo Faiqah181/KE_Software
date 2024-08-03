@@ -2,10 +2,9 @@ import InstallmentModel from "../models/installment.model.js";
 import AccountModel from '../models/account.model.js';
 import CustomerModel from "../models/customer.model.js";
 import mongoose from "mongoose";
+import functions from  "../init.js"
 
 const controller = {}
-const localMonth = new Date().getMonth();
-const localYear = new Date().getFullYear();
 
 controller.getByMonthYear = async (req, res) => {
 
@@ -23,15 +22,16 @@ controller.getByMonthYear = async (req, res) => {
 function findMonthPayment(monthRecord, customerId) {
 
     let sum = 0;
-    (monthRecord.dailyRecord).forEach(r => {
-        (r.customerRecord).forEach(p => {
 
-            const x = mongoose.Types.ObjectId(p.customer);
+    for (const r of monthRecord.dailyRecord) {
+        for (const p of r.customerRecord) {
+
+            const x = new mongoose.Types.ObjectId(p.customer);
             if (x.equals(customerId)) {
                 sum += p.amount
             }
-        })
-    })
+        }
+    }
 
     return sum;
 }
@@ -68,12 +68,12 @@ const updateAccountsAndCustomer = async (customer, currentAccounts, newSum) => {
         }
 
         const currentMonthDetail = {
-            year: localYear,
-            month: localMonth,
+            year: new Date().getFullYear(),
+            month: new Date().getMonth(),
             payment: payment
         }
 
-        if (lastMonth?.month === localMonth) {
+        if (lastMonth?.month === new Date().getMonth()) {
             currentMonthDetail.payment += lastMonth.payment
             monthlyRecord[monthlyRecord.length - 1] = currentMonthDetail
         }
@@ -96,7 +96,7 @@ controller.addMonthlyRecord = async (req, res) => {
     try {
 
         const record = req.body;
-        const localRecord = await InstallmentModel.find({ "year": localYear });
+        const localRecord = await InstallmentModel.find({ "year": new Date().getFullYear() });
         const currentCustomers = await CustomerModel.find({});
 
         const customerFunction = async (c) => {
@@ -106,7 +106,7 @@ controller.addMonthlyRecord = async (req, res) => {
             //find previous received payments
             let prevSum = 0;
             if (localRecord.length) {
-                const localMonthRecord = localRecord[0].months[localMonth];
+                const localMonthRecord = localRecord[0].months[new Date().getMonth()];
                 prevSum = localMonthRecord ? findMonthPayment(localMonthRecord, c._id) : 0;
             }
             //find current received payments
@@ -128,20 +128,22 @@ controller.addMonthlyRecord = async (req, res) => {
         //save record
         if(!localRecord[0]){
             localRecord[0] = {
-                year: localYear,
+                year: new Date().getFullYear(),
                 months: []
             }
             localRecord[0].months = Array.apply(null,Array(12)).map(a=>null) 
-            localRecord[0].months[localMonth] = record
+            localRecord[0].months[new Date().getMonth()] = record
             let r = await InstallmentModel(localRecord[0])
             res.send(await r.save())
         }
         else {
-            localRecord[0].months[localMonth] = record
-            const r = await InstallmentModel.findOneAndUpdate({ "year": localYear }, { "months": localRecord[0].months })
+            localRecord[0].months[new Date().getMonth()] = record
+            const r = await InstallmentModel.findOneAndUpdate({ "year": new Date().getFullYear() }, { "months": localRecord[0].months })
             res.send(r)
         }
         
+        //update customers status
+        await functions.updateCustomerStatus();
     }
     catch (e) {
 
