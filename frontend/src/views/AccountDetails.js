@@ -88,8 +88,7 @@ const AccountDetails = () => {
             setMonthlyDetails(accMonthlyDetails);
         }
         catch (e) {
-            console.log("Account COntroller: getMonthlyRecord")
-            console.log(e)
+            console.log("Account Controller: getMonthlyRecord", e)
         }
 
     }

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const accountSchema = mongoose.Schema({
-    accountNum: { type: Number, required: true, unique: true },
+    accountNum: { type: String, required: true, unique: true },
     item: { type: String, required: true },
     cost: { type: Number, min: 0 },
     retailPrice: { type: Number, min: 0 },

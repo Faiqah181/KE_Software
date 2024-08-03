@@ -37,7 +37,7 @@ controller.getCurrentMonthAccount = async (req, res) => {
 
 controller.getByID = async (_req, res, id) => {
     try {
-        const customer = await Account.findById(mongoose.Types.ObjectId(`${id}`)).populate('customer');
+        const customer = await Account.findById(new mongoose.Types.ObjectId(`${id}`)).populate('customer');
         if (customer) {
             res.send(customer);
         }

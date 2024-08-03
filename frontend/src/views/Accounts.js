@@ -132,7 +132,7 @@ const Accounts = () => {
             account.current.retailPrice = parseInt(account.current.retailPrice)
             account.current.advance = parseInt(account.current.advance)
 
-            const Installment = parseInt(account.current.retailPrice + (account.current.retailPrice * 0.3))
+            const Installment = parseInt(account.current.retailPrice + (account.current.retailPrice * 0.35))
             setInstallmentPrice(Installment)
 
             let tempBalance = Installment - account.current.advance
