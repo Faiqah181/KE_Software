@@ -1,6 +1,9 @@
 import React from "react";
 import "../css/TertiaryButton.css"
 
-const TertiaryButton = (props) => <button className={`tertiary-btn ${props.customClass}`} {...props}>{props.children}</button>
+const TertiaryButton = (props) => {
+    const { customClass, children, ...restProps } = props;
+    return <button className={`tertiary-btn ${customClass}`} {...restProps}>{children}</button>
+}
 
 export default TertiaryButton;

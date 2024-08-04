@@ -76,7 +76,6 @@ const DailyRecord = () => {
             });
 
             const data = await res.data;
-            console.log(data)
             setInstallments(() => {
                 const state = Array(31).fill().map(() => ({}));
                 if (!data?.dailyRecord?.length) {
@@ -95,7 +94,6 @@ const DailyRecord = () => {
                         }
                     }
                 }
-                console.log(state);
 
                 return state;
             });
@@ -116,7 +114,6 @@ const DailyRecord = () => {
 
     const saveDaily = async () => {
         try {
-            console.log(installments);
             const data = { dailyRecord: [] };
 
             for (let day = 0; day < days.length; day++) {

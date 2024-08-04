@@ -294,8 +294,8 @@ const Accounts = () => {
                                     <Td>{acc.accountNum}</Td>
                                     <Td>{acc.customer.name}</Td>
                                     <Td>{acc.item}</Td>
-                                    <Td>{acc.dateOfSale}</Td>
-                                    <Td>{acc.balance}</Td>
+                                    <Td>{new Date(acc.dateOfSale).toLocaleDateString('en-GB')}</Td>
+                                    <Td>Rs. {acc.balance}</Td>
                                 </Tr>
                             )
                         })}

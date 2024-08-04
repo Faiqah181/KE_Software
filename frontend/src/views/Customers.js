@@ -191,7 +191,7 @@ const Customer = () => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {filteredCustomers.map(c => <CustomerTableRow data={c} /> )}
+                                {filteredCustomers.map(c => <CustomerTableRow key={c._id} data={c} /> )}
                             </Tbody>
                         </CustomTable>
                     </TabPane>

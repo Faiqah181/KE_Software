@@ -72,7 +72,7 @@ const AccountDetails = () => {
     }, [])
 
     useEffect(()=>{
-        setMonthlyRecord();
+        account && setMonthlyRecord();
     }, [account])
 
     const setMonthlyRecord = async () => {
@@ -171,9 +171,9 @@ const AccountDetails = () => {
                         </Thead>
                         <Tbody>
                             {
-                                accMonthlyDetails?.map(a => {
+                                accMonthlyDetails?.map((a, i) => {
                                     return (                                     
-                                        <Tr>
+                                        <Tr key={i}>
                                             <Td>{a.year}</Td>
                                             <Td>{months[a.month]}</Td>
                                             <Td>{a.payment}</Td>
