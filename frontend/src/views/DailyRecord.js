@@ -168,7 +168,8 @@ const DailyRecord = () => {
     useEffect(() => {
         if (selectedYear !== '-' && selectedMonth !== "February 2001") {
             setDays(new Array(daysInMonth(months.indexOf(selectedMonth) + 1, selectedYear)).fill(0));
-            if (today.getFullYear() === selectedYear && today.getMonth() === months.indexOf(selectedMonth)) {
+            if ((today.getFullYear() === selectedYear && today.getMonth() === months.indexOf(selectedMonth)) ||
+                (today.getMonth() - 1 === months.indexOf(selectedMonth))) {
                 setEditable(true);
             }
             else setEditable(false);

@@ -68,7 +68,6 @@ const Accounts = () => {
             account.current.customer = selectedCustomer.value
             account.current.discount = 0
             account.current.closed = balance === 0 ? true : false;
-            account.current.dateOfSale = new Date().toLocaleDateString()
             account.current.monthlyPayments = []
             account.current.balance = balance
             account.current.openingBalance = balance
@@ -195,12 +194,22 @@ const Accounts = () => {
                                     </FormGroup>
                                 </Col>
                                 <Col>
+                                        <FormGroup>
+                                            <Label for="A_dateOfSale">Date of Sale</Label>
+                                            <Input id="A_dateOfSale" type="date" onChange={(evt) => { account.current.dateOfSale = evt.target.value; console.log( account.current.dateOfSale ) }} placeholder="Account Opening Date"/>
+                                        </FormGroup>
+                                </Col>
+                                
+                            </Row>
+                            <Row>
+                            <Col>
                                     <FormGroup>
                                         <Label for="A_Customer">Customer</Label>
                                         <Select id="A_Customer" isSearchable isClearable onChange={(val) => {
                                             setSelectedCustomer(val);
+                                            setAddBtnDisable(true);
                                             setWalletAmount(selectedCustomer.wallet);
-                                            setAddBtnDisable(true); setCalculateBtnDisable(false)
+                                            setCalculateBtnDisable(false)
                                         }}
                                             options={customers} placeholder="Select Customer" />
                                     </FormGroup>
@@ -239,7 +248,7 @@ const Accounts = () => {
                                 <Col>
                                     <FormGroup>
                                         <Label for="A_installmentPrice">Installment Price</Label>
-                                        <Input id="A_installmentPrice" type="number" disabled value={installmentPrice} placeholder="Installment price" />
+                                        <Input id="A_installmentPrice" type="number" onChange={(evt) => { setInstallmentPrice(evt.target.value) }} value={installmentPrice} placeholder="Installment price" />
                                     </FormGroup>
                                 </Col>
                             </Row>
@@ -256,10 +265,11 @@ const Accounts = () => {
                                 <Col>
                                     <FormGroup>
                                         <Label for="A_balance">Balance Amount</Label>
-                                        <Input id="A_balance" disabled type="number" value={balance} placeholder="Balance amount" />
+                                        <Input id="A_balance" type="number" value={balance} onChange={(evt) => { setBalance(evt.target.value) }} placeholder="Balance amount" />
                                     </FormGroup>
                                 </Col>
                             </Row>
+                            
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={() => {

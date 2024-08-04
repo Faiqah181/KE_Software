@@ -139,7 +139,12 @@ const AccountDetails = () => {
                     </Row>
                     <br />
                     <Row>
-                        <LabelledText name="Address">{account?.customer.address}</LabelledText>
+                        <Col>
+                            <LabelledText name="Address">{account?.customer.address}</LabelledText>
+                        </Col>
+                        <Col>
+                            <LabelledText name="Date Of Sale">{new Date(account?.dateOfSale).toLocaleDateString('en-GB')}</LabelledText>
+                        </Col>
                     </Row>
                     <br />
                     <Row>
