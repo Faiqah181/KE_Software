@@ -43,8 +43,7 @@ function App() {
 	}
 
 	return (
-
-		<div className="sub-root">
+		<>
 			{store.user && <Titlebar />}
 			{store.user && <div id='app'>
 				<SideNav />
@@ -65,8 +64,7 @@ function App() {
 			<Route exact path='/Login'>
 				<Login />
 			</Route>
-		</div>
-
+		</>
 	);
 }
 

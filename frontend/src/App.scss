@@ -6,12 +6,6 @@ $danger: #dc3545;
 
 @import '~bootstrap/scss/bootstrap';
 
-.sub-root{
-  height: inherit;
-  display: flex;
-  flex-flow: column;
-}
-
 .custom-notification{
   z-index: 9999;
 }
@@ -19,13 +13,15 @@ $danger: #dc3545;
 #app {
   background: #FAFAFA;
   display: flex;
-  height: inherit;
+  flex: 1;
+  min-height: 0px;
   --primary-hover: #72517425;
 }
 
 #content {
   padding: 1rem;
   flex: auto;
+  overflow: auto;
 }
 
 
