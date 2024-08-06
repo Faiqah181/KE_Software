@@ -52,6 +52,21 @@ controller.deleteCustomer = async (req, res) => {
     }
 }
 
+controller.updateCustomer = async (req, res) => {
+
+    try {
+        const customerId = req.params.id;
+        const customer = req.body;
+        await CustomerModel.findByIdAndUpdate(customerId, customer)
+        res.sendStatus(200)
+    }
+    catch (error) {
+        console.log(error)
+        res.sendStatus(500)
+    }
+
+}
+
 controller.getCurrentCustomer = async (req, res) => {
     try {
         const customer = await Customer.find({ status: "current" });
@@ -89,7 +104,7 @@ controller.updateCustomerWallet = async (req, res) => {
 
     try {
         const customerId = req.body.customerId
-        const walletAmount = rq.body.walletAmount
+        const walletAmount = req.body.walletAmount
         await CustomerModel.findByIdAndUpdate({ id: customerId }, { wallet: walletAmount })
         res.sendStatus(200)
     }

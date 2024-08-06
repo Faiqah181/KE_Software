@@ -17,6 +17,10 @@ customerRouter.get('/:id', (req, res) => {
     customerController.getByID(req, res);
 });
 
+customerRouter.put('/:id', (req, res) => {
+    customerController.updateCustomer(req, res);
+});
+
 customerRouter.get('/type/current', (req, res) => {
     customerController.getCurrentCustomer(req, res);
 });

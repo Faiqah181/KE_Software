@@ -5,10 +5,13 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import useAuthentication from "../components/useAuthentication";
+import TertiaryButton from "../components/TertiaryButton"
 import CustomTable from "../components/CustomTable";
 import { Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
 import { state } from "../store";
 import { useSnapshot } from "valtio";
+import { FaRegEdit } from "react-icons/fa";
+import EditCustomer from "../components/EditCustomer";
 
 const Customer = () => {
 
@@ -26,8 +29,8 @@ const Customer = () => {
     const [filteredInactives, setFilteredInactives] = useState([]);
     const [activeTab, setActiveTab] = useState("1");
     const [isModalOpen, setModalOpen] = useState(false)
+    const [editingCustomer, setEditingCustomer] = useState(null);
 
-    
 
     const addCustomer = async (e) => {
         e.preventDefault();
@@ -102,41 +105,44 @@ const Customer = () => {
     const CustomerTableRow = ({data}) => {
         return (
             <Tr key={data._id}>
-                <Td>{data.name}</Td>
+                <Td>{data.name} {data.fatherName ? `S/o ${data.fatherName}` : ''}</Td>
                 <Td>{data.mobile}</Td>
                 <Td>{data.address}</Td>
                 <Td>{data.cnic}</Td>
                 <Td>{data.wallet}</Td>
+                <Td>
+                    <TertiaryButton onClick={() => setEditingCustomer(data)} customClass="print-btn" style={{ marginLeft: "0.5rem" }}>
+                        <FaRegEdit size="1.5em" />
+                    </TertiaryButton>
+                </Td>
             </Tr>
         )
     }
 
+    const getCustomers = async () => {
+        try {
+            const currentPromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/current`, {
+                headers: { 'x-access-token': user }
+            });
+            const defaulterPromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/defaulter`, {
+                headers: { 'x-access-token': user }
+            });
+            const inactivePromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/inactive`, {
+                headers: { 'x-access-token': user }
+            });
+
+            const res = await Promise.all([currentPromise, defaulterPromise, inactivePromise]);
+
+            setCustomers(res[0].data);
+            setDefaulters(res[1].data);
+            setInactives(res[2].data);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
-
-        const getCustomers = async () => {
-            try {
-                const currentPromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/current`, {
-                    headers: { 'x-access-token': user }
-                });
-                const defaulterPromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/defaulter`, {
-                    headers: { 'x-access-token': user }
-                });
-                const inactivePromise = axios.get(`${process.env.REACT_APP_API_URL}/customers/type/inactive`, {
-                    headers: { 'x-access-token': user }
-                });
-
-                const res = await Promise.all([currentPromise, defaulterPromise, inactivePromise]);
-
-                setCustomers(res[0].data);
-                setDefaulters(res[1].data);
-                setInactives(res[2].data);
-            }
-            catch (error) {
-                console.log(error);
-            }
-        }
-
         getCustomers();
     }, [])
 
@@ -188,6 +194,7 @@ const Customer = () => {
                                     <Th>Address</Th>
                                     <Th>CNIC</Th>
                                     <Th>Wallet</Th>
+                                    <Th style={{ width: '10%' }}></Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
@@ -204,6 +211,7 @@ const Customer = () => {
                                     <Th>Address</Th>
                                     <Th>CNIC</Th>
                                     <Th>Wallet</Th>
+                                    <Th style={{ width: '10%' }}></Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
@@ -220,17 +228,18 @@ const Customer = () => {
                                     <Th>Address</Th>
                                     <Th>CNIC</Th>
                                     <Th>Wallet</Th>
+                                    <Th style={{ width: '10%' }}></Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {filteredInactives.map(c => <CustomerTableRow data={c} /> )}
+                                {filteredInactives.map(c => <CustomerTableRow key={c._id} data={c} /> )}
                             </Tbody>
                         </CustomTable>
                     </TabPane>
                 </TabContent>
 
                 <Modal isOpen={isModalOpen} centered toggle={() => { setModalOpen(!isModalOpen) }} size='lg' scrollable>
-                    <ModalHeader>Add New Customers</ModalHeader>
+                    <ModalHeader>Add New Customer</ModalHeader>
                     <Form onSubmit={addCustomer}>
                         <ModalBody>
                             <Row>
@@ -276,6 +285,8 @@ const Customer = () => {
                         </ModalFooter>
                     </Form>
                 </Modal>
+
+                <EditCustomer editingCustomer={editingCustomer} setModalOpen={setEditingCustomer} refetchCustomers={getCustomers} />
             </CardBody>
         </Card>
     );
