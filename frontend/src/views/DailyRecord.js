@@ -172,7 +172,7 @@ const DailyRecord = () => {
                 (today.getMonth() - 1 === months.indexOf(selectedMonth))) {
                 setEditable(true);
             }
-            else setEditable(false);
+            // else setEditable(false);
 
         }
     }, [selectedMonth, selectedYear])
