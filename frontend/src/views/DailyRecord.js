@@ -85,7 +85,7 @@ const DailyRecord = () => {
                 for (let day = 0; day < days.length; day++) {
 
                     for (const record of data.dailyRecord[day].customerRecord) {
-                        state[day][record.customer] = record.amount;
+                        state[day][record?.customer] = record?.amount;
                     }
 
                     for (const c of customers) {
@@ -136,7 +136,7 @@ const DailyRecord = () => {
                 headers: { 'x-access-token': user, },
             })
             state.alertState.active = true
-            state.alertState.message = "Account added successfully"
+            state.alertState.message = "Daily records saved successfully"
             state.alertState.color = "info"
 
         }
