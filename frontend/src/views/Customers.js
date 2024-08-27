@@ -11,6 +11,7 @@ import { Tbody, Td, Th, Thead, Tr } from "react-super-responsive-table";
 import { state } from "../store";
 import { useSnapshot } from "valtio";
 import { FaRegEdit } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import EditCustomer from "../components/EditCustomer";
 
 const Customer = () => {
@@ -62,6 +63,29 @@ const Customer = () => {
         }
     }
 
+    const deleteCustomer = async (customer) => {
+        try{
+
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}/customers/delete`, { data: customer }, {
+                headers: { 'x-access-token': user }
+            })
+
+            if (res.status === 200) {
+                state.alertState.message = "Customer deleted successfully"
+                state.alertState.color = "info"
+                state.alertState.active = true
+                getCustomers();
+            }
+
+        }
+        catch(error){
+            console.log(error)
+            state.alertState.message = "Error! Customer not deleted."
+            state.alertState.color = "danger"
+            state.alertState.active = true
+        }
+    }
+
     const inputData = (event) => {
         const target = event.target
 
@@ -82,21 +106,21 @@ const Customer = () => {
         if (tab === "1") {
             setFilteredCustomers(searchText ?
                 customers.filter(c =>
-                    c.name.toLowerCase().includes(searchText) || c.address.toLowerCase().includes(searchText)
+                    c.name?.toLowerCase()?.includes(searchText) || c.address?.toLowerCase()?.includes(searchText)
                 ) : customers
             );
         }
         else if (tab === "2") {
             setFilteredDefaulters(searchText ?
                 defaulters.filter(c =>
-                    c.name.toLowerCase().includes(searchText) || c.address.toLowerCase().includes(searchText)
+                    c.name?.toLowerCase()?.includes(searchText) || c.address?.toLowerCase()?.includes(searchText)
                 ) : defaulters
             );
         }
         else if (tab === "3") {
             setFilteredInactives(searchText ?
                 inactives.filter(c =>
-                    c.name.toLowerCase().includes(searchText) || c.address.toLowerCase().includes(searchText)
+                    c.name?.toLowerCase()?.includes(searchText) || c.address?.toLowerCase()?.includes(searchText)
                 ) : inactives
             );
         }
@@ -111,8 +135,13 @@ const Customer = () => {
                 <Td>{data.cnic}</Td>
                 <Td>{data.wallet}</Td>
                 <Td>
-                    <TertiaryButton onClick={() => setEditingCustomer(data)} customClass="print-btn" style={{ marginLeft: "0.5rem" }}>
+                    <TertiaryButton onClick={() => setEditingCustomer(data)} customClass="print-btn" style={{ marginLeft: "0.25rem" }}>
                         <FaRegEdit size="1.5em" />
+                    </TertiaryButton>
+                </Td>
+                <Td>
+                    <TertiaryButton onClick={() => {deleteCustomer(data)}} customClass="print-btn" style={{ marginLeft: "0.25rem" }}>
+                        <RiDeleteBin6Line size="1.5em" />
                     </TertiaryButton>
                 </Td>
             </Tr>
@@ -195,6 +224,7 @@ const Customer = () => {
                                     <Th>CNIC</Th>
                                     <Th>Wallet</Th>
                                     <Th style={{ width: '10%' }}></Th>
+                                    <Th style={{ width: '10%' }}></Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
@@ -212,6 +242,7 @@ const Customer = () => {
                                     <Th>CNIC</Th>
                                     <Th>Wallet</Th>
                                     <Th style={{ width: '10%' }}></Th>
+                                    <Th style={{ width: '10%' }}></Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
@@ -228,6 +259,7 @@ const Customer = () => {
                                     <Th>Address</Th>
                                     <Th>CNIC</Th>
                                     <Th>Wallet</Th>
+                                    <Th style={{ width: '10%' }}></Th>
                                     <Th style={{ width: '10%' }}></Th>
                                 </Tr>
                             </Thead>

@@ -43,8 +43,8 @@ controller.addCustomer = async (req, res) => {
 controller.deleteCustomer = async (req, res) => {
     const customer = req.body;
     try {
-        await Customer.deleteByID(customer);
-        res.sendStatus(200);
+        var resp = await Customer.deleteByID(customer);
+        res.sendStatus(resp);
     }
     catch (e) {
         console.error(`Error: ${e}`);
