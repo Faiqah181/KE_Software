@@ -165,6 +165,13 @@ const Accounts = () => {
         searchChanged();
     }, [accounts])
 
+    useEffect(() => {
+
+        if(selectedCustomer){
+            setWalletAmount(selectedCustomer.wallet);
+        }
+
+    }, [selectedCustomer])
 
 
     return (
@@ -206,10 +213,10 @@ const Accounts = () => {
                                     <FormGroup>
                                         <Label for="A_Customer">Customer</Label>
                                         <Select id="A_Customer" isSearchable isClearable onChange={(val) => {
+                                            setWalletAmount(null);
                                             setSelectedCustomer(val);
                                             setAddBtnDisable(true);
-                                            setWalletAmount(selectedCustomer.wallet);
-                                            setCalculateBtnDisable(false)
+                                            setCalculateBtnDisable(false)                       
                                         }}
                                             options={customers} placeholder="Select Customer" />
                                     </FormGroup>
