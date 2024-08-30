@@ -5,6 +5,7 @@ import axios from 'axios';
 import useAuthentication from "../components/useAuthentication";
 import "../css/DailyRecord.css";
 import { state } from "../store";
+import LoadingButton from '../components/LoadingButton';
 
 const DailyRecord = () => {
 
@@ -37,6 +38,7 @@ const DailyRecord = () => {
     const [yearToggle, setYearToggle] = useState(false)
     const [selectedYear, setSelectedYear] = useState('-')
     const [isEditable, setEditable] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const [installments, setInstallments] = useState(Array(31).fill().map(() => ({})));
 
@@ -113,6 +115,7 @@ const DailyRecord = () => {
     }
 
     const saveDaily = async () => {
+        setLoading(true);
         try {
             const data = { dailyRecord: [] };
 
@@ -145,6 +148,9 @@ const DailyRecord = () => {
             state.alertState.active = true
             state.alertState.message = "Error! Account not added."
             state.alertState.color = "danger"
+        }
+        finally{
+            setLoading(false);
         }
     }
 
@@ -219,7 +225,7 @@ const DailyRecord = () => {
                             }
                         </DropdownMenu>
                     </Dropdown>
-                    <Button className="row-btn-right" onClick={saveDaily} disabled={!isEditable}>Save</Button>
+                    <LoadingButton isLoading={loading} className="row-btn-right" onClick={saveDaily} disabled={!isEditable}>Save</LoadingButton>
                 </div>
 
                 <div className="daily-row">
