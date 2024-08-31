@@ -10,11 +10,13 @@ import DescriptiveButton from "../components/DescriptiveButton";
 import CustomTable from "../components/CustomTable";
 import { Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
 
+import { RiDeleteBin6Line } from "react-icons/ri";
 import useAuthentication from "../components/useAuthentication";
 import { useReactToPrint } from 'react-to-print';
 import axios from "axios";
 import "../css/AccountDetails.css"
 
+import { state } from "../store";
 
 const AccountDetails = () => {
 
@@ -103,6 +105,29 @@ const AccountDetails = () => {
         else return "secondary";
     }
 
+    const deleteAccount = async () => {
+        try{
+            
+            const res = await axios.delete(`${process.env.REACT_APP_API_URL}/accounts/delete`, { data: account }, {
+                headers: { 'x-access-token': user }
+            })
+
+            if (res.status === 200) {
+                state.alertState.message = "Account deleted successfully"
+                state.alertState.color = "info"
+                state.alertState.active = true
+                history.push(`/Accounts`)
+            }
+
+        }
+        catch(error){
+            console.log(error)
+            state.alertState.message = "Error! Customer not deleted."
+            state.alertState.color = "danger"
+            state.alertState.active = true
+        }
+    }
+
     return (
         <Card>
             <CardBody>
@@ -127,6 +152,9 @@ const AccountDetails = () => {
                         </Dropdown>
                         <TertiaryButton onClick={handlePrint} customClass="print-btn" style={{ marginLeft: "0.5rem" }}>
                             <AiFillPrinter size="1.5em" />
+                        </TertiaryButton>
+                        <TertiaryButton onClick={() => { deleteAccount() }} style={{ marginLeft: "0.25rem" }}>
+                            <RiDeleteBin6Line size="1.5em"  />
                         </TertiaryButton>
                     </div>
                     <Row>

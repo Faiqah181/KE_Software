@@ -34,7 +34,9 @@ AccountModel.addAccount = account => {
 }
 
 AccountModel.deleteByID = account => {
-    return AccountModel.remove({ _id: account._id });
+    return AccountModel.findOneAndDelete({ _id: account._id }).then(obj => {
+        console.log("Account deleted:", obj.id);
+    });
 }
 
 
